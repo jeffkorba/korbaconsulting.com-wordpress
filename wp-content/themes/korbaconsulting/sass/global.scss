@@ -1,0 +1,20 @@
+// CORE
+@import 'core/mixins';
+@import 'core/variables';
+@import 'core/fonts';
+@import 'core/base';
+
+// COMPONENTS
+@import 'components/carousel';
+
+// LAYOUT
+@import 'layout/header';
+@import 'layout/sidebar';
+@import 'layout/page';
+@import 'layout/footer';
+
+// PAGES
+@import 'pages/home';
+
+//VENDOR
+@import 'vendor/bootstrap';

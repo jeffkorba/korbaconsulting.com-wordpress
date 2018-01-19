@@ -1,0 +1,44 @@
+.carousel {
+
+	height: 375px;
+	text-align: center;
+
+	.carousel-inner {
+
+		height: 100%;
+
+		.carousel-item {
+
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+
+			&.active {
+
+			}
+
+			h1 {
+				color: #fff;
+				text-transform: uppercase;
+			}
+
+			h4 {
+				color: rgba(255, 255, 255, .45);
+				text-transform: uppercase;
+			}
+		}
+	}
+
+	.carousel-control-next, .carousel-control-prev {
+
+		width: 10%;
+
+		.carousel-control-next-icon, .carousel-control-prev-icon {
+
+			width: 40px;
+			height: 40px;
+		}
+	}
+}

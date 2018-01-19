@@ -1,0 +1,124 @@
+header {
+
+    height: 110px;
+
+    .navigation {
+
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        .tab {
+
+            float: left;
+            margin-right: 1px;
+            transition: all .1s ease-in-out;
+
+            &:hover {
+
+                background-color: #042744;
+
+                a {
+                    color: #fff;
+                    text-decoration: none;
+                }
+
+                .menu-dropdown {
+                    opacity: 1;
+                    visibility: visible;
+                }
+            }
+
+            &.active {
+
+                border-bottom: 2px solid #92acd1;
+
+                &:hover {
+                    background-color: #042744;
+                }
+            }
+
+            a {
+
+                display: block;
+                padding: 10px 15px;
+                color: #666;
+                text-decoration: none;
+            }
+
+            .menu-dropdown {
+
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                opacity: 0;
+                visibility: hidden;
+                position: absolute;
+                z-index: 1000;
+                background-color: rgba(4, 39, 68, .9);
+                width: 200px;
+                padding: 10px;
+                box-shadow: 2px 2px 8px rgba(0, 0, 0, .25);
+                border-top: 1px solid #fff;
+                transition: all .1s ease-in-out;
+
+                a {
+
+                    display: block;
+                    color: #fff;
+                    padding: 5px;
+
+                    &:hover {
+
+                        background-color: rgba(255, 255, 255, .25);
+                        color: #fff;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@media (max-width: 991px) {
+
+	header {
+
+		&.active {
+
+			aside {
+				transform: translateX(0);
+			}
+
+			.overlay {
+				visibility: visible;
+				opacity: 1;
+			}
+		}
+
+		aside {
+			position: fixed;
+			top: 60px;
+			left: 0;
+			height: 100vh;
+			z-index: 1101;
+			transform: translateX(-100%);
+			transition: all .5s ease-in-out;
+		}
+
+		.overlay {
+			position: fixed;
+			width: 100vw;
+			height: 100vh;
+			top: 60px;
+			right: 0;
+			left: 0;
+		    bottom: 0;
+		    z-index: 1100;
+			background-color: rgba(0, 0, 0, .75);
+			visibility: hidden;;
+			opacity: 0;
+			transition: all .5s ease-in-out;
+		}
+	}
+}

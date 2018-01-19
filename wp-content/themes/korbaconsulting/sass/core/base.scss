@@ -1,0 +1,61 @@
+body {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
+	color: #333;
+	margin: 0;
+}
+
+.title {
+	color: #fff;
+	line-height: 75px;
+}
+
+
+
+
+
+#social-icon-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+#social-icon-list li {
+
+	float: left;
+	margin-right: 10px;
+
+	a {
+
+		transition: all .1s ease-in-out;
+		opacity: .85;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+}
+
+.icon-16x16 {
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+}
+
+.icon-32x32 {
+	width: 32px;
+	height: 32px;
+	display: inline-block;
+}
+
+.icon-48x48 {
+	width: 48px;
+	height: 48px;
+	display: inline-block;
+}
+
+.icon-64x64 {
+	width: 64px;
+	height: 64px;
+	display: inline-block;
+}
