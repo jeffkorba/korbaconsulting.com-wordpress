@@ -1,9 +1,22 @@
-.page {
+.page, .error404 {
 
+	main {
 
-	.banner {
+		padding-bottom: 2rem;
 
-		background-color: #344f6f;
-		margin-bottom: 3rem;
+		.banner {
+
+			background-color: #344f6f;
+			margin-bottom: 2rem;
+
+			.title {
+				margin: 0;
+			}
+		}
+
+		article {
+
+			min-height: 20rem;
+		}
 	}
 }

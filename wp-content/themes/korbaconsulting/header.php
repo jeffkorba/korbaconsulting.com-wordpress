@@ -28,15 +28,21 @@
 
 		<div class="container-fluid">
 
-			<header>
+			<div class="container">
 
-				<div class="container">
+				<div class="row">
 
-					<div class="row">
+					<header>
 
-						<nav class="col-lg-6 col-md-6 col-sm-6 hidden-xs">
+						<div class="menu-toggle">
 
-							<ul class="navigation">
+							<i class="fas fa-bars fa-2x"></i>
+
+						</div>
+
+						<nav>
+
+							<ul>
 
 								<li class="tab">
 									<a href="/">Home</a>
@@ -86,46 +92,40 @@
 
 						</nav>
 
-						<div class="col-lg-6 col-md-6 col-sm-3 hidden-xs text-right">
+						<div class="logo">
+
 							<a href="/"><img src="<?php bloginfo('template_url'); ?>/images/logo-small.png" alt="<?php bloginfo('name'); ?>"></a>
+
 						</div>
 
-					</div>
+					</header>
+
+					<aside>
+
+						<nav>
+
+							<ul>
+
+								<li><a href="/">Home</a></li>
+
+								<li><a href="/services">Services</a></li>
+
+								<li><a href="/work">Work</a></li>
+
+								<li><a href="/about">About</a></li>
+
+								<li><a href="/careers">Careers</a></li>
+
+								<li><a href="/contact">Contact</a></li>
+
+							</ul>
+
+						</nav>
+
+					</aside>
 
 				</div>
 
-				<aside class="d-none">
-
-					<div class="logo">
-
-						<a href="/"><img src="<?php bloginfo('template_url'); ?>/images/logo-small.png" alt="<?php bloginfo('name'); ?>" class="" /></a>
-
-					</div>
-
-					<nav>
-
-						<ul class="navigation">
-
-							<li><a href="/">Home</a></li>
-
-							<li><a href="/services">Services</a></li>
-
-							<li><a href="/work">Work</a></li>
-
-							<li><a href="/about">About</a></li>
-
-							<li><a href="/careers">Careers</a></li>
-
-							<li><a href="/contact">Contact</a></li>
-
-						</ul>
-
-					</nav>
-
-				</aside>
-
-				<div class="overlay"></div>
-
-			</header>
+			</div>
 
 		</div>

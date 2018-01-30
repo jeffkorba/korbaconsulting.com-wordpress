@@ -34,7 +34,7 @@ gulp.task('css', function () {
 });
 
 gulp.task('js', function () {
-	return gulp.src('js/**/*.js')
+	return gulp.src('scripts/**/*.js')
 		.pipe(concat('global.js'))
 		.pipe(gulp.dest('static/js'))
 		.pipe(rename('global.min.js'))

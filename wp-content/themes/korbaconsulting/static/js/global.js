@@ -5,3 +5,7 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 
 ga('create', 'UA-48992097-1', 'korbaconsulting.com');
 ga('send', 'pageview');
+
+$('header .menu-toggle').click(function () {
+	$('aside').toggleClass('active');
+});
