@@ -28,6 +28,8 @@
 
 				<article>
 
+					Sorry! That page can’t be found.
+
 				</article>
 
 			</div>

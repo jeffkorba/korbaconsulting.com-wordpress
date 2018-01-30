@@ -119,6 +119,7 @@ aside {
 			height: inherit;
 			width: 60px;
 			user-select: none;
+			cursor: pointer;
 		}
 
 		nav {
@@ -167,11 +168,11 @@ aside {
 
 		nav {
 
-			background-color: rgba(6, 43, 70, .85);
+			background-color: rgba(6, 43, 70, .90);
 			position: fixed;
 			top: 60px;
 			left: 0;
-			width: 65%;
+			width: 250px;
 			height: 100vh;
 			transform: translateX(-100%);
 			transition: all .5s ease-in-out;
@@ -187,13 +188,19 @@ aside {
 
 					width: 100%;
 
-					&:hover {
+					&:not(:last-of-type) {
+
+						border-bottom: 1px solid rgba(255, 255, 255, .25);
+					}
+
+					&:hover, &.active {
 
 						a {
-							background-color: rgba(255, 255, 255, .05);
+							background-color: rgba(255, 255, 255, .10);
 							color: #fff;
 							font-weight: 700;
 							text-decoration: none;
+							border-right: 3px solid #fff;
 						}
 					}
 
@@ -208,9 +215,5 @@ aside {
 				}
 			}
 		}
-	}
-
-	main {
-		margin-top: 60px;
 	}
 }

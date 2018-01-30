@@ -7,5 +7,11 @@ ga('create', 'UA-48992097-1', 'korbaconsulting.com');
 ga('send', 'pageview');
 
 $('header .menu-toggle').click(function () {
+
 	$('aside').toggleClass('active');
+});
+
+$('aside').click(function () {
+
+	$('aside').removeClass('active');
 });
