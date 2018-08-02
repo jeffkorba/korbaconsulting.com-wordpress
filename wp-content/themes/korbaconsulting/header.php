@@ -13,7 +13,7 @@
 
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,700,400i,700i" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="<?php bloginfo('template_url'); ?>/vendor/bootstrap/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="<?php bloginfo('template_url'); ?>/static/css/global.min.css" />
+		<link rel="stylesheet" href="<?php bloginfo('template_url'); ?>/static/css/global.css" />
 
 		<script src="<?php bloginfo('template_url'); ?>/vendor/jquery/jquery.min.js"></script>
 		<script src="<?php bloginfo('template_url'); ?>/vendor/popper/popper.js"></script>
@@ -52,7 +52,7 @@
 
 									<a href="/services">Services</a>
 
-									<ul class="menu-dropdown">
+									<ul class="menu-dropdown d-none">
 
 										<li class="menu-item"><a href="/consulting">Consulting</a></li>
 										<li class="menu-item"><a href="/design">Design</a></li>
@@ -65,19 +65,28 @@
 
 								<li class="tab">
 
-									<a href="/work">Work</a>
+									<a href="/work/portfolio">Portfolio</a>
 
-									<ul class="menu-dropdown">
+									<ul class="menu-dropdown d-none">
 
 										<li class="menu-item"><a href="/portfolio">Portfolio</a></li>
-										<li class="menu-item"><a href="/case-studies">Case Studies</a></li>
+										<li class="menu-item d-none"><a href="/case-studies">Case Studies</a></li>
 
 									</ul>
 
 								</li>
 
-								<li class="tab">
+								<li class="tab d-none">
+
 									<a href="/about">About</a>
+
+									<ul class="menu-dropdown">
+
+										<li class="menu-item"><a href="/about/the-company">The Company</a></li>
+										<li class="menu-item"><a href="/about/our-process">Our Process</a></li>
+
+									</ul>
+
 								</li>
 
 								<li class="tab">
@@ -94,7 +103,7 @@
 
 						<div class="logo">
 
-							<a href="/"><img src="<?php bloginfo('template_url'); ?>/images/logo-small.png" alt="<?php bloginfo('name'); ?>"></a>
+							<a href="/"><img src="<?php bloginfo('template_url'); ?>/images/logos/korba-consulting-small.png" alt="<?php bloginfo('name'); ?>"></a>
 
 						</div>
 
@@ -110,9 +119,9 @@
 
 								<li><a href="/services">Services</a></li>
 
-								<li><a href="/work">Work</a></li>
+								<li><a href="/work/portfolio">Portfolio</a></li>
 
-								<li><a href="/about">About</a></li>
+								<li class="d-none"><a href="/about">About</a></li>
 
 								<li><a href="/careers">Careers</a></li>
 

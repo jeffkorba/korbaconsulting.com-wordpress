@@ -26,7 +26,7 @@
 								</ul>
 							</div>
 
-							<div class="col-lg-2 mb-3">
+							<div class="col-lg-2 mb-3 d-none">
 								<h5>About</h5>
 							</div>
 
@@ -36,7 +36,7 @@
 									<li><a href="https://www.facebook.com/korbaconsulting"><i class="fab fa-facebook-square fa-3x" aria-hidden="true"></i></a></li>
 									<li><a href="https://twitter.com/korbaconsulting"><i class="fab fa-twitter-square fa-3x" aria-hidden="true"></i></a></li>
 									<li><a href="https://www.linkedin.com/company/korba-consulting"><i class="fab fa-linkedin fa-3x" aria-hidden="true"></i></a></li>
-									<li><a href="https://plus.google.com/109784616032333571934"><i class="fab fa-google-plus-square fa-3x" aria-hidden="true"></i></a></li>
+									<li class="d-none"><a href="https://plus.google.com/109784616032333571934"><i class="fab fa-google-plus-square fa-3x" aria-hidden="true"></i></a></li>
 								</ul>
 							</div>
 

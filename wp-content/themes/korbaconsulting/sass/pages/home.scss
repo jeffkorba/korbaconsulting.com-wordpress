@@ -2,97 +2,61 @@
 
 	.banner {
 
-	    height: 375px;
 	    background-color: #344f6f;
 	}
 
 	.featured-work {
 
-		min-height: 375px;
-		padding: 35px 0;
+		padding: 4rem 0;
 		color: #666;
-
-		.featured-list {
-
-			list-style: none;
-			padding: 0;
-			margin: 0;
-			display: flex;
-			flex-wrap: wrap;
-			align-items: center;
-
-			.featured-item {
-
-				position: relative;
-				display: inline-flex;
-				width: 350px;
-				height: 225px;
-				background-color: #fff;
-				border: 1px solid #eee;
-				box-shadow: 2px 2px 16px rgba(0, 0, 0, .05);
-				overflow: hidden;
-			    margin-bottom: 30px;
-			    justify-content: center;
-			    align-items: center;
-				transition: all .25s ease-in-out;
-
-				&:not(:last-of-type) {
-
-					margin-right:  30px;
-				}
-
-				&:hover {
-
-					cursor: pointer;
-					box-shadow: 2px 2px 16px rgba(0, 0, 0, .15);
-
-					img {
-
-						opacity: 1;
-					}
-				}
-
-				img {
-					opacity: .75;
-					min-width: 100%;
-					transition: all .1s ease-in-out;
-				}
-
-				.nametag {
-
-					width: 180px;
-					position: absolute;
-					bottom: 25px;
-					right: 0;
-					text-align: right;
-					background-color: rgba(0, 0, 0, .5);
-					color: #fff;
-					padding: 8px 16px;
-					text-transform: uppercase;
-					transition: all .1s ease-in-out;
-					font-size: .85rem;
-				}
-			}
-		}
 	}
 
 	.widgets {
 
-		min-height: 375px;
 		padding: 35px 0;
 		background-color: #666;
 		color: #fff;
 
 		.widget {
 
-			min-height: 225px;
 			background-color: #222;
 			line-height: 24px;
 			padding: 15px;
 
-			&:last-of-type {
+			ul {
+				list-style: none;
+				margin: 0;
+				padding: 0;
 
-				margin-bottom: 1rem;
+				li {
+
+					&:not(:last-of-type) {
+
+						border-bottom: 1px solid rgba(255, 255, 255, .15);
+					}
+
+					a {
+						&:link, &:visited {
+							display: block;
+							color: #fff;
+							padding: 15px;
+							transition: all .15s ease-in-out;
+						}
+
+						&:hover, &:active {
+							background-color: rgba(255, 255, 255, .05);
+							text-decoration: none;
+						}
+					}
+
+					h6 {
+						color: #92acd1;
+					}
+				}
+			}
+
+			.twitter-user, .twitter-hashtag {
+				color: #92acd1;
 			}
 
 			a {

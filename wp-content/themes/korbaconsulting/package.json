@@ -4,21 +4,26 @@
   "description": "Korba Consulting",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jeffkorba/korbaconsulting.git"
+    "url": "git+https://github.com/jeffkorba/korbaconsulting.git"
   },
   "main": "gulpfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-sass": "node-sass ./sass/global.scss --output-style compressed -o ./static/css",
+    "watch-sass": "node-sass -w -r ./sass -o ./static/css"
   },
   "author": "Jeff Korba",
   "license": "ISC",
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-autoprefixer": "^4.0.0",
-    "gulp-clean": "^0.3.2",
-    "gulp-concat": "^2.6.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^3.1.0",
-    "gulp-uglify": "^3.0.0"
+    "node-sass": "^4.9.2",
+    "sass-loader": "^7.0.3",
+    "webpack": "^4.16.2"
+  },
+  "bugs": {
+    "url": "https://github.com/jeffkorba/korbaconsulting/issues"
+  },
+  "homepage": "https://github.com/jeffkorba/korbaconsulting#readme",
+  "dependencies": {
+    "webpack-cli": "^3.1.0"
   }
 }

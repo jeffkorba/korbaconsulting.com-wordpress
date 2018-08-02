@@ -1,0 +1,37 @@
+.home .banner {
+  background-color: #344f6f; }
+
+.home .featured-work {
+  padding: 4rem 0;
+  color: #666; }
+
+.home .widgets {
+  padding: 35px 0;
+  background-color: #666;
+  color: #fff; }
+  .home .widgets .widget {
+    background-color: #222;
+    line-height: 24px;
+    padding: 15px; }
+    .home .widgets .widget ul {
+      list-style: none;
+      margin: 0;
+      padding: 0; }
+      .home .widgets .widget ul li:not(:last-of-type) {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
+      .home .widgets .widget ul li a:link, .home .widgets .widget ul li a:visited {
+        display: block;
+        color: #fff;
+        padding: 15px;
+        transition: all .15s ease-in-out; }
+      .home .widgets .widget ul li a:hover, .home .widgets .widget ul li a:active {
+        background-color: rgba(255, 255, 255, 0.05);
+        text-decoration: none; }
+      .home .widgets .widget ul li h6 {
+        color: #92acd1; }
+    .home .widgets .widget .twitter-user, .home .widgets .widget .twitter-hashtag {
+      color: #92acd1; }
+    .home .widgets .widget a:link, .home .widgets .widget a:visited {
+      color: #92acd1; }
+    .home .widgets .widget a:hover, .home .widgets .widget a:active {
+      text-decoration: underline; }

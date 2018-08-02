@@ -1,5 +1,6 @@
 <?php
 add_editor_style();
+add_theme_support('post-thumbnails');
 
 register_nav_menu('services-menu', 'Services Menu');
 register_nav_menu('work-menu', 'Work Menu');
@@ -21,7 +22,3 @@ function is_current_page($page = '') {
 		return false;
 	}
 }
-
-
-
-

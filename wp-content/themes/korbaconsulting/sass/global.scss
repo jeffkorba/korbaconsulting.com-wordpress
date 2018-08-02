@@ -5,6 +5,7 @@
 @import 'core/base';
 
 // COMPONENTS
+@import 'components/cards';
 @import 'components/carousel';
 
 // LAYOUT
@@ -15,6 +16,7 @@
 
 // PAGES
 @import 'pages/home';
+@import 'pages/services';
 
 //VENDOR
 @import 'vendor/bootstrap';

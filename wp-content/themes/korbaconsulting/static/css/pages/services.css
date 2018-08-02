@@ -1,0 +1,29 @@
+.services section {
+  border-bottom: 1px solid #fff; }
+  .services section.consulting, .services section.design, .services section.development, .services section.managed-services {
+    display: flex;
+    align-items: center; }
+  .services section.consulting {
+    background-color: #91abd0;
+    color: #062b46; }
+    .services section.consulting hr {
+      border-color: rgba(255, 255, 255, 0.25); }
+  .services section.design {
+    background-color: #eee; }
+    .services section.design hr {
+      border-color: rgba(0, 0, 0, 0.25); }
+  .services section.development {
+    background-color: #062b46;
+    color: #fff; }
+    .services section.development hr {
+      border-color: rgba(255, 255, 255, 0.25); }
+  .services section.managed-services {
+    background-color: #344f6f;
+    color: #fff; }
+    .services section.managed-services hr {
+      border-color: rgba(255, 255, 255, 0.25); }
+  .services section .content {
+    padding: 4rem 6rem;
+    text-align: center; }
+  .services section img {
+    width: 100%; }

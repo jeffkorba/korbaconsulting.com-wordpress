@@ -1,36 +1,29 @@
-.page, .error404 {
+main {
 
-	main {
+	.banner {
 
-		padding-bottom: 2rem;
+		padding: 1rem 0;
+		background-color: #344f6f;
 
-		.banner {
-
-			background-color: #344f6f;
-			margin-bottom: 2rem;
-
-			.title {
-				margin: 0;
-				padding: 1rem 0;
-			}
+		h1 {
+			margin: 0;
+			color: #fff;
+			line-height: 75px;
 		}
+	}
 
-		article {
+	article {
 
-			min-height: 20rem;
-		}
+		min-height: 20rem;
+		padding: 2rem 0;
 	}
 }
 
 @media (max-width: 991px) {
 
-	.page, .error404 {
+	main {
 
-		main {
-
-			margin-top: 60px;
-		}
-
+		margin-top: 60px;
 	}
 
 }
