@@ -37,7 +37,7 @@
 							<p>Being able to develop strategies that <strong>drive innovation</strong> and <strong>foster growth</strong> are requisites to maintaining a <strong>long-term client relationship</strong>.
 						</div>
 
-						<div class="col-lg-6  col-sm-12"><img src="<?php bloginfo('template_url'); ?>/images/services/consulting.jpg" alt="Consulting" /></div>
+						<div class="col-lg-6 col-sm-12"><img src="<?php bloginfo('template_url'); ?>/images/services/consulting.jpg" alt="Consulting" /></div>
 
 					</section>
 

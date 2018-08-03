@@ -34,6 +34,10 @@
 
 					<header>
 
+						<?php
+						global $post;
+						?>
+
 						<div class="menu-toggle">
 
 							<i class="fas fa-bars fa-2x"></i>
@@ -44,11 +48,11 @@
 
 							<ul>
 
-								<li class="tab">
+								<li class="tab <?php echo ($post->post_name === 'hello-world') ? 'active' : '' ?>">
 									<a href="/">Home</a>
 								</li>
 
-								<li class="tab">
+								<li class="tab <?php echo ($post->post_name === 'services') ? 'active' : '' ?>">
 
 									<a href="/services">Services</a>
 
@@ -63,7 +67,7 @@
 
 								</li>
 
-								<li class="tab">
+								<li class="tab <?php echo ($post->post_name === 'portfolio') ? 'active' : '' ?>">
 
 									<a href="/work/portfolio">Portfolio</a>
 
@@ -76,7 +80,7 @@
 
 								</li>
 
-								<li class="tab d-none">
+								<li class="tab d-none <?php echo ($post->post_name === 'about') ? 'active' : '' ?>">
 
 									<a href="/about">About</a>
 
@@ -89,11 +93,11 @@
 
 								</li>
 
-								<li class="tab">
+								<li class="tab <?php echo ($post->post_name === 'careers') ? 'active' : '' ?>">
 									<a href="/careers">Careers</a>
 								</li>
 
-								<li class="tab">
+								<li class="tab <?php echo ($post->post_name === 'contact') ? 'active' : '' ?>">
 									<a href="/contact">Contact</a>
 								</li>
 
