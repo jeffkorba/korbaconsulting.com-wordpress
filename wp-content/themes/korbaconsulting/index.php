@@ -137,9 +137,9 @@
 									McCormick Place West</a>
 								</li>
 								<li>
-									<a href="https://www.hackerx.org/" target="_blank"><h6>HackerX - Chicago (Back-End) Developer</h6>
-									September 6, 2018<br />
-									TBD</a>
+									<a href="https://www.meetup.com/Chicago-WordPress-Meetup/events/253584084" target="_blank"><h6>Styling WooCommerce</h6>
+									September 5, 2018<br />
+									Holiday Club</a>
 								</li>
 							</ul>
 						</div>
