@@ -11,18 +11,18 @@
 							<div class="col-lg-2 mb-3">
 								<h5>Services</h5>
 								<ul class="menu-list">
-									<li class="menu-item"><a href="/consulting">Consulting</a></li>
-									<li class="menu-item"><a href="/design">Design</a></li>
-									<li class="menu-item"><a href="/development">Development</a></li>
-									<li class="menu-item"><a href="/managed-services">Managed Services</a></li>
+									<li class="menu-item"><a href="/services/consulting">Consulting</a></li>
+									<li class="menu-item"><a href="/services/design">Design</a></li>
+									<li class="menu-item"><a href="/services/development">Development</a></li>
+									<li class="menu-item"><a href="/services/managed-services">Managed Services</a></li>
 								</ul>
 							</div>
 
 							<div class="col-lg-2 mb-3">
 								<h5>Work</h5>
 								<ul class="menu-list">
-									<li class="menu-item"><a href="/portfolio">Portfolio</a></li>
-									<li class="menu-item"><a href="/case-studies">Case Studies</a></li>
+									<li class="menu-item"><a href="/work/portfolio">Portfolio</a></li>
+									<li class="menu-item"><a href="/work/case-studies">Case Studies</a></li>
 								</ul>
 							</div>
 
