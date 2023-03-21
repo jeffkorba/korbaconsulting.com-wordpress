@@ -64,7 +64,7 @@
 
 		<?php wp_footer(); ?>
 
-		<script src="<?php bloginfo('template_url'); ?>/static/js/global.min.js"></script>
+		<script src="<?php bloginfo('template_url'); ?>/static/js/main.js"></script>
 
 	</body>
 
