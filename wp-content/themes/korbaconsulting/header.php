@@ -93,9 +93,9 @@
 
 								</li>
 
-								<li class="tab <?php echo ($post->post_name === 'careers') ? 'active' : '' ?>">
+								<!-- <li class="tab <?php echo ($post->post_name === 'careers') ? 'active' : '' ?>">
 									<a href="/careers">Careers</a>
-								</li>
+								</li> -->
 
 								<li class="tab <?php echo ($post->post_name === 'contact') ? 'active' : '' ?>">
 									<a href="/contact">Contact</a>
