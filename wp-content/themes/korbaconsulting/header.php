@@ -127,7 +127,7 @@
 
 								<li class="d-none"><a href="/about">About</a></li>
 
-								<li><a href="/careers">Careers</a></li>
+								<!-- <li><a href="/careers">Careers</a></li> -->
 
 								<li><a href="/contact">Contact</a></li>
 

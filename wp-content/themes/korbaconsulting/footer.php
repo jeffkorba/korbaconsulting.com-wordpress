@@ -14,7 +14,7 @@
 									<li class="menu-item"><a href="/services/consulting">Consulting</a></li>
 									<li class="menu-item"><a href="/services/design">Design</a></li>
 									<li class="menu-item"><a href="/services/development">Development</a></li>
-									<li class="menu-item"><a href="/services/managed-services">Managed Services</a></li>
+									<!-- <li class="menu-item"><a href="/services/managed-services">Managed Services</a></li> -->
 								</ul>
 							</div>
 
@@ -22,7 +22,7 @@
 								<h5>Work</h5>
 								<ul class="menu-list">
 									<li class="menu-item"><a href="/work/portfolio">Portfolio</a></li>
-									<li class="menu-item"><a href="/work/case-studies">Case Studies</a></li>
+									<!-- <li class="menu-item"><a href="/work/case-studies">Case Studies</a></li> -->
 								</ul>
 							</div>
 
@@ -35,7 +35,7 @@
 								<ul id="social-icon-list">
 									<li><a href="https://www.facebook.com/korbaconsulting"><i class="fab fa-facebook-square fa-3x" aria-hidden="true"></i></a></li>
 									<li><a href="https://twitter.com/korbaconsulting"><i class="fab fa-twitter-square fa-3x" aria-hidden="true"></i></a></li>
-									<li><a href="https://www.linkedin.com/company/korba-consulting"><i class="fab fa-linkedin fa-3x" aria-hidden="true"></i></a></li>
+									<li><a href="https://www.linkedin.com/company/korbaconsulting"><i class="fab fa-linkedin fa-3x" aria-hidden="true"></i></a></li>
 									<li class="d-none"><a href="https://plus.google.com/109784616032333571934"><i class="fab fa-google-plus-square fa-3x" aria-hidden="true"></i></a></li>
 								</ul>
 							</div>
