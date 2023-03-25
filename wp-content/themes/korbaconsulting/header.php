@@ -11,7 +11,7 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,400i,700i" rel="stylesheet" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,700,400i,500i,700i" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="<?php bloginfo('template_url'); ?>/vendor/bootstrap/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="<?php bloginfo('template_url'); ?>/static/css/global.css" />
 
