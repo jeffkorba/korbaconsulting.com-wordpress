@@ -1,4 +1,5 @@
 ._*
 .DS_Store
-**/node_modules
+node_modules
+wp-content/uploads
 wp-config.php
