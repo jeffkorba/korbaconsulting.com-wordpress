@@ -19,7 +19,6 @@
 		<script src="<?php bloginfo('template_url'); ?>/vendor/popper/popper.js"></script>
 		<script src="<?php bloginfo('template_url'); ?>/vendor/bootstrap/js/bootstrap.min.js"></script>
 		<script src="<?php bloginfo('template_url'); ?>/vendor/fontawesome/js/fontawesome-all.min.js"></script>
-		<script defer data-domain="korbaconsulting.com" src="https://plausible.io/js/script.js"></script>
 
 	</head>
 
