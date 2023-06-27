@@ -28,7 +28,7 @@
 
 				<article>
 
-					<div class="card-deck">
+					<div class="row row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-gap-4">
 
 						<?php
 						$args = array(
@@ -46,13 +46,20 @@
 							}
 						?>
 
-						<div class="card">
-							<a href="<?php echo $posts[$i]->guid ?>"><img class="card-img-top" src="<?php echo $thumbnailUrl; ?>" alt="Technical Sales Specialist"></a>
-							<div class="card-body">
-								<h5 class="card-title"><a href="<?php echo $posts[$i]->guid ?>"><?php echo $posts[$i]->post_title ?></a></h5>
-								<p class="card-text"><?php echo $posts[$i]->post_excerpt ?></p>
-								<p class="card-text text-muted"><?php echo date('F j, Y', strtotime($posts[$i]->post_date)); ?></p>
+						<div class="col">
+
+							<div class="card">
+
+								<a href="/<?php echo $posts[$i]->post_name ?>"><img class="card-img-top" src="<?php echo $thumbnailUrl; ?>" alt="<?php echo $posts[$i]->post_title ?>"></a>
+								<div class="card-body">
+									<h5 class="card-title"><a href="<?php echo $posts[$i]->guid ?>"><?php echo $posts[$i]->post_title ?></a></h5>
+									<p class="card-text"><?php echo $posts[$i]->post_excerpt ?></p>
+									<p class="card-text text-muted"><?php echo date('F j, Y', strtotime($posts[$i]->post_date)); ?></p>
+									<a href="/<?php echo $posts[$i]->post_name ?>" class="btn btn-primary">Read More</a>
+								</div>
+
 							</div>
+
 						</div>
 
 						<?php

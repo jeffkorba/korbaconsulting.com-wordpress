@@ -6,48 +6,41 @@
 
 			<div class="container">
 
-				<div class="carousel slide" data-ride="carousel">
-
-					<ol class="carousel-indicators">
-						<li data-target=".carousel" data-slide-to="0" class="active" />
-						<li data-target=".carousel" data-slide-to="1" />
-						<li data-target=".carousel" data-slide-to="2" />
-					</ol>
-
-					<div class="carousel-inner">
-
-						<div class="carousel-item active">
-							<h1>Process-Oriented Development</h1>
-							<h4>Creating a process specific to the requirements<br />
-								of a business helps to model a development lifecycle<br />
-								that is time efficient and cost effective.</h4>
-						</div>
-						<div class="carousel-item">
-							<h1>Scalable Design Patterns</h1>
-							<h4>Systems need to scale. Using design patterns like<br />
-								MVC and MVVM help enforce architecture that allows your<br />
-								system to scale seamlessly.</h4>
-						</div>
-						<div class="carousel-item">
-							<h1>Less is More</h1>
-							<h4>Systems can be complex, but the underlying<br />
-								architecture doesn’t need to be. Reducing complexity,<br />
-								helps reduce the time and cost of future development.</h4>
-						</div>
-
+				<div id="carouselExampleIndicators" class="carousel slide">
+					<div class="carousel-indicators">
+						<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+						<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+						<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
 					</div>
-
-					<a class="carousel-control-prev" href=".carousel" role="button" data-slide="prev">
-						<span class="carousel-control-prev-icon" aria-hidden="true" />
-						<span class="sr-only">Previous</span>
-					</a>
-
-					<a class="carousel-control-next" href=".carousel" role="button" data-slide="next">
-						<span class="carousel-control-next-icon" aria-hidden="true" />
-						<span class="sr-only">Next</span>
-					</a>
-
-		        </div>
+					<div class="carousel-inner">
+						<div class="carousel-item active">
+							<div class="carousel-body">
+								<div class="carousel-title">Process-Oriented Development</div>
+								<div class="carousel-subtitle">Creating a process specific to the requirements of a business helps to model a development lifecycle that is time efficient and cost effective.</div>
+							</div>
+						</div>
+						<div class="carousel-item">
+							<div class="carousel-body">
+								<div class="carousel-title">Scalable Design Patterns</div>
+								<div class="carousel-subtitle">Systems need to scale. Using design patterns like MVC and MVVM help enforce architecture that allows your system to scale seamlessly.</div>
+							</div>
+						</div>
+						<div class="carousel-item">
+							<div class="carousel-body">
+								<div class="carousel-title">Less Is More</div>
+								<div class="carousel-subtitle">Systems can be complex, but the underlying architecture doesn't need to be. Reducing complexity, helps reduce the time and cost of future development.</div>
+							</div>
+						</div>
+					</div>
+					<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Previous</span>
+					</button>
+					<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Next</span>
+					</button>
+				</div>
 
 			</div>
 
@@ -61,22 +54,30 @@
 
 				<div class="row">
 
-					<div class="col-lg-12">
+					<div class="col-12">
 
 						<h5>Featured Work</h5>
 
-						<div class="card-deck">
-							<div class="card">
-								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/northern-trust.png" alt="Northern Trust">
+						<div class="row row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-gap-4">
+
+							<div class="col">
+								<div class="card">
+									<a href="#"><img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/northern-trust.png" alt="Northern Trust" /></a>
+								</div>
 							</div>
 
-							<div class="card">
-								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/optionshouse.png" alt="OptionsHouse">
+							<div class="col">
+								<div class="card">
+									<a href="#"><img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/optionshouse.png" alt="OptionsHouse" /></a>
+								</div>
 							</div>
 
-							<div class="card">
-								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/humana.png" alt="Humana">
+							<div class="col">
+								<div class="card">
+									<a href="#"><img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/humana.png" alt="Humana" /></a>
+								</div>
 							</div>
+							
 						</div>
 
 					</div>
@@ -107,6 +108,7 @@
 								$posts = get_posts($args);
 
 								for ($i = 0; $i < count($posts); $i++) {
+
 									if (strlen($posts[$i]->post_excerpt) > 100) {
 										$excerpt = substr($posts[$i]->post_excerpt, 0, 99) . '...';
 									}
@@ -115,8 +117,10 @@
 									}
 								?>
 								<li>
-									<a href="<?php echo $posts[$i]->guid ?>"><h6><?php echo $posts[$i]->post_title; ?></h6>
-									<?php echo $excerpt; ?></a>
+									<a href="/<?php echo $posts[$i]->post_name ?>">
+										<div class="widget-title"><?php echo $posts[$i]->post_title; ?></div>
+										<?php echo $excerpt; ?>
+									</a>
 								</li>
 								<?php
 								}
@@ -132,14 +136,18 @@
 						<div class="widget">
 							<ul>
 								<li>
-									<a href="https://aws.amazon.com/summits/chicago/" target="_blank"><h6>AWS Summit Chicago</h6>
-									August 1-2, 2018<br />
-									McCormick Place West</a>
+									<a href="https://aws.amazon.com/summits/chicago/" target="_blank">
+										<div class="widget-title">AWS Summit Chicago</div>
+										August 1-2, 2018<br />
+										McCormick Place West
+									</a>
 								</li>
 								<li>
-									<a href="https://www.meetup.com/Chicago-WordPress-Meetup/events/253584084" target="_blank"><h6>Styling WooCommerce</h6>
-									September 5, 2018<br />
-									Holiday Club</a>
+									<a href="https://www.meetup.com/Chicago-WordPress-Meetup/events/253584084" target="_blank">
+										<div class="widget-title">Styling WooCommerce</div>
+										September 5, 2018<br />
+										Holiday Club
+									</a>
 								</li>
 							</ul>
 						</div>
@@ -148,16 +156,20 @@
 
 					<div class="col-lg-4 col-md-4 col-sm-12">
 
-						<h5>Careers</h5>
+						<h5>Updates</h5>
 						<div class="widget">
 							<ul>
 								<li>
-									<a href="/careers/technical-sales-specialist"><h6>Technical Sales Specialist</h6>
-									Build leads, draft proposals, research market trends, and manage client engagements.</a>
+									<a href="/careers/technical-sales-specialist">
+										<div class="widget-title">Theme Tweaks</div>
+										Updated site dependencies, reorganized theme structure and added support for project details.
+									</a>
 								</li>
 								<li>
-									<a href="/careers/ui-ux-designer"><h6>UI/UX Designer</h6>
-									Create interfaces for websites and web applications. Design user experiences that are both intuitive and modern.</a>
+									<a href="/careers/ui-ux-designer">
+										<div class="widget-title">Content Updates</div>
+										Added more details behind the individual projects between each client.
+									</a>
 								</li>
 							</ul>
 						</div>

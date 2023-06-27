@@ -24,57 +24,74 @@
 
 		<div class="row">
 
-			<div class="col-lg-12">
+			<div class="col-12">
 
 				<article>
-					<div class="card-deck mb-4">
-						<div class="card">
-							<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/allstate.png" alt="Allstate">
+
+					<div class="row row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-gap-4">
+
+						<div class="col">
+							<div class="card">
+								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/allstate.png" alt="Allstate">
+							</div>
 						</div>
 
-						<div class="card">
-							<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/apex-clearing.png" alt="Apex Clearing">
+						<div class="col">
+							<div class="card">
+								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/apex-clearing.png" alt="Apex Clearing">
+							</div>
 						</div>
 
-						<div class="card">
-							<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/follett.png" alt="Follett">
+						<div class="col">
+							<div class="card">
+								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/follett.png" alt="Follett">
+							</div>
 						</div>
+					
+						<div class="col">					
+							<div class="card">
+								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/ncsa.png" alt="NCSA">
+							</div>
+						</div>
+
+						<div class="col">
+							<div class="card">
+								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/northern-trust.png" alt="Northern Trust">
+							</div>
+						</div>
+
+						<div class="col">
+							<div class="card">
+								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/optionshouse.png" alt="OptionsHouse">
+							</div>
+						</div>
+						
+						<div class="col">						
+							<div class="card">
+								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/betty-crocker.png" alt="Betty Crocker">
+							</div>
+						</div>
+
+						<div class="col">
+							<div class="card">
+								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/valspar.png" alt="Valspar">
+							</div>
+						</div>
+
+						<div class="col">
+							<div class="card">
+								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/chicago-booth.png" alt="Chicago Booth">
+							</div>
+						</div>
+						
+						<div class="col">						
+							<div class="card">
+								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/humana.png" alt="Humana">
+							</div>
+						</div>
+
 					</div>
 
-					<div class="card-deck mb-4">
-						<div class="card">
-							<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/ncsa.png" alt="NCSA">
-						</div>
-
-						<div class="card">
-							<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/northern-trust.png" alt="Northern Trust">
-						</div>
-
-						<div class="card">
-							<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/optionshouse.png" alt="OptionsHouse">
-						</div>
-					</div>
-
-					<div class="card-deck mb-4">
-						<div class="card">
-							<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/betty-crocker.png" alt="Betty Crocker">
-						</div>
-
-						<div class="card">
-							<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/valspar.png" alt="Valspar">
-						</div>
-
-						<div class="card">
-							<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/chicago-booth.png" alt="Chicago Booth">
-						</div>
-					</div>
-
-					<div class="card-deck">
-						<div class="card">
-							<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/logos/clients/humana.png" alt="Humana">
-						</div>
-						<div class="offset-8"></div>
-					</div>
 				</article>
 
 			</div>

@@ -28,29 +28,35 @@
 
 				<article>
 
-					<section class="row no-gutters development">
+					<div class="row row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-gap-4">
 
-						<div class="col-lg-6 col-sm-12 content">
-							<h3>Portfolio</h3>
-							<hr />
-							<p>Brands of companies we've done work for in the past.
+						<div class="col">
+							<div class="card">
+								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/work/portfolio.jpg" alt="Portfolio">
+								<div class="card-body">
+									<h5 class="card-title">Portfolio</h5>
+									<div class="card-text">
+										<p>Brands of companies we've done work for in the past.</p>
+									</div>
+									<a href="/work/portfolio" class="btn btn-primary">See Portfolio</a>
+								</div>
+							</div>
 						</div>
 
-						<div class="col-lg-6 col-sm-12"><img src="<?php bloginfo('template_url'); ?>/images/work/portfolio.jpg" alt="Portfolio" /></div>
-
-					</section>
-
-					<section class="row no-gutters managed-services">
-
-						<div class="col-lg-6 col-sm-12"><img src="<?php bloginfo('template_url'); ?>/images/work/case-studies.jpg" alt="Case Studies" /></div>
-
-						<div class="col-lg-6 col-sm-12 content">
-							<h3>Case Studies</h3>
-							<hr />
-							<p>High-level summaries of strategies and analysis we've done in the past.
+						<div class="col">
+							<div class="card">
+								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/work/case-studies.jpg" alt="Case Studies">
+								<div class="card-body">
+									<h5 class="card-title">Case Studies</h5>
+									<div class="card-text">
+										<p>High-level summaries of strategies and analysis we've done in the past.</p>
+									</div>
+									<a href="/work/case-studies" class="btn btn-primary">See Case Studies</a>
+								</div>
+							</div>
 						</div>
 
-					</section>
+					</div>
 
 				</article>
 

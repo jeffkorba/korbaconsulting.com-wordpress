@@ -1,3 +1,7 @@
+<?php
+global $post;
+?>
+
 <!doctype html>
 <html>
 
@@ -11,132 +15,139 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,700,400i,500i,700i" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="<?php bloginfo('template_url'); ?>/vendor/bootstrap/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="<?php bloginfo('template_url'); ?>/static/css/global.css" />
+		<link rel="icon" type="image/png" href="<?php bloginfo('template_url'); ?>/images/logos/korba-consulting-square.png" />
+		<link rel="stylesheet" type="text/css" href="<?php bloginfo('template_url'); ?>/vendor/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="<?php bloginfo('template_url'); ?>/static/css/global.css" />
 
-		<script src="<?php bloginfo('template_url'); ?>/vendor/jquery/jquery.min.js"></script>
-		<script src="<?php bloginfo('template_url'); ?>/vendor/popper/popper.js"></script>
+		<script src="<?php bloginfo('template_url'); ?>/vendor/axios/axios.min.js"></script>
 		<script src="<?php bloginfo('template_url'); ?>/vendor/bootstrap/js/bootstrap.min.js"></script>
-		<script src="<?php bloginfo('template_url'); ?>/vendor/fontawesome/js/fontawesome-all.min.js"></script>
+		<script src="<?php bloginfo('template_url'); ?>/vendor/fontawesome-free/js/all.min.js"></script>
+		<script src="<?php bloginfo('template_url'); ?>/vendor/vue/vue.global.js"></script>
 
 	</head>
 
 	<body <?php body_class(); ?>>
 
-		<div class="container-fluid">
+		<header>
 
-			<div class="container">
+			<div class="desktop d-none d-sm-none d-md-none d-lg-block">
 
-				<div class="row">
+				<div class="container">
 
-					<header>
+					<div class="row">
 
-						<?php
-						global $post;
-						?>
+						<div class="col-6">
 
-						<div class="menu-toggle">
+							<div class="logo">
 
-							<i class="fas fa-bars fa-2x"></i>
+								<a href="/"><img src="<?php bloginfo('template_url'); ?>/images/logos/korba-consulting-small.png" alt="<?php bloginfo('name'); ?>"></a>
 
-						</div>
-
-						<nav>
-
-							<ul>
-
-								<li class="tab <?php echo ($post->post_name === 'hello-world') ? 'active' : '' ?>">
-									<a href="/">Home</a>
-								</li>
-
-								<li class="tab <?php echo ($post->post_name === 'services') ? 'active' : '' ?>">
-
-									<a href="/services">Services</a>
-
-									<ul class="menu-dropdown d-none">
-
-										<li class="menu-item"><a href="/consulting">Consulting</a></li>
-										<li class="menu-item"><a href="/design">Design</a></li>
-										<li class="menu-item"><a href="/development">Development</a></li>
-										<li class="menu-item"><a href="/managed-services">Managed Services</a></li>
-
-									</ul>
-
-								</li>
-
-								<li class="tab <?php echo ($post->post_name === 'portfolio') ? 'active' : '' ?>">
-
-									<a href="/work/portfolio">Portfolio</a>
-
-									<ul class="menu-dropdown d-none">
-
-										<li class="menu-item"><a href="/portfolio">Portfolio</a></li>
-										<li class="menu-item d-none"><a href="/case-studies">Case Studies</a></li>
-
-									</ul>
-
-								</li>
-
-								<li class="tab d-none <?php echo ($post->post_name === 'about') ? 'active' : '' ?>">
-
-									<a href="/about">About</a>
-
-									<ul class="menu-dropdown">
-
-										<li class="menu-item"><a href="/about/the-company">The Company</a></li>
-										<li class="menu-item"><a href="/about/our-process">Our Process</a></li>
-
-									</ul>
-
-								</li>
-
-								<!-- <li class="tab <?php echo ($post->post_name === 'careers') ? 'active' : '' ?>">
-									<a href="/careers">Careers</a>
-								</li> -->
-
-								<li class="tab <?php echo ($post->post_name === 'contact') ? 'active' : '' ?>">
-									<a href="/contact">Contact</a>
-								</li>
-
-							</ul>
-
-						</nav>
-
-						<div class="logo">
-
-							<a href="/"><img src="<?php bloginfo('template_url'); ?>/images/logos/korba-consulting-small.png" alt="<?php bloginfo('name'); ?>"></a>
+							</div>
 
 						</div>
 
-					</header>
+						<div class="col-6">
 
-					<aside>
+							<nav>
 
-						<nav>
+								<ul>
 
-							<ul>
+									<li class="tab <?php echo ($_SERVER['REQUEST_URI'] === '/') ? 'active' : '' ?>">
+										<a href="/">Home</a>
+									</li>
 
-								<li><a href="/">Home</a></li>
+									<li class="tab <?php echo ($post->post_name === 'services') ? 'active' : '' ?>">
 
-								<li><a href="/services">Services</a></li>
+										<a href="/services">Services</a>
 
-								<li><a href="/work/portfolio">Portfolio</a></li>
+										<ul class="menu-dropdown">
 
-								<li class="d-none"><a href="/about">About</a></li>
+											<li class="menu-item"><a href="/services/consulting">Consulting</a></li>
+											<li class="menu-item"><a href="/services/design">Design</a></li>
+											<li class="menu-item"><a href="/services/development">Development</a></li>
+											<li class="menu-item"><a href="/services/managed-services">Managed Services</a></li>
 
-								<!-- <li><a href="/careers">Careers</a></li> -->
+										</ul>
 
-								<li><a href="/contact">Contact</a></li>
+									</li>
 
-							</ul>
+									<li class="tab <?php echo ($post->post_name === 'portfolio') ? 'active' : '' ?>">
 
-						</nav>
+										<a href="/work">Work</a>
 
-					</aside>
+										<ul class="menu-dropdown">
+
+											<li class="menu-item"><a href="/work/portfolio">Portfolio</a></li>
+											<li class="menu-item"><a href="/work/case-studies">Case Studies</a></li>
+
+										</ul>
+
+									</li>
+
+									<li class="tab <?php echo ($post->post_name === 'about') ? 'active' : '' ?>">
+
+										<a href="/about">About</a>
+
+										<ul class="menu-dropdown">
+
+											<li class="menu-item"><a href="/about/the-company">The Company</a></li>
+											<li class="menu-item"><a href="/about/the-philosophy">The Philosophy</a></li>
+											<li class="menu-item"><a href="/blog">Blog</a></li>
+
+										</ul>
+
+									</li>
+
+									<li class="tab <?php echo ($post->post_name === 'contact') ? 'active' : '' ?>">
+										<a href="/contact">Contact</a>
+									</li>
+
+								</ul>
+
+							</nav>
+
+						</div>
+
+					</div>
 
 				</div>
 
 			</div>
 
-		</div>
+			<div class="mobile d-lg-none">
+				
+				<div class="logo">
+
+					<a href="/"><img src="<?php bloginfo('template_url'); ?>/images/logos/korba-consulting-square.png" alt="<?php bloginfo('name'); ?>"></a>
+
+				</div>
+
+				<div class="menu-toggle" v-on:click="toggleMenu">
+
+					<span v-show="!isActive"><i class="fas fa-bars fa-2x"></i></span>
+
+					<span v-show="isActive"><i class="fas fa-xmark fa-2x"></i></span>
+
+				</div>
+
+				<nav v-bind:class="{active: isActive}">
+
+					<ul>
+
+						<li><a href="/">Home</a></li>
+
+						<li><a href="/services">Services</a></li>
+
+						<li><a href="/work">Work</a></li>
+
+						<li><a href="/about">About</a></li>
+
+						<li><a href="/contact">Contact</a></li>
+
+					</ul>
+
+				</nav>
+
+			</div>
+
+		</header>

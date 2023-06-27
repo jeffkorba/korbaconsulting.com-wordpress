@@ -1,9 +1,15 @@
-$('header .menu-toggle').click(function () {
+Vue.createApp({
+	data () {
+		return {
+		
+			isActive: false
+		}
+	},
+	methods: {
 
-	$('aside').toggleClass('active');
-});
+		toggleMenu () {
 
-$('aside').click(function () {
-
-	$('aside').removeClass('active');
-});
+			this.isActive = !this.isActive;
+		}
+	}
+}).mount('header .mobile')

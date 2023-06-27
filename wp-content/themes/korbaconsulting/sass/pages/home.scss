@@ -2,7 +2,7 @@
 
 	.banner {
 
-	    background-color: #344f6f;
+	    background-color: $blue;
 	}
 
 	.featured-work {
@@ -21,7 +21,15 @@
 
 			background-color: #222;
 			line-height: 24px;
-			padding: 15px;
+			padding: .75rem;
+
+			.widget-title {
+
+				color: $lightBlue;
+				font-size: 1.1rem;
+				font-weight: 700;
+				margin-bottom: .25rem;
+			}
 
 			ul {
 				list-style: none;
@@ -36,32 +44,32 @@
 					}
 
 					a {
+
 						&:link, &:visited {
+
 							display: block;
 							color: #fff;
-							padding: 15px;
+							padding: .75rem;
+							text-decoration: none;
 							transition: all .15s ease-in-out;
 						}
 
 						&:hover, &:active {
-							background-color: rgba(255, 255, 255, .05);
-							text-decoration: none;
-						}
-					}
 
-					h6 {
-						color: #92acd1;
+							text-decoration: none;
+							background-color: rgba(255, 255, 255, .05);
+						}
 					}
 				}
 			}
 
 			.twitter-user, .twitter-hashtag {
-				color: #92acd1;
+				color: $lightBlue;
 			}
 
 			a {
 				&:link, &:visited {
-					color: #92acd1;
+					color: $lightBlue;
 				}
 
 				&:hover, &:active {
