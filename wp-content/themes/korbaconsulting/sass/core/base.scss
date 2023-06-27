@@ -20,30 +20,6 @@ a {
 	} 
 }
 
-#social-icon-list {
-
-	list-style: none;
-	padding: 0;
-	margin: 0;
-}
-
-#social-icon-list li {
-
-	float: left;
-	margin-right: 10px;
-
-	a {
-
-		transition: all .1s ease-in-out;
-		opacity: .85;
-
-		&:hover {
-
-			opacity: 1;
-		}
-	}
-}
-
 .icon-16x16 {
 
 	width: 16px;

@@ -4,7 +4,7 @@
 
 				<div class="row">
 
-					<div class="col-lg-9 col-md-6 col-sm-6 col-xs-6">
+					<div class="col col-lg-9">
 
 						<div class="row">
 
@@ -39,13 +39,13 @@
 
 					</div>
 
-					<div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 text-lg-right mb-3">
+					<div class="col col-lg-3 text-end mb-3">
 						<h5>Contact</h5>
 						
-						<ul id="social-icon-list">
-							<li><a href="https://www.facebook.com/korbaconsulting"><i class="fab fa-facebook-square fa-3x" aria-hidden="true"></i></a></li>
-							<li><a href="https://twitter.com/korbaconsulting"><i class="fab fa-twitter-square fa-3x" aria-hidden="true"></i></a></li>
-							<li><a href="https://www.linkedin.com/company/korbaconsulting"><i class="fab fa-linkedin fa-3x" aria-hidden="true"></i></a></li>
+						<ul class="social-icons float-end mb-1">
+							<li class="ms-1"><a href="https://www.facebook.com/korbaconsulting"><i class="fab fa-facebook-square fa-3x" aria-hidden="true"></i></a></li>
+							<li class="ms-1"><a href="https://twitter.com/korbaconsulting"><i class="fab fa-twitter-square fa-3x" aria-hidden="true"></i></a></li>
+							<li class="ms-1"><a href="https://www.linkedin.com/company/korbaconsulting"><i class="fab fa-linkedin fa-3x" aria-hidden="true"></i></a></li>
 						</ul>
 
 						<a href="mailto:contact@korbaconsulting.com">contact@korbaconsulting.com</a><br />

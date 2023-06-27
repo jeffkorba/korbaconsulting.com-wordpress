@@ -1,3 +1,22 @@
 .admin-bar {
-	margin-top: 32px;
+
+	.desktop {
+
+		margin-top: 32px;
+	}
+
+	.mobile {
+	
+		margin-top: 46px;
+
+		nav {
+
+			top: 106px;
+		
+			ul {
+			
+				top: inherit;
+			}
+		}
+	}
 }

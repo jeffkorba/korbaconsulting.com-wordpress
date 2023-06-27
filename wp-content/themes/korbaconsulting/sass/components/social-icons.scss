@@ -1,0 +1,22 @@
+.social-icons {
+
+	list-style: none;
+	padding: 0;
+	margin: 0;
+
+	li {
+
+		float: left;
+
+		a {
+
+			transition: all .1s ease-in-out;
+			opacity: .85;
+
+			&:hover {
+
+				opacity: 1;
+			}
+		}
+	}
+}
