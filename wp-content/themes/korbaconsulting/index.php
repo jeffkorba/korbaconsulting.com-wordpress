@@ -96,7 +96,7 @@
 
 				<div class="row">
 
-					<div class="col-lg-4 col-md-4 col-sm-12">
+					<div class="col-lg-4 col-md-4 col-sm-12 mb-3">
 
 						<h5>Blog</h5>
 						<div class="widget">
@@ -130,7 +130,7 @@
 
 					</div>
 
-					<div class="col-lg-4 col-md-4 col-sm-12">
+					<div class="col-lg-4 col-md-4 col-sm-12 mb-3">
 
 						<h5>Events</h5>
 						<div class="widget">
@@ -154,7 +154,7 @@
 
 					</div>
 
-					<div class="col-lg-4 col-md-4 col-sm-12">
+					<div class="col-lg-4 col-md-4 col-sm-12 mb-3">
 
 						<h5>Updates</h5>
 						<div class="widget">

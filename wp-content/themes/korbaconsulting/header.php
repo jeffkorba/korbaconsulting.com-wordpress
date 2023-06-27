@@ -17,7 +17,7 @@ global $post;
 
 		<link rel="icon" type="image/png" href="<?php bloginfo('template_url'); ?>/images/logos/korba-consulting-square.png" />
 		<link rel="stylesheet" type="text/css" href="<?php bloginfo('template_url'); ?>/vendor/bootstrap/css/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="<?php bloginfo('template_url'); ?>/static/css/global.css" />
+		<link rel="stylesheet" type="text/css" href="<?php bloginfo('template_url'); ?>/static/css/main.css" />
 
 		<script src="<?php bloginfo('template_url'); ?>/vendor/axios/axios.min.js"></script>
 		<script src="<?php bloginfo('template_url'); ?>/vendor/bootstrap/js/bootstrap.min.js"></script>
