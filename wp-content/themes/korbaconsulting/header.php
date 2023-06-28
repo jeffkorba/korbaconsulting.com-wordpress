@@ -40,7 +40,7 @@ global $post;
 
 							<div class="logo">
 
-								<a href="/"><img src="<?php bloginfo('template_url'); ?>/static/images/logos/korba-consulting-small.png" alt="<?php bloginfo('name'); ?>"></a>
+								<a href="/"><img src="<?php bloginfo('template_url'); ?>/static/images/logos/korba-consulting.png" alt="<?php bloginfo('name'); ?>"></a>
 
 							</div>
 

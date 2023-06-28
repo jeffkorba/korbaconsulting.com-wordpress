@@ -45,9 +45,9 @@
 
 							<div class="card">
 
-								<a href="/<?php echo $posts[$i]->post_name ?>"><img class="card-img-top" src="<?php echo $attachment['url']; ?>" alt="<?php echo $attachment['alt_text'] ?>"></a>
+								<img class="card-img-top" src="<?php echo $attachment['url']; ?>" alt="<?php echo $attachment['alt_text'] ?>">
 								<div class="card-body">
-									<h5 class="card-title"><a href="<?php echo $posts[$i]->guid ?>"><?php echo $posts[$i]->post_title ?></a></h5>
+									<h5 class="card-title"><?php echo $posts[$i]->post_title ?></h5>
 									<p class="card-text"><?php echo $posts[$i]->post_excerpt ?></p>
 									<p class="card-text text-muted"><?php echo date('F j, Y', strtotime($posts[$i]->post_date)); ?></p>
 									<a href="/<?php echo $posts[$i]->post_name ?>" class="btn btn-primary">Read More</a>
