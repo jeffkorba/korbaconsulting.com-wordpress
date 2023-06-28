@@ -160,13 +160,13 @@
 						<div class="widget">
 							<ul>
 								<li>
-									<a href="/careers/technical-sales-specialist">
+									<a href="#">
 										<div class="widget-title">Theme Tweaks</div>
 										Updated site dependencies, reorganized theme structure and added support for project details.
 									</a>
 								</li>
 								<li>
-									<a href="/careers/ui-ux-designer">
+									<a href="#">
 										<div class="widget-title">Content Updates</div>
 										Added more details behind the individual projects between each client.
 									</a>
