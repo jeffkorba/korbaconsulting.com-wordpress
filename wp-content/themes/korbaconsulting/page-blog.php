@@ -38,19 +38,14 @@
 
 						for ($i = 0; $i < count($posts); $i++) {
 
-							if (has_post_thumbnail($posts[$i]->ID)) {
-								$thumbnailUrl = get_the_post_thumbnail_url($posts[$i]->ID, 'medium');
-							}
-							else {
-								$thumbnailUrl = get_bloginfo('template_url') . '/images/logo-large.png';
-							}
+							$attachment = get_attachment($posts[$i]->ID);
 						?>
 
 						<div class="col">
 
 							<div class="card">
 
-								<a href="/<?php echo $posts[$i]->post_name ?>"><img class="card-img-top" src="<?php echo $thumbnailUrl; ?>" alt="<?php echo $posts[$i]->post_title ?>"></a>
+								<a href="/<?php echo $posts[$i]->post_name ?>"><img class="card-img-top" src="<?php echo $attachment['url']; ?>" alt="<?php echo $attachment['alt_text'] ?>"></a>
 								<div class="card-body">
 									<h5 class="card-title"><a href="<?php echo $posts[$i]->guid ?>"><?php echo $posts[$i]->post_title ?></a></h5>
 									<p class="card-text"><?php echo $posts[$i]->post_excerpt ?></p>

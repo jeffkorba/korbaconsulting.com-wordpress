@@ -15,14 +15,14 @@ global $post;
 	    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-		<link rel="icon" type="image/png" href="<?php bloginfo('template_url'); ?>/images/logos/korba-consulting-square.png" />
-		<link rel="stylesheet" type="text/css" href="<?php bloginfo('template_url'); ?>/vendor/bootstrap/css/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="<?php bloginfo('template_url'); ?>/static/css/main.css" />
+		<link rel="icon" type="image/png" href="<?php echo get_file_location('favicon'); ?>" />
+		<link rel="stylesheet" type="text/css" href="<?php bloginfo('template_url'); ?>/static/vendor/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="<?php echo get_file_location('css', true); ?>" />
 
-		<script src="<?php bloginfo('template_url'); ?>/vendor/axios/axios.min.js"></script>
-		<script src="<?php bloginfo('template_url'); ?>/vendor/bootstrap/js/bootstrap.min.js"></script>
-		<script src="<?php bloginfo('template_url'); ?>/vendor/fontawesome-free/js/all.min.js"></script>
-		<script src="<?php bloginfo('template_url'); ?>/vendor/vue/vue.global.js"></script>
+		<script src="<?php bloginfo('template_url'); ?>/static/vendor/axios/axios.min.js"></script>
+		<script src="<?php bloginfo('template_url'); ?>/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+		<script src="<?php bloginfo('template_url'); ?>/static/vendor/fontawesome-free/js/all.min.js"></script>
+		<script src="<?php bloginfo('template_url'); ?>/static/vendor/vue/vue.global.js"></script>
 
 	</head>
 
@@ -40,7 +40,7 @@ global $post;
 
 							<div class="logo">
 
-								<a href="/"><img src="<?php bloginfo('template_url'); ?>/images/logos/korba-consulting-small.png" alt="<?php bloginfo('name'); ?>"></a>
+								<a href="/"><img src="<?php bloginfo('template_url'); ?>/static/images/logos/korba-consulting-small.png" alt="<?php bloginfo('name'); ?>"></a>
 
 							</div>
 
@@ -118,7 +118,7 @@ global $post;
 				
 				<div class="logo">
 
-					<a href="/"><img src="<?php bloginfo('template_url'); ?>/images/logos/korba-consulting-square.png" alt="<?php bloginfo('name'); ?>"></a>
+					<a href="/"><img src="<?php bloginfo('template_url'); ?>/static/images/logos/korba-consulting-square.png" alt="<?php bloginfo('name'); ?>"></a>
 
 				</div>
 

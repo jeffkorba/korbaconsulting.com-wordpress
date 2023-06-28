@@ -32,7 +32,7 @@
 
 						<div class="col">
 							<div class="card">
-								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/work/portfolio.jpg" alt="Portfolio">
+								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/work/portfolio.jpg" alt="Portfolio">
 								<div class="card-body">
 									<h5 class="card-title">Portfolio</h5>
 									<div class="card-text">
@@ -45,7 +45,7 @@
 
 						<div class="col">
 							<div class="card">
-								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/images/work/case-studies.jpg" alt="Case Studies">
+								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/work/case-studies.jpg" alt="Case Studies">
 								<div class="card-body">
 									<h5 class="card-title">Case Studies</h5>
 									<div class="card-text">

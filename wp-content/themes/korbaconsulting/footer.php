@@ -43,9 +43,9 @@
 						<h5>Contact</h5>
 						
 						<ul class="social-icons float-end mb-1">
-							<li class="ms-1"><a href="https://www.facebook.com/korbaconsulting"><i class="fab fa-facebook-square fa-3x" aria-hidden="true"></i></a></li>
-							<li class="ms-1"><a href="https://twitter.com/korbaconsulting"><i class="fab fa-twitter-square fa-3x" aria-hidden="true"></i></a></li>
-							<li class="ms-1"><a href="https://www.linkedin.com/company/korbaconsulting"><i class="fab fa-linkedin fa-3x" aria-hidden="true"></i></a></li>
+							<li><a href="https://www.facebook.com/korbaconsulting"><i class="fab fa-facebook-square fa-3x" aria-hidden="true"></i></a></li>
+							<li class="ms-2"><a href="https://twitter.com/korbaconsulting"><i class="fab fa-twitter-square fa-3x" aria-hidden="true"></i></a></li>
+							<li class="ms-2"><a href="https://www.linkedin.com/company/korbaconsulting"><i class="fab fa-linkedin fa-3x" aria-hidden="true"></i></a></li>
 						</ul>
 
 						<a href="mailto:contact@korbaconsulting.com">contact@korbaconsulting.com</a><br />
@@ -66,7 +66,7 @@
 
 		<?php wp_footer(); ?>
 
-		<script src="<?php bloginfo('template_url'); ?>/static/js/main.js"></script>
+		<script src="<?php echo get_file_location('js', true); ?>"></script>
 
 	</body>
 

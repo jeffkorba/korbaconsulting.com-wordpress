@@ -16,19 +16,19 @@ const paths = {
 	vendor: {
 		axios: {
 			src: './node_modules/axios/dist/**/*.*',
-			dest: './vendor/axios'
+			dest: './static/vendor/axios'
 		},
 		bootstrap: {
 			src: './node_modules/bootstrap/dist/**/*.*',
-			dest: './vendor/bootstrap'
+			dest: './static/vendor/bootstrap'
 		},
 		fontawesome: {
 			src: './node_modules/@fortawesome/fontawesome-free/**/*.*',
-			dest: './vendor/fontawesome-free'
+			dest: './static/vendor/fontawesome-free'
 		},
 		vue: {
 			src: './node_modules/vue/dist/**/*.*',
-			dest: './vendor/vue'
+			dest: './static/vendor/vue'
 		}
 	}
 };
