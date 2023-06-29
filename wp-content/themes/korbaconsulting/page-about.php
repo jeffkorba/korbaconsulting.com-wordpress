@@ -39,7 +39,7 @@ the_post();
 								<div class="card-body">
 									<h5 class="card-title">The Company</h5>
 									<div class="card-text">
-										<p>
+										<p>Learn about what the company does and what technologies are used.
 									</div>
 									<a href="/about/the-company" class="btn btn-primary">See The Company</a>
 								</div>
@@ -52,7 +52,7 @@ the_post();
 								<div class="card-body">
 									<h5 class="card-title">The Philosophy</h5>
 									<div class="card-text">
-										<p>
+										<p>Learn about the development strategies used for consulting engagements.
 									</div>
 									<a href="/about/the-philosophy" class="btn btn-primary">See The Philosophy</a>
 								</div>
@@ -65,7 +65,7 @@ the_post();
 								<div class="card-body">
 									<h5 class="card-title">Blog</h5>
 									<div class="card-text">
-										<p>
+										<p>Find out the latest news and technology updates.
 									</div>
 									<a href="/blog" class="btn btn-primary">See Blog</a>
 								</div>

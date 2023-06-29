@@ -71,7 +71,7 @@ global $post;
 
 									</li>
 
-									<li class="tab <?php echo ($post->post_name === 'portfolio') ? 'active' : '' ?>">
+									<li class="tab <?php echo ($post->post_name === 'work') ? 'active' : '' ?>">
 
 										<a href="/work">Work</a>
 

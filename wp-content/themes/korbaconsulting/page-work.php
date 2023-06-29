@@ -36,7 +36,7 @@
 								<div class="card-body">
 									<h5 class="card-title">Portfolio</h5>
 									<div class="card-text">
-										<p>Brands of companies we've done work for in the past.</p>
+										<p>A showcase of project work done for organizations in the past.</p>
 									</div>
 									<a href="/work/portfolio" class="btn btn-primary">See Portfolio</a>
 								</div>
@@ -49,7 +49,7 @@
 								<div class="card-body">
 									<h5 class="card-title">Case Studies</h5>
 									<div class="card-text">
-										<p>High-level summaries of strategies and analysis we've done in the past.</p>
+										<p>High-level summaries of strategies and analysis done for organizations in the past.</p>
 									</div>
 									<a href="/work/case-studies" class="btn btn-primary">See Case Studies</a>
 								</div>

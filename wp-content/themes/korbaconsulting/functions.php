@@ -16,6 +16,13 @@ const FAVICON_FILE_LOCATION = '/static/images/logos/korba-consulting-square.png'
 add_editor_style();
 add_theme_support('post-thumbnails');
 
+// Post Types
+require_once 'post-types/case-study.php';
+require_once 'post-types/project.php';
+
+// Taxonomies
+require_once 'taxonomies/client.php';
+
 // Menus
 // register_nav_menu('services-menu', 'Services Menu');
 // register_nav_menu('work-menu', 'Work Menu');
