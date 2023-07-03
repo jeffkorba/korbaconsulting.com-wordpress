@@ -66,8 +66,6 @@
 
 		<?php wp_footer(); ?>
 
-		<script src="<?php echo get_file_location('js', true); ?>"></script>
-
 	</body>
 
 </html>

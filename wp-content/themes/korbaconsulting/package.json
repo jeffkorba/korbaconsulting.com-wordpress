@@ -10,6 +10,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "gulp build",
+    "scripts": "gulp scripts",
+    "styles": "gulp styles",
+    "vendor": "gulp vendor",
     "watch": "gulp watch"
   },
   "author": "Jeff Korba",
@@ -20,8 +23,10 @@
   "homepage": "https://github.com/jeffkorba/korbaconsulting#readme",
   "devDependencies": {
     "gulp": "^4.0.2",
+    "gulp-clean": "^0.4.0",
     "gulp-sass": "^5.1.0",
     "gulp-sourcemaps": "^3.0.0",
+    "gulp-uglify": "^3.0.2",
     "sass": "^1.60.0"
   },
   "dependencies": {

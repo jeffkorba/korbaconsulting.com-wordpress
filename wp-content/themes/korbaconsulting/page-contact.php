@@ -30,7 +30,7 @@
 
 					<div class="row">
 
-						<div class="col-md-12 col-lg-8 order-sm-2 order-md-2 order-lg-1">
+						<div class="col-md-12 col-lg-8 order-2 order-lg-1">
 
 							<form>
 
@@ -65,7 +65,7 @@
 
 						</div>
 
-						<div class="col-md-12 col-lg-4 order-sm-1 order-md-1 order-lg-2 mb-3">
+						<div class="col-md-12 col-lg-4 order-1 order-lg-2 mb-4">
 
 							<div class="card">
 

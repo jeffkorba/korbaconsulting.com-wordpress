@@ -1,17 +1,17 @@
-'use strict';
-
 const gulp = require('gulp');
+const clean = require('gulp-clean');
 const sass = require('gulp-sass')(require('sass'));
 const sourcemaps = require('gulp-sourcemaps');
+const uglify = require('gulp-uglify');
 
 const paths = {
 	styles: {
-		src: './sass/main.scss',
-		dest: './static/css/'
+		src: './src/sass/main.scss',
+		dest: './static/css'
 	},
 	scripts: {
-		src: '',
-		dest: './static/js/'
+		src: './src/scripts/*.{js,json}',
+		dest: './static/js'
 	},
 	vendor: {
 		axios: {
@@ -32,6 +32,33 @@ const paths = {
 		}
 	}
 };
+
+function cleanVendor () {
+
+	return gulp.src('./static/vendor/*', {
+		read: false,
+		allowEmpty: true
+	})
+	.pipe(clean());
+}
+
+function cleanScripts () {
+
+	return gulp.src(paths.scripts.dest, {
+			read: false,
+			allowEmpty: true
+		})
+		.pipe(clean());
+}
+
+function cleanStyles () {
+
+	return gulp.src(paths.styles.dest, {
+			read: false,
+			allowEmpty: true
+		})
+		.pipe(clean());
+}
 
 function copyAxios () {
 
@@ -57,6 +84,15 @@ function copyVue () {
 		.pipe(gulp.dest(paths.vendor.vue.dest));
 }
 
+function buildScripts () {
+
+	return gulp.src(paths.scripts.src)
+		.pipe(sourcemaps.init())
+		.pipe(uglify())
+        .pipe(sourcemaps.write('.'))
+		.pipe(gulp.dest(paths.scripts.dest));
+};
+
 function buildStyles () {
 
 	return gulp.src(paths.styles.src)
@@ -73,5 +109,8 @@ function watchStyles () {
 	gulp.watch('./sass/**/*.scss', buildStyles);
 };
 
-exports.build = gulp.parallel(copyAxios, copyBootstrap, copyFontAwesome, copyVue, buildStyles);
+exports.build = gulp.series(cleanVendor, copyAxios, copyBootstrap, copyFontAwesome, copyVue, cleanScripts, buildScripts, cleanStyles, buildStyles);
+exports.scripts = gulp.series(cleanScripts, buildScripts);
+exports.styles = gulp.series(cleanStyles, buildStyles);
+exports.vendor = gulp.series(cleanVendor, copyAxios, copyBootstrap, copyFontAwesome, copyVue);
 exports.watch = watchStyles;

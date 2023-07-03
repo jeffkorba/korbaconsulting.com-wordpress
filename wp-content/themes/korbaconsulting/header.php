@@ -15,14 +15,9 @@ global $post;
 	    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-		<link rel="icon" type="image/png" href="<?php echo get_file_location('favicon'); ?>" />
-		<link rel="stylesheet" type="text/css" href="<?php bloginfo('template_url'); ?>/static/vendor/bootstrap/css/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="<?php echo get_file_location('css', true); ?>" />
+		<link rel="icon" type="image/png" href="<?php echo get_template_directory_uri() . FAVICON_FILE_LOCATION ?>" />
 
-		<script src="<?php bloginfo('template_url'); ?>/static/vendor/axios/axios.min.js"></script>
-		<script src="<?php bloginfo('template_url'); ?>/static/vendor/bootstrap/js/bootstrap.min.js"></script>
-		<script src="<?php bloginfo('template_url'); ?>/static/vendor/fontawesome-free/js/all.min.js"></script>
-		<script src="<?php bloginfo('template_url'); ?>/static/vendor/vue/vue.global.js"></script>
+		<?php wp_head(); ?>
 
 	</head>
 

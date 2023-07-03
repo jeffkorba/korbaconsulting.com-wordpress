@@ -60,19 +60,19 @@
 
 						<div class="row row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-gap-4">
 
-							<div class="col">
+							<div class="col-12">
 								<div class="card">
 									<a href="#"><img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/logos/clients/northern-trust.png" alt="Northern Trust" /></a>
 								</div>
 							</div>
 
-							<div class="col">
+							<div class="col-12">
 								<div class="card">
 									<a href="#"><img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/logos/clients/optionshouse.png" alt="OptionsHouse" /></a>
 								</div>
 							</div>
 
-							<div class="col">
+							<div class="col-12">
 								<div class="card">
 									<a href="#"><img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/logos/clients/humana.png" alt="Humana" /></a>
 								</div>
