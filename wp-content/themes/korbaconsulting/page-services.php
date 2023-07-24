@@ -34,7 +34,7 @@ the_post();
 					<div class="row row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-gap-4">
 
 						<div class="col">
-							<div class="card">
+							<div class="card h-100">
 								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/services/consulting.jpg" alt="Consulting">
 								<div class="card-body">
 									<h5 class="card-title">Consulting</h5>
@@ -48,7 +48,7 @@ the_post();
 						</div>
 
 						<div class="col">
-							<div class="card">
+							<div class="card h-100">
 								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/services/design.jpg" alt="Design">
 								<div class="card-body">
 									<h5 class="card-title">Design</h5>
@@ -62,7 +62,7 @@ the_post();
 						</div>
 
 						<div class="col">
-							<div class="card">
+							<div class="card h-100">
 								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/services/development.jpg" alt="Development">
 								<div class="card-body">
 									<h5 class="card-title">Development</h5>
@@ -76,7 +76,7 @@ the_post();
 						</div>
 
 						<div class="col">
-							<div class="card">
+							<div class="card h-100">
 								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/services/managed-services.jpg" alt="Managed Services">
 								<div class="card-body">
 									<h5 class="card-title">Managed Services</h5>

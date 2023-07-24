@@ -31,7 +31,7 @@
 					<div class="row row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-gap-4">
 
 						<div class="col">
-							<div class="card">
+							<div class="card h-100">
 								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/work/portfolio.jpg" alt="Portfolio">
 								<div class="card-body">
 									<h5 class="card-title">Portfolio</h5>
@@ -44,7 +44,7 @@
 						</div>
 
 						<div class="col">
-							<div class="card">
+							<div class="card h-100">
 								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/work/case-studies.jpg" alt="Case Studies">
 								<div class="card-body">
 									<h5 class="card-title">Case Studies</h5>
