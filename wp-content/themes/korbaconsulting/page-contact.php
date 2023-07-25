@@ -69,7 +69,7 @@ the_post();
 
 						<div class="col-md-12 col-lg-8 order-2 order-lg-1">
 
-							<form>
+							<form action="" method="post">
 
 								<div class="mb-3">
 									<label for="fullName" class="form-label">Full Name<sup>*</sup></label>
@@ -77,7 +77,7 @@ the_post();
 								</div>
 
 								<div class="mb-3">
-									<label for="companyName" class="form-label">Company Name<sup>*</sup></label>
+									<label for="companyName" class="form-label">Company Name</label>
 									<input type="text" class="form-control" name="companyName" id="companyName">
 								</div>
 
