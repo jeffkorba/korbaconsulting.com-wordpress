@@ -1,8 +1,4 @@
 ._*
 .DS_Store
-node_modules
 wp-content/uploads
 wp-config.php
-.env
-vendor
-!**/static/vendor
