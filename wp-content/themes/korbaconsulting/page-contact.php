@@ -5,7 +5,7 @@ if (isset($_POST['fullName']) && isset($_POST['emailAddress']) && isset($_POST['
 
 	$to = DEFAULT_EMAIL_ADDRESS;
 	$subject = '[Auto-Notification] New Message';
-	$message = 'A new message has been submitted through the KorbaConsulting.com contact form:' . "\r\n\r\n";
+	$message = 'A new message has been submitted through the korbaconsulting.com contact form:' . "\r\n\r\n";
 	$message .= 'Full Name: ' . $_POST['fullName'] . "\r\n";
 	$message .= 'Company: ' . $_POST['companyName'] . "\r\n";
 	$message .= 'Email Address: ' . $_POST['emailAddress'] . "\r\n";
@@ -44,25 +44,6 @@ the_post();
 
 			<div class="col-lg-12">
 
-				<?php
-				if (isset($response)) {
-					if ($response) {
-				?>
-				<div class="alert alert-success text-center" role="alert">
-					Your message was successfully sent.
-				</div>
-				<?php
-					}
-					else {
-				?>
-				<div class="alert alert-danger text-center" role="alert">
-					There was an error sending your message. Please contact <strong><a href="mailto:<?php echo DEFAULT_EMAIL_ADDRESS; ?>"><?php echo DEFAULT_EMAIL_ADDRESS; ?></a></strong> if your message is urgent.
-				</div>
-				<?php
-					}
-				}
-				?>
-
 				<article>
 
 					<div class="row">
@@ -95,6 +76,25 @@ the_post();
 									<label for="message" class="form-label">Message<sup>*</sup></label>
 									<textarea class="form-control" name="message" id="message" rows="5" required></textarea>
 								</div>
+
+								<?php
+								if (isset($response)) {
+									if ($response) {
+								?>
+								<div class="alert alert-success text-center mb-3" role="alert">
+									Your message was successfully sent.
+								</div>
+								<?php
+									}
+									else {
+								?>
+								<div class="alert alert-danger text-center mb-3" role="alert">
+									There was an error sending your message. Please contact <strong><a href="mailto:<?php echo DEFAULT_EMAIL_ADDRESS; ?>"><?php echo DEFAULT_EMAIL_ADDRESS; ?></a></strong> if your message is urgent.
+								</div>
+								<?php
+									}
+								}
+								?>
 
 								<button type="submit" class="btn btn-primary">Submit</button>
 
