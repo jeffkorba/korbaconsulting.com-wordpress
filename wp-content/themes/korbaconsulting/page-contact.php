@@ -1,4 +1,22 @@
-<?php get_header(); the_post(); ?>
+<?php
+get_header();
+
+if (isset($_POST['fullName']) && isset($_POST['emailAddress']) && isset($_POST['phoneNumber']) && isset($_POST['message'])) {
+
+	$to = DEFAULT_EMAIL_ADDRESS;
+	$subject = '[Auto-Notification] New Message';
+	$message = 'A new message has been submitted through the KorbaConsulting.com contact form:' . "\r\n\r\n";
+	$message .= 'Full Name: ' . $_POST['fullName'] . "\r\n";
+	$message .= 'Company: ' . $_POST['companyName'] . "\r\n";
+	$message .= 'Email Address: ' . $_POST['emailAddress'] . "\r\n";
+	$message .= 'Phone Number: ' . $_POST['phoneNumber'] . "\r\n";
+	$message .= 'Message: ' . $_POST['message'];
+
+	$response = wp_mail($to, $subject, $message);
+}
+
+the_post();
+?>
 
 <main>
 
@@ -26,6 +44,25 @@
 
 			<div class="col-lg-12">
 
+				<?php
+				if (isset($response)) {
+					if ($response) {
+				?>
+				<div class="alert alert-success text-center" role="alert">
+					Your message was successfully sent.
+				</div>
+				<?php
+					}
+					else {
+				?>
+				<div class="alert alert-danger text-center" role="alert">
+					There was an error sending your message. Please contact <strong><a href="mailto:<?php echo DEFAULT_EMAIL_ADDRESS; ?>"><?php echo DEFAULT_EMAIL_ADDRESS; ?></a></strong> if your message is urgent.
+				</div>
+				<?php
+					}
+				}
+				?>
+
 				<article>
 
 					<div class="row">
@@ -36,27 +73,27 @@
 
 								<div class="mb-3">
 									<label for="fullName" class="form-label">Full Name<sup>*</sup></label>
-									<input type="text" class="form-control" id="fullName">
+									<input type="text" class="form-control" name="fullName" id="fullName" required>
 								</div>
 
 								<div class="mb-3">
 									<label for="companyName" class="form-label">Company Name<sup>*</sup></label>
-									<input type="text" class="form-control" id="companyName">
+									<input type="text" class="form-control" name="companyName" id="companyName">
 								</div>
 
 								<div class="mb-3">
 									<label for="emailAddress" class="form-label">Email Address<sup>*</sup></label>
-									<input type="email" class="form-control" id="emailAddress">
+									<input type="email" class="form-control" name="emailAddress" id="emailAddress" required>
 								</div>
 
 								<div class="mb-3">
 									<label for="phoneNumber" class="form-label">Phone Number<sup>*</sup></label>
-									<input type="tel" class="form-control" id="phoneNumber">
+									<input type="tel" class="form-control" name="phoneNumber" id="phoneNumber" required>
 								</div>
 
 								<div class="mb-3">
 									<label for="message" class="form-label">Message<sup>*</sup></label>
-									<textarea class="form-control" id="message" rows="3"></textarea>
+									<textarea class="form-control" name="message" id="message" rows="5" required></textarea>
 								</div>
 
 								<button type="submit" class="btn btn-primary">Submit</button>
@@ -84,7 +121,7 @@
 											</li>
 											<li class="list-group-item">
 												<i class="fas fa-envelope me-2"></i>
-												<a href="mailto:contact@korbaconsulting.com">contact@korbaconsulting.com</a>
+												<a href="mailto:<?php echo DEFAULT_EMAIL_ADDRESS; ?>"><?php echo DEFAULT_EMAIL_ADDRESS; ?></a>
 											</li>
 											<li class="list-group-item">
 												<i class="fas fa-phone me-2"></i>

@@ -9,6 +9,7 @@ use Dotenv\Dotenv;
 // Global Constants
 const NO_IMAGE_FILE_LOCATION = '/static/images/logos/korba-consulting-poster.png';
 const FAVICON_FILE_LOCATION = '/static/images/logos/korba-consulting-square.png';
+const DEFAULT_EMAIL_ADDRESS = 'contact@korbaconsulting.com';
 
 // Initialization
 $dotenv = Dotenv::createImmutable(__DIR__);

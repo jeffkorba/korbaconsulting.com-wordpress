@@ -48,7 +48,7 @@
 							<li class="ms-2"><a href="https://www.linkedin.com/company/korbaconsulting"><i class="fab fa-linkedin fa-3x" aria-hidden="true"></i></a></li>
 						</ul>
 
-						<a href="mailto:contact@korbaconsulting.com">contact@korbaconsulting.com</a><br />
+						<a href="mailto:<?php echo DEFAULT_EMAIL_ADDRESS; ?>"><?php echo DEFAULT_EMAIL_ADDRESS; ?></a><br />
 						<a href="tel:+13127722642">312.772.2642</a>
 					</div>
 
