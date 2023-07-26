@@ -113,11 +113,11 @@ the_post();
 										<ul class="list-group list-group-flush">
 											<li class="list-group-item">
 												<i class="fa-brands fa-linkedin me-2"></i>
-												<a href="https://www.linkedin.com/company/korbaconsulting">linkedin.com/company/korbaconsulting</a>
+												<a href="https://www.linkedin.com/company/korbaconsulting" target="_blank">linkedin.com/company/korbaconsulting</a>
 											</li>
 											<li class="list-group-item">
 												<i class="fa-brands fa-twitter me-2"></i>
-												<a href="https://twitter.com/korbaconsulting">twitter.com/korbaconsulting</a>
+												<a href="https://twitter.com/korbaconsulting" target="_blank">twitter.com/korbaconsulting</a>
 											</li>
 											<li class="list-group-item">
 												<i class="fas fa-envelope me-2"></i>
