@@ -1,19 +1,8 @@
 <?php
-// Dependencies
-require_once 'vendor/autoload.php';
-
-use Dotenv\Dotenv;
-// use GuzzleHttp\Client;
-// use GuzzleHttp\Exception\RequestException;
-
 // Global Constants
 const NO_IMAGE_FILE_LOCATION = '/static/images/logos/korba-consulting-poster.png';
 const FAVICON_FILE_LOCATION = '/static/images/logos/korba-consulting-square.png';
 const DEFAULT_EMAIL_ADDRESS = 'contact@korbaconsulting.com';
-
-// Initialization
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 
 // Styles
 wp_enqueue_style('bootstrap', get_template_directory_uri() . '/static/vendor/bootstrap/css/bootstrap.min.css', [], '5.3.0');
@@ -24,7 +13,7 @@ wp_enqueue_script('axios', get_template_directory_uri() . '/static/vendor/axios/
 wp_enqueue_script('bootstrap', get_template_directory_uri() . '/static/vendor/bootstrap/js/bootstrap.min.js', [], '5.3.0');
 wp_enqueue_script('fontawesome', get_template_directory_uri() . '/static/vendor/fontawesome-free/js/all.min.js', [], '6.4.0');
 wp_enqueue_script('main', get_template_directory_uri() . '/static/js/main.js', [], '1.0', true);
-if ($_ENV['APP_ENV'] === 'production') {
+if (APP_ENV === 'production') {
 
 	wp_enqueue_script('vue', get_template_directory_uri() . '/static/vendor/vue/vue.global.prod.js', [], '3.3.4');
 }
