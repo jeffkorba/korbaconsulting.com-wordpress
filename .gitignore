@@ -1,4 +1,5 @@
-/wp-content/uploads
+/node_modules
+/public/wp-config.php
+/public/wp-content/uploads
 ._*
 .DS_Store
-wp-config.php

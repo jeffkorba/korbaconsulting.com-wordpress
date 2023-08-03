@@ -4,38 +4,40 @@ const sass = require('gulp-sass')(require('sass'));
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
 
+const distPath = './public/wp-content/themes/korbaconsulting/static';
+
 const paths = {
 	styles: {
 		src: './src/sass/main.scss',
-		dest: './static/css'
+		dest: distPath + '/css'
 	},
 	scripts: {
 		src: './src/scripts/*.{js,json}',
-		dest: './static/js'
+		dest: distPath + '/js'
 	},
 	vendor: {
 		axios: {
 			src: './node_modules/axios/dist/**/*.*',
-			dest: './static/vendor/axios'
+			dest: distPath + '/vendor/axios'
 		},
 		bootstrap: {
 			src: './node_modules/bootstrap/dist/**/*.*',
-			dest: './static/vendor/bootstrap'
+			dest: distPath + '/vendor/bootstrap'
 		},
 		fontawesome: {
 			src: './node_modules/@fortawesome/fontawesome-free/**/*.*',
-			dest: './static/vendor/fontawesome-free'
+			dest: distPath + '/vendor/fontawesome-free'
 		},
 		vue: {
 			src: './node_modules/vue/dist/**/*.*',
-			dest: './static/vendor/vue'
+			dest: distPath + '/vendor/vue'
 		}
 	}
 };
 
 function cleanVendor () {
 
-	return gulp.src('./static/vendor/*', {
+	return gulp.src(distPath + '/vendor/*', {
 		read: false,
 		allowEmpty: true
 	})
