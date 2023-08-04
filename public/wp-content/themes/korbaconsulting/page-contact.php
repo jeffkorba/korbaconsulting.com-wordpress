@@ -48,27 +48,22 @@
 
 								</div>
 
-								<div class="mb-3">
+								<div class="row">
 
+									<div class="col-12 col-md-6 mb-3">
 
-									<div class="row">
-
-										<div class="col col-lg-6">
-
-											<div class="form-group">
-												<label for="emailAddress" class="form-label">Email Address<sup>*</sup></label>
-												<input type="email" id="emailAddress" name="emailAddress" v-model="emailAddress" class="form-control" required>
-											</div>
-
+										<div class="form-group">
+											<label for="emailAddress" class="form-label">Email Address<sup>*</sup></label>
+											<input type="email" id="emailAddress" name="emailAddress" v-model="emailAddress" class="form-control" required>
 										</div>
 
-										<div class="col col-lg-6">
+									</div>
 
-											<div class="form-group">
-												<label for="phoneNumber" class="form-label">Phone Number<sup>*</sup></label>
-												<input type="tel" id="phoneNumber" name="phoneNumber" v-model="phoneNumber" class="form-control" required>
-											</div>
+									<div class="col-12 col-lg-6 mb-3">
 
+										<div class="form-group">
+											<label for="phoneNumber" class="form-label">Phone Number<sup>*</sup></label>
+											<input type="tel" id="phoneNumber" name="phoneNumber" v-model="phoneNumber" class="form-control" required>
 										</div>
 
 									</div>

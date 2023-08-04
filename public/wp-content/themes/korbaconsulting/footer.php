@@ -43,9 +43,10 @@
 						<h5>Contact</h5>
 						
 						<ul class="social-icons float-end mb-1">
-							<li><a href="https://www.facebook.com/korbaconsulting"><i class="fab fa-facebook-square fa-3x" aria-hidden="true"></i></a></li>
-							<li class="ms-2"><a href="https://twitter.com/korbaconsulting"><i class="fab fa-twitter-square fa-3x" aria-hidden="true"></i></a></li>
-							<li class="ms-2"><a href="https://www.linkedin.com/company/korbaconsulting"><i class="fab fa-linkedin fa-3x" aria-hidden="true"></i></a></li>
+						
+							<li><a href="https://www.facebook.com/korbaconsulting" target="_blank"><i class="fa-brands fa-square-facebook fa-3x"></i></a></li>
+							<li class="ms-2"><a href="https://twitter.com/korbaconsulting" target="_blank"><i class="fa-brands fa-square-x-twitter fa-3x"></i></a></li>
+							<li class="ms-2"><a href="https://www.linkedin.com/company/korbaconsulting" target="_blank"><i class="fa-brands fa-linkedin fa-3x"></i></a></li>
 						</ul>
 
 						<a href="mailto:<?php echo DEFAULT_EMAIL_ADDRESS; ?>"><?php echo DEFAULT_EMAIL_ADDRESS; ?></a><br />

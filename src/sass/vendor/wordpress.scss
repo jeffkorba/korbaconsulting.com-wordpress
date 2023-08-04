@@ -1,22 +1,28 @@
 .admin-bar {
 
-	.desktop {
+	@media only screen and (max-width: 991px) {
 
-		margin-top: 32px;
+		.mobile {
+	
+			top: 32px
+		}
+
+		main {
+		
+			margin-top: 60px;
+		}
 	}
 
-	.mobile {
+	@media only screen and (max-width: 783px) {
+
+		.mobile {
 	
-		margin-top: 46px;
+			top: 46px
+		}
 
-		nav {
-
-			top: 106px;
+		main {
 		
-			ul {
-			
-				top: inherit;
-			}
+			margin-top: 61px;
 		}
 	}
 }
