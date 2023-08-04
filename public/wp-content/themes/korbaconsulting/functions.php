@@ -4,6 +4,9 @@ const NO_IMAGE_FILE_LOCATION = '/static/images/logos/korba-consulting-poster.png
 const FAVICON_FILE_LOCATION = '/static/images/logos/korba-consulting-square.png';
 const DEFAULT_EMAIL_ADDRESS = 'contact@korbaconsulting.com';
 
+// REST API
+require_once 'rest-api/forms/contact.php';
+
 // Styles
 wp_enqueue_style('bootstrap', get_template_directory_uri() . '/static/vendor/bootstrap/css/bootstrap.min.css', [], '5.3.0');
 wp_enqueue_style('main', get_template_directory_uri() . '/static/css/main.css', [], '1.1');
@@ -21,7 +24,6 @@ else {
 
 	wp_enqueue_script('vue', get_template_directory_uri() . '/static/vendor/vue/vue.global.js', [], '3.3.4');
 }
-
 
 // Theme Features
 add_editor_style();

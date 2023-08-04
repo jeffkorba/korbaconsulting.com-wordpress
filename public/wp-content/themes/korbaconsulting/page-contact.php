@@ -1,22 +1,4 @@
-<?php
-get_header();
-
-if (isset($_POST['fullName']) && isset($_POST['emailAddress']) && isset($_POST['phoneNumber']) && isset($_POST['message'])) {
-
-	$to = DEFAULT_EMAIL_ADDRESS;
-	$subject = '[Auto-Notification] New Message';
-	$message = 'A new message has been submitted through the korbaconsulting.com contact form:' . "\r\n\r\n";
-	$message .= 'Full Name: ' . $_POST['fullName'] . "\r\n";
-	$message .= 'Company: ' . $_POST['companyName'] . "\r\n";
-	$message .= 'Email Address: ' . $_POST['emailAddress'] . "\r\n";
-	$message .= 'Phone Number: ' . $_POST['phoneNumber'] . "\r\n";
-	$message .= 'Message: ' . $_POST['message'];
-
-	$response = wp_mail($to, $subject, $message);
-}
-
-the_post();
-?>
+<?php get_header(); ?>
 
 <main>
 
@@ -28,7 +10,7 @@ the_post();
 
 				<div class="col-lg-12">
 
-					<h1 class="title"><?php the_title(); ?></h1>
+					<h1 class="title"><?php echo $post->post_title; ?></h1>
 
 				</div>
 
@@ -50,53 +32,59 @@ the_post();
 
 						<div class="col-md-12 col-lg-8 order-2 order-lg-1">
 
-							<form action="" method="post">
+							<form id="contact">
 
 								<div class="mb-3">
+
 									<label for="fullName" class="form-label">Full Name<sup>*</sup></label>
-									<input type="text" class="form-control" name="fullName" id="fullName" required>
+									<input type="text" id="fullName" name="fullName" v-model="fullName" class="form-control" required>
+
 								</div>
 
 								<div class="mb-3">
-									<label for="companyName" class="form-label">Company Name</label>
-									<input type="text" class="form-control" name="companyName" id="companyName">
+
+									<label for="company" class="form-label">Company<sup>*</sup></label>
+									<input type="text" id="company" name="company" v-model="company" class="form-control" required>
+
 								</div>
 
 								<div class="mb-3">
-									<label for="emailAddress" class="form-label">Email Address<sup>*</sup></label>
-									<input type="email" class="form-control" name="emailAddress" id="emailAddress" required>
+
+
+									<div class="row">
+
+										<div class="col col-lg-6">
+
+											<div class="form-group">
+												<label for="emailAddress" class="form-label">Email Address<sup>*</sup></label>
+												<input type="email" id="emailAddress" name="emailAddress" v-model="emailAddress" class="form-control" required>
+											</div>
+
+										</div>
+
+										<div class="col col-lg-6">
+
+											<div class="form-group">
+												<label for="phoneNumber" class="form-label">Phone Number<sup>*</sup></label>
+												<input type="tel" id="phoneNumber" name="phoneNumber" v-model="phoneNumber" class="form-control" required>
+											</div>
+
+										</div>
+
+									</div>
+
 								</div>
 
 								<div class="mb-3">
-									<label for="phoneNumber" class="form-label">Phone Number<sup>*</sup></label>
-									<input type="tel" class="form-control" name="phoneNumber" id="phoneNumber" required>
-								</div>
 
-								<div class="mb-3">
 									<label for="message" class="form-label">Message<sup>*</sup></label>
-									<textarea class="form-control" name="message" id="message" rows="5" required></textarea>
+									<textarea id="message" name="message" rows="5" class="form-control" v-model="message" required></textarea>
+
 								</div>
 
-								<?php
-								if (isset($response)) {
-									if ($response) {
-								?>
-								<div class="alert alert-success text-center mb-3" role="alert">
-									Your message was successfully sent.
-								</div>
-								<?php
-									}
-									else {
-								?>
-								<div class="alert alert-danger text-center mb-3" role="alert">
-									There was an error sending your message. Please contact <strong><a href="mailto:<?php echo DEFAULT_EMAIL_ADDRESS; ?>"><?php echo DEFAULT_EMAIL_ADDRESS; ?></a></strong> if your message is urgent.
-								</div>
-								<?php
-									}
-								}
-								?>
+								<div v-if="alert != null" class="alert text-center mb-3" v-bind:class="[alert.isSuccess ? 'alert-success' : 'alert-danger']" v-html="alert.message" role="alert"></div>
 
-								<button type="submit" class="btn btn-primary">Submit</button>
+								<button type="submit" v-on:click="submitMessage" class="btn btn-primary">Submit</button>
 
 							</form>
 
@@ -147,5 +135,69 @@ the_post();
 	</div>
 
 </main>
+
+<script defer src="https://www.google.com/recaptcha/api.js?render=<?php echo RECAPTCHA_SITE_KEY; ?>"></script>
+<script>
+Vue.createApp({
+
+	data () {
+
+		return {
+
+			fullName: '',
+			company: '',
+			emailAddress: '',
+			phoneNumber: '',
+			message: '',
+			alert: null
+		}
+	},
+
+	methods: {
+
+		submitMessage (event) {
+
+			event.preventDefault();
+
+			grecaptcha.ready(() => {
+
+				grecaptcha.execute('<?php echo RECAPTCHA_SITE_KEY; ?>', {
+					action: 'submit'
+				}).then((token) => {
+
+					axios.post('/wp-json/forms/contact', {
+						fullName: this.fullName,
+						company: this.company,
+						emailAddress: this.emailAddress,
+						phoneNumber: this.phoneNumber,
+						message: this.message,
+						token: token
+					})
+					.then((response) => {
+
+						this.fullName = '';
+						this.company = '';
+						this.emailAddress = '';
+						this.phoneNumber = '';
+						this.message = '';
+
+						this.alert = {
+							isSuccess: true,
+							message: 'Your message was successfully sent.'
+						};
+					})
+					.catch((error) => {
+
+						this.alert = {
+							isSuccess: false,
+							message: 'There was an error sending your message. Please contact <strong><a href="mailto:<?php echo DEFAULT_EMAIL_ADDRESS; ?>"><?php echo DEFAULT_EMAIL_ADDRESS; ?></a></strong> if your message is urgent.'
+						};
+					});
+				});
+			});
+		}
+	}
+}).mount('#contact');
+</script>
 
 <?php get_footer(); ?>
