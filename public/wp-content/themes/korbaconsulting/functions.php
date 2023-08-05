@@ -28,6 +28,7 @@ else {
 // Theme Features
 add_editor_style();
 add_theme_support('post-thumbnails');
+add_theme_support( 'admin-bar', ['callback' => '__return_false']);
 
 // Post Types
 require_once 'post-types/case-study.php';

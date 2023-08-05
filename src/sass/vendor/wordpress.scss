@@ -1,28 +1,30 @@
-.admin-bar {
-
-	@media only screen and (max-width: 991px) {
-
-		.mobile {
+body {
 	
-			top: 32px
-		}
+	margin-top: 60px;
 
-		main {
-		
-			margin-top: 60px;
+	&.admin-bar {
+
+		#wpadminbar {
+
+			display: none;
 		}
 	}
+}
 
-	@media only screen and (max-width: 783px) {
+@media (min-width: 992px) {
 
-		.mobile {
-	
-			top: 46px
-		}
-
-		main {
+	body {
 		
-			margin-top: 61px;
+		margin-top: 0;
+
+		&.admin-bar {
+
+			margin-top: 32px;
+
+			#wpadminbar {
+
+				display: block;
+			}
 		}
 	}
 }

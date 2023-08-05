@@ -2,19 +2,18 @@ main {
 
 	.banner {
 
-		padding: 1rem 0;
+		padding: 2rem 0;
 		background-color: $blue;
 
 		h1 {
+
 			margin: 0;
 			color: #fff;
-			line-height: 75px;
 		}
 	}
 
 	article {
 
-		min-height: 20rem;
 		padding: 2rem 0;
 	}
 }

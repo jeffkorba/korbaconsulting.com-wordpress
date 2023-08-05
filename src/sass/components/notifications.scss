@@ -1,0 +1,42 @@
+.notification-group {
+
+	color: #fff;
+
+	.notification-item {
+
+		background-color: #222;
+		line-height: 24px;
+		padding: .75rem;
+
+		&:not(:last-of-type) {
+		
+			margin-bottom: 1px;
+		}
+
+		a {
+
+			&:link, &:visited {
+
+				display: block;
+				color: #fff;
+				padding: .75rem;
+				text-decoration: none;
+				transition: all .15s ease-in-out;
+			}
+
+			&:hover, &:active {
+
+				text-decoration: none;
+				background-color: rgba(255, 255, 255, .05);
+			}
+		}
+
+		.notification-title {
+
+			color: $lightBlue;
+			font-size: 1.1rem;
+			font-weight: 700;
+			margin-bottom: .25rem;
+		}
+	}
+}
