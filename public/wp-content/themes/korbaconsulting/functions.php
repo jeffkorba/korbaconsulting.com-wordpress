@@ -1,29 +1,11 @@
 <?php
 // Global Constants
-const NO_IMAGE_FILE_LOCATION = '/static/images/logos/korba-consulting-poster.png';
-const FAVICON_FILE_LOCATION = '/static/images/logos/korba-consulting-square.png';
 const DEFAULT_EMAIL_ADDRESS = 'contact@korbaconsulting.com';
+const FAVICON_FILE_LOCATION = '/static/images/logos/korba-consulting-square.png';
+const NO_IMAGE_FILE_LOCATION = '/static/images/logos/korba-consulting-poster.png';
 
 // REST API
 require_once 'rest-api/forms/contact.php';
-
-// Styles
-wp_enqueue_style('bootstrap', get_template_directory_uri() . '/static/vendor/bootstrap/css/bootstrap.min.css', [], '5.3.0');
-wp_enqueue_style('main', get_template_directory_uri() . '/static/css/main.css', [], '1.1');
-
-// Scripts
-wp_enqueue_script('axios', get_template_directory_uri() . '/static/vendor/axios/axios.min.js', [], '1.4.0');
-wp_enqueue_script('bootstrap', get_template_directory_uri() . '/static/vendor/bootstrap/js/bootstrap.min.js', [], '5.3.0');
-wp_enqueue_script('fontawesome', get_template_directory_uri() . '/static/vendor/fontawesome-free/js/all.min.js', [], '6.4.0');
-wp_enqueue_script('main', get_template_directory_uri() . '/static/js/main.js', [], '1.0', true);
-if (APP_ENV === 'production') {
-
-	wp_enqueue_script('vue', get_template_directory_uri() . '/static/vendor/vue/vue.global.prod.js', [], '3.3.4');
-}
-else {
-
-	wp_enqueue_script('vue', get_template_directory_uri() . '/static/vendor/vue/vue.global.js', [], '3.3.4');
-}
 
 // Theme Features
 add_editor_style();
@@ -44,7 +26,36 @@ require_once 'taxonomies/client.php';
 register_nav_menu('header-menu', 'Header Menu');
 register_nav_menu('footer-menu', 'Footer Menu');
 
+// Actions
+add_action('wp_enqueue_scripts', 'enqueue_scripts');
+add_action('wp_enqueue_scripts', 'enqueue_styles');
+
 // Functions
+function enqueue_scripts () {
+
+	wp_enqueue_script('axios', get_template_directory_uri() . '/static/vendor/axios/axios.min.js', [], '1.4.0');
+	wp_enqueue_script('bootstrap', get_template_directory_uri() . '/static/vendor/bootstrap/js/bootstrap.min.js', [], '5.3.0');
+	wp_enqueue_script('fontawesome', get_template_directory_uri() . '/static/vendor/fontawesome-free/js/all.min.js', [], '6.4.0');
+	wp_enqueue_script('main', get_template_directory_uri() . '/static/js/main.js', [], '1.0', true);
+
+	if (APP_ENV === 'production') {
+
+		$script_path = '/static/vendor/vue/vue.global.prod.js';
+	}
+	else {
+
+		$script_path = '/static/vendor/vue/vue.global.js';
+	}
+	
+	wp_enqueue_script('vue', get_template_directory_uri() . $script_path, [], '3.3.4');
+}
+
+function enqueue_styles () {
+
+	wp_enqueue_style('bootstrap', get_template_directory_uri() . '/static/vendor/bootstrap/css/bootstrap.min.css', [], '5.3.0');
+	wp_enqueue_style('main', get_template_directory_uri() . '/static/css/main.css', [], '1.1');
+}
+
 function get_attachment (Int $post_id) {
 
 	$attachment_id = get_post_thumbnail_id($post_id);
