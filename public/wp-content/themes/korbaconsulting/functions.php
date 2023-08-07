@@ -20,11 +20,11 @@ require_once 'post-types/project.php';
 require_once 'taxonomies/client.php';
 
 // Menus
-// register_nav_menu('services-menu', 'Services Menu');
-// register_nav_menu('work-menu', 'Work Menu');
-// register_nav_menu('about-menu', 'About Menu');
-register_nav_menu('header-menu', 'Header Menu');
-register_nav_menu('footer-menu', 'Footer Menu');
+register_nav_menu('services-menu', 'Services Menu');
+register_nav_menu('work-menu', 'Work Menu');
+register_nav_menu('about-menu', 'About Menu');
+// register_nav_menu('header-menu', 'Header Menu');
+// register_nav_menu('footer-menu', 'Footer Menu');
 
 // Actions
 add_action('wp_enqueue_scripts', 'enqueue_scripts');

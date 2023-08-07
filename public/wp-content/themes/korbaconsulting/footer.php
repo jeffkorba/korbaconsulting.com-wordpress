@@ -9,30 +9,45 @@
 						<div class="row">
 
 							<div class="col-lg-3 mb-3">
+
 								<h5>Services</h5>
-								<ul class="menu-list">
-									<li class="menu-item"><a href="/services/consulting">Consulting</a></li>
-									<li class="menu-item"><a href="/services/design">Design</a></li>
-									<li class="menu-item"><a href="/services/development">Development</a></li>
-									<li class="menu-item"><a href="/services/managed-services">Managed Services</a></li>
-								</ul>
+
+								<?php
+								wp_nav_menu([
+									'theme_location' => 'services-menu',
+									'menu_class' => 'menu-list',
+									'container' => false
+								]);
+								?>
+
 							</div>
 
 							<div class="col-lg-3 mb-3">
+
 								<h5>Work</h5>
-								<ul class="menu-list">
-									<li class="menu-item"><a href="/work/portfolio">Portfolio</a></li>
-									<li class="menu-item"><a href="/work/case-studies">Case Studies</a></li>
-								</ul>
+
+								<?php
+								wp_nav_menu([
+									'theme_location' => 'work-menu',
+									'menu_class' => 'menu-list',
+									'container' => false
+								]);
+								?>
+
 							</div>
 
 							<div class="col-lg-3 mb-3">
+
 								<h5>About</h5>
-								<ul class="menu-list">
-									<li class="menu-item"><a href="/about/the-company">The Company</a></li>
-									<li class="menu-item"><a href="/about/the-philosophy">The Philosophy</a></li>
-									<li class="menu-item"><a href="/blog">Blog</a></li>
-								</ul>
+
+								<?php
+								wp_nav_menu([
+									'theme_location' => 'about-menu',
+									'menu_class' => 'menu-list',
+									'container' => false
+								]);
+								?>
+
 							</div>
 
 						</div>

@@ -1,7 +1,3 @@
-<?php
-global $post;
-?>
-
 <!doctype html>
 <html>
 
@@ -64,14 +60,13 @@ global $post;
 
 										<a href="/services">Services</a>
 
-										<ul class="menu-dropdown">
-
-											<li class="menu-item"><a href="/services/consulting">Consulting</a></li>
-											<li class="menu-item"><a href="/services/design">Design</a></li>
-											<li class="menu-item"><a href="/services/development">Development</a></li>
-											<li class="menu-item"><a href="/services/managed-services">Managed Services</a></li>
-
-										</ul>
+										<?php
+										wp_nav_menu([
+											'theme_location' => 'services-menu',
+											'menu_class' => 'menu-dropdown',
+											'container' => false
+										]);
+										?>
 
 									</li>
 
@@ -79,12 +74,13 @@ global $post;
 
 										<a href="/work">Work</a>
 
-										<ul class="menu-dropdown">
-
-											<li class="menu-item"><a href="/work/portfolio">Portfolio</a></li>
-											<li class="menu-item"><a href="/work/case-studies">Case Studies</a></li>
-
-										</ul>
+										<?php
+										wp_nav_menu([
+											'theme_location' => 'work-menu',
+											'menu_class' => 'menu-dropdown',
+											'container' => false
+										]);
+										?>
 
 									</li>
 
@@ -92,13 +88,13 @@ global $post;
 
 										<a href="/about">About</a>
 
-										<ul class="menu-dropdown">
-
-											<li class="menu-item"><a href="/about/the-company">The Company</a></li>
-											<li class="menu-item"><a href="/about/the-philosophy">The Philosophy</a></li>
-											<li class="menu-item"><a href="/blog">Blog</a></li>
-
-										</ul>
+										<?php
+										wp_nav_menu([
+											'theme_location' => 'about-menu',
+											'menu_class' => 'menu-dropdown',
+											'container' => false
+										]);
+										?>
 
 									</li>
 
