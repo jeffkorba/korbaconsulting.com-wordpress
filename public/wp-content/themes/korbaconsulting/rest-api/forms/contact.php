@@ -1,5 +1,5 @@
 <?php
-function postContactForm (WP_REST_Request $request) {
+function postContact (WP_REST_Request $request) {
 
 	$reCAPTCHA = new reCAPTCHA(RECAPTCHA_SECRET_KEY);
 
@@ -11,7 +11,7 @@ function postContactForm (WP_REST_Request $request) {
 		$subject = '[Auto-Notification] New Message';
 		$message = 'A new message has been submitted through the korbaconsulting.com contact form:' . "\r\n\r\n";
 		$message .= 'Full Name: ' . $request['fullName'] . "\r\n";
-		$message .= 'Company: ' . $_POST['companyName'] . "\r\n";
+		$message .= 'Company: ' . $request['companyName'] . "\r\n";
 		$message .= 'Email Address: ' . $request['emailAddress'] . "\r\n";
 		$message .= 'Phone Number: ' . $request['phoneNumber'] . "\r\n";
 		$message .= 'Message: ' . $request['message'];
@@ -51,7 +51,7 @@ add_action('rest_api_init', function () {
 
 	register_rest_route('forms', '/contact/', [
 		'methods' => 'POST',
-		'callback' => 'postContactForm',
+		'callback' => 'postContact',
 		'permission_callback' => '__return_true'
 	]);
 });

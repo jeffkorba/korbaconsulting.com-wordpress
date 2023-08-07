@@ -49,10 +49,10 @@
 
 									<div class="mb-3">
 
-										<label for="company" class="form-label">Company Name<sup>*</sup></label>
-										<input type="text" id="company" name="company" v-model="company" class="form-control" required>
+										<label for="companyName" class="form-label">Company Name<sup>*</sup></label>
+										<input type="text" id="companyName" name="companyName" v-model="companyName" class="form-control" required>
 
-										<small class="text-danger" v-if="company == '' && isSubmitted">
+										<small class="text-danger" v-if="companyName == '' && isSubmitted">
 											Please provide a company name.
 										</small>
 
@@ -125,25 +125,33 @@
 								<div class="card-body">
 
 									<h5 class="card-title">Let's Connect</h5>
+
 									<div class="card-text">
+
 										<ul class="list-group list-group-flush">
+
 											<li class="list-group-item">
 												<i class="fa-brands fa-linkedin me-2"></i>
 												<a href="https://www.linkedin.com/company/korbaconsulting" target="_blank">linkedin.com/company/korbaconsulting</a>
 											</li>
+
 											<li class="list-group-item">
 												<i class="fa-brands fa-x-twitter me-2"></i>
 												<a href="https://twitter.com/korbaconsulting" target="_blank">twitter.com/korbaconsulting</a>
 											</li>
+
 											<li class="list-group-item">
 												<i class="fas fa-envelope me-2"></i>
 												<a href="mailto:<?php echo DEFAULT_EMAIL_ADDRESS; ?>"><?php echo DEFAULT_EMAIL_ADDRESS; ?></a>
 											</li>
+											
 											<li class="list-group-item">
 												<i class="fas fa-phone me-2"></i>
 												<a href="tel:+13127722642">312.772.2642</a>
 											</li>
+
 										</ul>
+
 									</div>
 									
 								</div>
@@ -173,7 +181,7 @@ Vue.createApp({
 		return {
 
 			fullName: '',
-			company: '',
+			companyName: '',
 			emailAddress: '',
 			phoneNumber: '',
 			message: '',
@@ -220,7 +228,7 @@ Vue.createApp({
 
 					axios.post('/wp-json/forms/contact', {
 						fullName: this.fullName,
-						company: this.company,
+						companyName: this.companyName,
 						emailAddress: this.emailAddress,
 						phoneNumber: this.phoneNumber,
 						message: this.message,
@@ -229,7 +237,7 @@ Vue.createApp({
 					.then((response) => {
 
 						this.fullName = '';
-						this.company = '';
+						this.companyName = '';
 						this.emailAddress = '';
 						this.phoneNumber = '';
 						this.message = '';
