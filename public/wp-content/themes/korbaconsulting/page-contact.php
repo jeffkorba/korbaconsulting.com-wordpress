@@ -213,7 +213,7 @@ Vue.createApp({
 			this.isSubmitted = true;
 			this.isProcessing = true;
 
-			if (this.fullName == '' || this.company == '' || this.emailAddress == '' || this.phoneNumber == '' || this.message == '' || !this.isEmailAddressValid || !this.isPhoneNumberValid) {
+			if (this.fullName == '' || this.companyName == '' || this.emailAddress == '' || this.phoneNumber == '' || this.message == '' || !this.isEmailAddressValid || !this.isPhoneNumberValid) {
 			
 				this.isProcessing = false;
 
