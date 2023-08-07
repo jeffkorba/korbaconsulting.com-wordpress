@@ -32,56 +32,89 @@
 
 						<div class="col-md-12 col-lg-8 order-2 order-lg-1">
 
-							<form id="contact">
+							<div id="contact">
 
-								<div class="mb-3">
+								<form v-on:submit.prevent="postContact" v-bind:class="{'was-validated': isSubmitted}" novalidate>
 
-									<label for="fullName" class="form-label">Full Name<sup>*</sup></label>
-									<input type="text" id="fullName" name="fullName" v-model="fullName" class="form-control" required>
+									<div class="mb-3">
 
-								</div>
+										<label for="fullName" class="form-label">Full Name<sup>*</sup></label>
+										<input type="text" id="fullName" name="fullName" v-model="fullName" class="form-control" required>
 
-								<div class="mb-3">
+										<small class="text-danger" v-if="fullName == '' && isSubmitted">
+											Please provide a first and last name.
+										</small>
 
-									<label for="company" class="form-label">Company<sup>*</sup></label>
-									<input type="text" id="company" name="company" v-model="company" class="form-control" required>
+									</div>
 
-								</div>
+									<div class="mb-3">
 
-								<div class="row">
+										<label for="company" class="form-label">Company Name<sup>*</sup></label>
+										<input type="text" id="company" name="company" v-model="company" class="form-control" required>
 
-									<div class="col-12 col-md-6 mb-3">
+										<small class="text-danger" v-if="company == '' && isSubmitted">
+											Please provide a company name.
+										</small>
 
-										<div class="form-group">
-											<label for="emailAddress" class="form-label">Email Address<sup>*</sup></label>
-											<input type="email" id="emailAddress" name="emailAddress" v-model="emailAddress" class="form-control" required>
+									</div>
+
+									<div class="row">
+
+										<div class="col-12 col-md-6 mb-3">
+
+											<div class="form-group">
+												<label for="emailAddress" class="form-label">Email Address<sup>*</sup></label>
+												<input type="email" id="emailAddress" name="emailAddress" v-model="emailAddress" class="form-control" required>
+											</div>
+											
+											<small class="text-danger" v-if="emailAddress == '' && isSubmitted">
+												Please provide an email address.
+											</small>
+											<small class="text-danger" v-else-if="emailAddress != '' && !isEmailAddressValid">
+												Please provide a valid email address.
+											</small>
+
+										</div>
+
+										<div class="col-12 col-lg-6 mb-3">
+
+											<div class="form-group">
+												<label for="phoneNumber" class="form-label">Phone Number<sup>*</sup></label>
+												<input type="tel" id="phoneNumber" name="phoneNumber" v-model="phoneNumber" v-on:input="checkPhoneNumber" maxlength="13" pattern="[0-9]{10}|[0-9]{13}" class="form-control" required>
+											</div>
+
+											<small class="text-danger" v-if="phoneNumber == '' && isSubmitted">
+												Please provide a phone number.
+											</small>
+											<small class="text-danger" v-else-if="phoneNumber != '' && !isPhoneNumberValid">
+												Please provide a valid phone number.
+											</small>
+
 										</div>
 
 									</div>
 
-									<div class="col-12 col-lg-6 mb-3">
+									<div class="mb-3">
 
-										<div class="form-group">
-											<label for="phoneNumber" class="form-label">Phone Number<sup>*</sup></label>
-											<input type="tel" id="phoneNumber" name="phoneNumber" v-model="phoneNumber" class="form-control" required>
-										</div>
+										<label for="message" class="form-label">Message<sup>*</sup></label>
+										<textarea id="message" name="message" rows="5" class="form-control" v-model="message" required></textarea>
+
+										<small class="text-danger" v-if="message == '' && isSubmitted">
+											Please provide a message.
+										</small>
 
 									</div>
 
-								</div>
+									<div v-if="alert != null" class="alert text-center mb-3" v-bind:class="[alert.isSuccess ? 'alert-success' : 'alert-danger']" v-html="alert.message" role="alert"></div>
 
-								<div class="mb-3">
+									<button type="submit" class="btn btn-primary" v-bind:disabled="isProcessing">
+										Submit
+										<span v-show="isProcessing"><i class="fa-solid fa-circle-notch fa-spin ms-2"></i></span>
+									</button>
 
-									<label for="message" class="form-label">Message<sup>*</sup></label>
-									<textarea id="message" name="message" rows="5" class="form-control" v-model="message" required></textarea>
+								</form>
 
-								</div>
-
-								<div v-if="alert != null" class="alert text-center mb-3" v-bind:class="[alert.isSuccess ? 'alert-success' : 'alert-danger']" v-html="alert.message" role="alert"></div>
-
-								<button type="submit" v-on:click="submitMessage" class="btn btn-primary">Submit</button>
-
-							</form>
+							</div>
 
 						</div>
 
@@ -99,7 +132,7 @@
 												<a href="https://www.linkedin.com/company/korbaconsulting" target="_blank">linkedin.com/company/korbaconsulting</a>
 											</li>
 											<li class="list-group-item">
-												<i class="fa-brands fa-twitter me-2"></i>
+												<i class="fa-brands fa-x-twitter me-2"></i>
 												<a href="https://twitter.com/korbaconsulting" target="_blank">twitter.com/korbaconsulting</a>
 											</li>
 											<li class="list-group-item">
@@ -144,15 +177,40 @@ Vue.createApp({
 			emailAddress: '',
 			phoneNumber: '',
 			message: '',
+			isEmailAddressValid: false,
+			isPhoneNumberValid: false,
+			isSubmitted: false,
+			isProcessing: false,
 			alert: null
+		}
+	},
+
+	watch: {
+
+		emailAddress: function () {
+
+			this.isEmailAddressValid = document.getElementById('emailAddress').checkValidity();
+		},
+
+		phoneNumber: function () {
+		
+			this.isPhoneNumberValid = document.getElementById('phoneNumber').checkValidity();
 		}
 	},
 
 	methods: {
 
-		submitMessage (event) {
+		postContact (event) {
 
-			event.preventDefault();
+			this.isSubmitted = true;
+			this.isProcessing = true;
+
+			if (this.fullName == '' || this.company == '' || this.emailAddress == '' || this.phoneNumber == '' || this.message == '' || !this.isEmailAddressValid || !this.isPhoneNumberValid) {
+			
+				this.isProcessing = false;
+
+				return false;
+			}
 
 			grecaptcha.ready(() => {
 
@@ -175,6 +233,7 @@ Vue.createApp({
 						this.emailAddress = '';
 						this.phoneNumber = '';
 						this.message = '';
+						this.isProcessing = false;
 
 						this.alert = {
 							isSuccess: true,
@@ -182,6 +241,8 @@ Vue.createApp({
 						};
 					})
 					.catch((error) => {
+
+						this.isProcessing = false;
 
 						this.alert = {
 							isSuccess: false,
