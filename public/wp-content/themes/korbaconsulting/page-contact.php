@@ -144,7 +144,7 @@
 												<i class="fas fa-envelope me-2"></i>
 												<a href="mailto:<?php echo DEFAULT_EMAIL_ADDRESS; ?>"><?php echo DEFAULT_EMAIL_ADDRESS; ?></a>
 											</li>
-											
+
 											<li class="list-group-item">
 												<i class="fas fa-phone me-2"></i>
 												<a href="tel:+13127722642">312.772.2642</a>
@@ -242,6 +242,7 @@ Vue.createApp({
 						this.phoneNumber = '';
 						this.message = '';
 						this.isProcessing = false;
+						this.isSubmitted = false;
 
 						this.alert = {
 							isSuccess: true,
