@@ -81,6 +81,18 @@ function get_attachment (Int $post_id) {
 	return $attachment;
 }
 
+function get_site_title () {
+
+	if (is_home()) {
+	
+		return get_bloginfo('name') . ' | ' . get_bloginfo('description'); 
+	}
+	else {
+	
+		return get_the_title() . ' | ' . get_bloginfo('name');
+	}
+}
+
 function is_current_page ($page = '') {
 
 	global $wp_query;
