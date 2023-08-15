@@ -60,7 +60,7 @@
 							</div>
 						</div>
 						
-						<div class="col-12">						
+						<div class="col-12">
 							<div class="card">
 								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/logos/clients/betty-crocker.webp" alt="Betty Crocker">
 							</div>
@@ -78,15 +78,21 @@
 							</div>
 						</div>
 						
-						<div class="col-12">						
+						<div class="col-12">
 							<div class="card">
 								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/logos/clients/humana.webp" alt="Humana">
 							</div>
 						</div>
 
-						<div class="col-12">						
+						<div class="col-12">
 							<div class="card">
 								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/logos/clients/supercuts.webp" alt="Supercuts">
+							</div>
+						</div>
+
+						<div class="col-12">
+							<div class="card">
+								<img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/logos/clients/ifcj.webp" alt="International Fellowship of Christians and Jews">
 							</div>
 						</div>
 
