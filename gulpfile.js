@@ -108,7 +108,7 @@ function buildStyles () {
 
 function watchStyles () {
 
-	gulp.watch('./sass/**/*.scss', buildStyles);
+	gulp.watch('./src/sass/**/*.scss', buildStyles);
 };
 
 exports.build = gulp.series(cleanVendor, copyAxios, copyBootstrap, copyFontAwesome, copyVue, cleanScripts, buildScripts, cleanStyles, buildStyles);

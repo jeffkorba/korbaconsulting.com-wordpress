@@ -80,7 +80,7 @@
 
 											<div class="form-group">
 												<label for="phoneNumber" class="form-label">Phone Number<sup>*</sup></label>
-												<input type="tel" id="phoneNumber" name="phoneNumber" v-model="phoneNumber" v-on:input="checkPhoneNumber" maxlength="13" pattern="[0-9]{10}|[0-9]{13}" class="form-control" required>
+												<input type="tel" id="phoneNumber" name="phoneNumber" v-model="phoneNumber" maxlength="13" pattern="[0-9]{10}|[0-9]{13}" class="form-control" required>
 											</div>
 
 											<small class="text-danger" v-if="phoneNumber == '' && isSubmitted">

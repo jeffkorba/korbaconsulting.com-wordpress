@@ -1,16 +1,16 @@
 <?php
 
-function create_post_type_case_study () {
+function create_post_type_client () {
 
-	$page_name = 'work/case-studies';
+	$page_name = 'work/clients';
 	$regex = '^'. $page_name . '/page/(\d+)/?$';
 	$query = 'index.php?pagename=' . $page_name . '&paged=$matches[1]';
  
-	register_post_type('case-study', [
+	register_post_type('client', [
 			'labels' => [
-				'name' => __('Case Studies'),
-				'singular_name' => __('Case Study'),
-				'all_items' => __('All Case Studies')
+				'name' => __('Clients'),
+				'singular_name' => __('Client'),
+				'all_items' => __('All Clients')
 			],
 			'supports' => ['title', 'editor', 'author', 'excerpt', 'thumbnail', 'custom-fields'],
 			'public' => true,
@@ -27,4 +27,4 @@ function create_post_type_case_study () {
 	add_rewrite_rule($regex, $query, 'top');
 }
 
-add_action('init', 'create_post_type_case_study');
+add_action('init', 'create_post_type_client');

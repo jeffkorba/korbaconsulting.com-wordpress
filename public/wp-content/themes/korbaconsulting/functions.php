@@ -13,11 +13,11 @@ add_theme_support('post-thumbnails');
 add_theme_support( 'admin-bar', ['callback' => '__return_false']);
 
 // Post Types
-require_once 'post-types/case-study.php';
+require_once 'post-types/client.php';
 require_once 'post-types/project.php';
 
 // Taxonomies
-require_once 'taxonomies/client.php';
+require_once 'taxonomies/technology.php';
 
 // Menus
 register_nav_menu('services-menu', 'Services Menu');
@@ -93,24 +93,16 @@ function get_site_title () {
 	}
 }
 
-function is_current_page ($page = '') {
-
-	global $wp_query;
-
-	if ($wp_query->query_vars['pagename'] === $page) {
-
-		return true;
-	}
-	else {
-
-		return false;
-	}
-}
-
 function is_tab_active ($tab = '') {
 
-	if (is_current_page($tab)) {
+	global $post;
 
-		echo 'active';
+	$parent_id = wp_get_post_parent_id($post->ID);
+
+	$parent = get_post($parent_id);
+
+	if (($_SERVER['REQUEST_URI'] === '/' && $tab === 'home') || $tab === $post->post_name || $tab === $parent->post_name) {
+
+		return true;
 	}
 }
