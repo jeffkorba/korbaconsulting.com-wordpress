@@ -31,7 +31,7 @@ the_post();
 
 				<article>
 
-					<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-gap-4">
+					<div class="row row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-gap-4">
 
 						<div class="col">
 							<div class="card h-100">
