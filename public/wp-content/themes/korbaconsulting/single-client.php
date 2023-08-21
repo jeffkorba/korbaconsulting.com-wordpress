@@ -53,7 +53,7 @@ $query = new WP_Query($args);
 
 							<div class="col">
 
-								<div class="card">
+								<div class="card h-100">
 
 									<img class="card-img-top" src="<?php echo $thumbnail['url']; ?>" alt="<?php echo $project->post_title ?>">
 									<div class="card-body">

@@ -37,14 +37,18 @@ $technologies = get_posts($args);
 
 				<article>
 
-					<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-gap-4">
+					<div class="row row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-gap-4">
 
 						<?php foreach ($technologies as $technology) { ?>
 
-						<div class="col-12">
-							<div class="card">
+						<div class="col">
+
+							<div class="card h-100">
+
 								<a href="<?php echo get_permalink($technology->ID); ?>"><img class="card-img-top" src="<?php echo get_thumbnail($technology->ID); ?>" alt="<?php echo $technology->post_title; ?>"></a>
+
 							</div>
+
 						</div>
 
 						<?php } ?>

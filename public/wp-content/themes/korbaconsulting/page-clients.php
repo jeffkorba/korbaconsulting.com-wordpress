@@ -37,13 +37,13 @@ $clients = get_posts($args);
 
 				<article>
 
-					<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-3 row-gap-4">
+					<div class="row row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-gap-4">
 
 						<?php foreach ($clients as $client) { ?>
 
-						<div class="col-12">
+						<div class="col">
 
-							<div class="card">
+							<div class="card h-100">
 
 								<a href="<?php echo get_permalink($client->ID); ?>"><img class="card-img-top" src="<?php echo get_thumbnail($client->ID)['url']; ?>" alt="<?php echo $client->post_title; ?>"></a>
 

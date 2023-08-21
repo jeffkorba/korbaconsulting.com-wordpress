@@ -4,7 +4,7 @@ $args = [
 	'post_status' => 'publish',
 	'posts_per_page' => 3,
 	'meta_key' => 'featured_client',
-	'meta_value' => 'true'
+	'meta_value' => true
 ];
 
 $query = new WP_Query($args);
