@@ -2,10 +2,7 @@
 $author_name = get_the_author_meta('display_name', $post->post_author);
 $thumbnail = get_thumbnail($post->ID);
 
-$terms = get_terms([
-    'taxonomy'   => 'technology',
-    'hide_empty' => false
-]);
+$terms = get_the_terms($post->ID, 'technology');
 ?>
 
 <?php get_header(); ?>
