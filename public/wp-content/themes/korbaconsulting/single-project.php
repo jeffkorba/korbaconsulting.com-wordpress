@@ -40,7 +40,7 @@ $terms = get_terms([
 
 					<h3><?php echo $post->post_title; ?></h3>
 
-					<?php echo $post->post_content; ?>
+					<div class="mb-2"><?php echo $post->post_content; ?></div>
 
 					<h5>Technologies</h5>
 
