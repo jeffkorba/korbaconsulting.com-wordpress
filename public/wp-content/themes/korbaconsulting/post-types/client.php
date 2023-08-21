@@ -2,7 +2,7 @@
 
 function create_post_type_client () {
 
-	$page_name = 'work/clients';
+	$page_name = 'portfolio/clients';
 	$regex = '^'. $page_name . '/page/(\d+)/?$';
 	$query = 'index.php?pagename=' . $page_name . '&paged=$matches[1]';
  

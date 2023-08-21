@@ -1,9 +1,9 @@
 <?php
-get_header();
-the_post();
-
-$attachment = get_attachment(get_the_ID());
+$attachment = get_attachment($post->ID);
+$author_name = get_the_author_meta('display_name', $post->post_author);
 ?>
+
+<?php get_header(); ?>
 
 <main>
 
@@ -33,8 +33,8 @@ $attachment = get_attachment(get_the_ID());
 
 				<article>
 
-					<h3><?php the_title(); ?></h3>
-					<p><strong><?php the_author(); ?></strong> &nbsp;|&nbsp; <?php the_date(); ?>
+					<h3><?php echo $post->post_title; ?></h3>
+					<p><strong><?php echo $author_name; ?></strong> &nbsp;|&nbsp; <?php echo get_the_date(); ?>
 
 					<?php
 					if (!empty($attachment['url'])) {
@@ -60,7 +60,7 @@ $attachment = get_attachment(get_the_ID());
 					}
 					?>
 
-					<p><?php the_content(); ?>
+					<?php echo $post->post_content; ?>
 
 				</article>
 

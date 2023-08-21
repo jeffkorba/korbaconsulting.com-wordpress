@@ -8,7 +8,7 @@
 
 				<div class="logo">
 
-					<a href="/"><img src="<?php bloginfo('template_url'); ?>/static/images/logos/korba-consulting.png" alt="<?php bloginfo('name'); ?>"></a>
+					<a href="/"><img src="<?php bloginfo('template_url'); ?>/static/images/korba-consulting-logo-500x200.png" alt="<?php bloginfo('name'); ?>"></a>
 
 				</div>
 
@@ -38,13 +38,13 @@
 
 						</li>
 
-						<li class="tab <?php echo is_tab_active('work') ? 'active' : '' ?>">
+						<li class="tab <?php echo is_tab_active('portfolio') ? 'active' : '' ?>">
 
-							<a href="/work">Work</a>
+							<a href="/portfolio">Portfolio</a>
 
 							<?php
 							wp_nav_menu([
-								'theme_location' => 'work-menu',
+								'theme_location' => 'portfolio-menu',
 								'menu_class' => 'menu-dropdown',
 								'container' => false
 							]);
@@ -52,13 +52,13 @@
 
 						</li>
 
-						<li class="tab <?php echo is_tab_active('about') ? 'active' : '' ?>">
+						<li class="tab <?php echo is_tab_active('company') ? 'active' : '' ?>">
 
-							<a href="/about">About</a>
+							<a href="/company">Company</a>
 
 							<?php
 							wp_nav_menu([
-								'theme_location' => 'about-menu',
+								'theme_location' => 'company-menu',
 								'menu_class' => 'menu-dropdown',
 								'container' => false
 							]);

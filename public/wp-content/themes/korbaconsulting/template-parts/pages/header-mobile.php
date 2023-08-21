@@ -2,7 +2,7 @@
 				
 	<div class="logo">
 
-		<a href="/"><img src="<?php bloginfo('template_url'); ?>/static/images/logos/korba-consulting-square.png" alt="<?php bloginfo('name'); ?>"></a>
+		<a href="/"><img src="<?php bloginfo('template_url'); ?>/static/images/korba-consulting-logo-750x750.png" alt="<?php bloginfo('name'); ?>"></a>
 
 	</div>
 
@@ -24,9 +24,7 @@
 
 			<li><a href="/work">Work</a></li>
 
-			<li><a href="/about">About</a></li>
-
-			<li><a href="/blog">Blog</a></li>
+			<li><a href="/company">Company</a></li>
 
 			<li><a href="/contact">Contact</a></li>
 

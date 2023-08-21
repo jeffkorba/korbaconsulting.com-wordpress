@@ -24,11 +24,11 @@
 
 							<div class="col-lg-3 mb-3">
 
-								<h5>Work</h5>
+								<h5>Portfolio</h5>
 
 								<?php
 								wp_nav_menu([
-									'theme_location' => 'work-menu',
+									'theme_location' => 'portfolio-menu',
 									'menu_class' => 'menu-list',
 									'container' => false
 								]);
@@ -38,11 +38,11 @@
 
 							<div class="col-lg-3 mb-3">
 
-								<h5>About</h5>
+								<h5>Company</h5>
 
 								<?php
 								wp_nav_menu([
-									'theme_location' => 'about-menu',
+									'theme_location' => 'company-menu',
 									'menu_class' => 'menu-list',
 									'container' => false
 								]);
@@ -62,7 +62,7 @@
 							<li><a href="https://www.facebook.com/korbaconsulting" target="_blank"><i class="fa-brands fa-square-facebook fa-3x"></i></a></li>
 							<li class="ms-2"><a href="https://twitter.com/korbaconsulting" target="_blank"><i class="fa-brands fa-square-x-twitter fa-3x"></i></a></li>
 							<li class="ms-2"><a href="https://www.linkedin.com/company/korbaconsulting" target="_blank"><i class="fa-brands fa-linkedin fa-3x"></i></a></li>
-						</ul>
+						</ul><br />
 
 						<a href="mailto:<?php echo DEFAULT_EMAIL_ADDRESS; ?>"><?php echo DEFAULT_EMAIL_ADDRESS; ?></a><br />
 						<a href="tel:+13127722642">312.772.2642</a>

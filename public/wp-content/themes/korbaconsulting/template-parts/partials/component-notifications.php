@@ -10,7 +10,7 @@
 	?>
 	<div class="notification-item">
 		<a href="<?php echo $notification['link']; ?>">
-			<h5 class="widget-title"><?php echo $notification['title']; ?></h5>
+			<h6 class="widget-title"><?php echo $notification['title']; ?></h6>
 			<?php echo $notification['description']; ?>
 		</a>
 	</div>

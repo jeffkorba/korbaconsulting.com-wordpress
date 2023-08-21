@@ -11,7 +11,7 @@ foreach ($posts as $post) {
 	array_push($blog, [
 		'title' => $post->post_title,
 		'description' => $post->post_excerpt,
-		'link' => '#'
+		'link' => get_permalink($post->ID)
 	]);
 }
 
@@ -52,7 +52,7 @@ $updates = [
 
 			<div class="col-lg-4 col-md-4 col-sm-12 mb-3">
 
-				<h3>Blog</h3>
+				<h5>Blog</h5>
 
 				<?php get_template_part('template-parts/partials/component', 'notifications', $blog); ?>
 
@@ -60,7 +60,7 @@ $updates = [
 
 			<div class="col-lg-4 col-md-4 col-sm-12 mb-3">
 
-				<h3>Events</h3>
+				<h5>Events</h5>
 
 				<?php get_template_part('template-parts/partials/component', 'notifications', $events); ?>
 
@@ -68,7 +68,7 @@ $updates = [
 
 			<div class="col-lg-4 col-md-4 col-sm-12 mb-3">
 
-				<h3>Updates</h3>
+				<h5>Updates</h5>
 
 				<?php get_template_part('template-parts/partials/component', 'notifications', $updates); ?>
 

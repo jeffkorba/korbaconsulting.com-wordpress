@@ -1,4 +1,4 @@
-<?php get_header(); the_post(); ?>
+<?php get_header(); ?>
 
 <main>
 
@@ -10,7 +10,7 @@
 
 				<div class="col-lg-12">
 
-					<h1 class="title"><?php the_title(); ?></h1>
+					<h1 class="title"><?php echo $post->post_title; ?></h1>
 
 				</div>
 

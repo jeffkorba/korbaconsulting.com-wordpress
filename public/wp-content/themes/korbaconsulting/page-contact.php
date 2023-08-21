@@ -172,7 +172,7 @@
 
 </main>
 
-<script defer src="https://www.google.com/recaptcha/api.js?render=<?php echo RECAPTCHA_SITE_KEY; ?>"></script>
+<script async src="https://www.google.com/recaptcha/api.js?render=<?php echo RECAPTCHA_SITE_KEY; ?>"></script>
 <script>
 Vue.createApp({
 

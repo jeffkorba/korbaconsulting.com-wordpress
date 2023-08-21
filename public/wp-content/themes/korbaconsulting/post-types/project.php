@@ -2,13 +2,13 @@
 
 function create_post_type_project () {
 
-	$page_name = 'work/portfolio';
+	$page_name = 'portfolio/projects';
 	$regex = '^'. $page_name . '/page/(\d+)/?$';
 	$query = 'index.php?pagename=' . $page_name . '&paged=$matches[1]';
  
 	register_post_type('project', [
 			'labels' => [
-				'name' => __('Portfolio'),
+				'name' => __('Projects'),
 				'singular_name' => __('Project'),
 				'all_items' => __('All Projects')
 			],

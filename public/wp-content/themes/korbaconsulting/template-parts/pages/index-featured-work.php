@@ -1,3 +1,19 @@
+<?php
+$args = [
+	'post_type' => 'client',
+	'post_status' => 'publish',
+	'posts_per_page' => 3,
+	'meta_key' => 'featured_client',
+	'meta_value' => 'true'
+];
+
+$query = new WP_Query($args);
+
+if ($query->have_posts()) {
+
+	$clients = $query->get_posts();
+?>
+
 <div class="featured-work">
 
 	<div class="container">
@@ -10,24 +26,20 @@
 
 				<div class="row row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-gap-4">
 
-					<div class="col-12">
-						<div class="card">
-							<a href="#"><img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/logos/clients/northern-trust.webp" alt="Northern Trust" /></a>
+					<?php
+					foreach($clients as $client) {
+					?>
+
+					<div class="col">
+						<div class="card h-100">
+							<img class="card-img-top" src="<?php echo get_thumbnail($client->ID)['url']; ?>" alt="<?php echo $client->post_title; ?>">
 						</div>
 					</div>
 
-					<div class="col-12">
-						<div class="card">
-							<a href="#"><img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/logos/clients/peak6.webp" alt="Peak6" /></a>
-						</div>
-					</div>
+					<?php
+					}
+					?>
 
-					<div class="col-12">
-						<div class="card">
-							<a href="#"><img class="card-img-top" src="<?php bloginfo('template_url'); ?>/static/images/logos/clients/humana.webp" alt="Humana" /></a>
-						</div>
-					</div>
-					
 				</div>
 
 			</div>
@@ -37,3 +49,7 @@
 	</div>
 
 </div>
+
+<?php
+}
+?>

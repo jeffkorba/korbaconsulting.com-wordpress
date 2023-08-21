@@ -1,8 +1,8 @@
 <?php
 // Global Constants
 const DEFAULT_EMAIL_ADDRESS = 'contact@korbaconsulting.com';
-const FAVICON_FILE_LOCATION = '/static/images/logos/korba-consulting-square.png';
-const NO_IMAGE_FILE_LOCATION = '/static/images/logos/korba-consulting-poster.png';
+const FAVICON_FILE_LOCATION = '/static/images/korba-consulting-logo-750x750.png';
+const NO_IMAGE_FILE_LOCATION = '/static/images/korba-consulting-logo-800x533.png';
 
 // REST API
 require_once 'rest-api/forms/contact.php';
@@ -11,6 +11,7 @@ require_once 'rest-api/forms/contact.php';
 add_editor_style();
 add_theme_support('post-thumbnails');
 add_theme_support( 'admin-bar', ['callback' => '__return_false']);
+add_post_type_support('page', 'excerpt');
 
 // Post Types
 require_once 'post-types/client.php';
@@ -21,10 +22,8 @@ require_once 'taxonomies/technology.php';
 
 // Menus
 register_nav_menu('services-menu', 'Services Menu');
-register_nav_menu('work-menu', 'Work Menu');
-register_nav_menu('about-menu', 'About Menu');
-// register_nav_menu('header-menu', 'Header Menu');
-// register_nav_menu('footer-menu', 'Footer Menu');
+register_nav_menu('portfolio-menu', 'Portfolio Menu');
+register_nav_menu('company-menu', 'Company Menu');
 
 // Actions
 add_action('wp_enqueue_scripts', 'enqueue_scripts');
@@ -53,32 +52,29 @@ function enqueue_scripts () {
 function enqueue_styles () {
 
 	wp_enqueue_style('bootstrap', get_template_directory_uri() . '/static/vendor/bootstrap/css/bootstrap.min.css', [], '5.3.0');
-	wp_enqueue_style('main', get_template_directory_uri() . '/static/css/main.css', [], '1.1');
+	wp_enqueue_style('main', get_template_directory_uri() . '/static/css/main.css', [], '1.2');
 }
 
-function get_attachment (Int $post_id) {
+function get_thumbnail (Int $post_id, String $size = 'full') {
 
-	$attachment_id = get_post_thumbnail_id($post_id);
-	$attachment_meta = wp_get_attachment_metadata($attachment_id);
+	$thumbnail_id = get_post_thumbnail_id($post_id);
+	$thumbnail_meta = wp_get_attachment_metadata($thumbnail_id);
+	$thumbnail_url = get_the_post_thumbnail_url($post_id, $size);
 
-	if (empty(wp_get_attachment_url($attachment_id)) || file_exists(get_attached_file($attachment_id)) === false) {
+	if (empty($thumbnail_url) || file_exists(get_attached_file($thumbnail_id)) === false) {
 
-		$attachment_url = NO_IMAGE_FILE_LOCATION;
-	}
-	else {
-
-		$attachment_url = wp_get_attachment_url($attachment_id);
+		$thumbnail_url = get_bloginfo('template_url') . NO_IMAGE_FILE_LOCATION;
 	}
 
-	$attachment = [
-		'id' => $attachment_id,
-		'alt_text' => get_post_meta($attachment_id, '_wp_attachment_image_alt', true),
-		'meta' => isset($attachment_meta['image_meta']) ? $attachment_meta['image_meta'] : null,
-		'caption' => wp_get_attachment_caption($attachment_id),
-		'url' => $attachment_url
+	$thumbnail = [
+		'id' => $thumbnail_id,
+		'alt_text' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true),
+		'meta' => isset($thumbnail_meta['image_meta']) ? $thumbnail_meta['image_meta'] : null,
+		'caption' => wp_get_attachment_caption($thumbnail_id),
+		'url' => $thumbnail_url
 	];
 
-	return $attachment;
+	return $thumbnail;
 }
 
 function get_site_title () {
@@ -93,7 +89,7 @@ function get_site_title () {
 	}
 }
 
-function is_tab_active ($tab = '') {
+function is_tab_active (String $tab = '') {
 
 	global $post;
 
