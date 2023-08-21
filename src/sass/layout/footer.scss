@@ -7,7 +7,11 @@ footer {
 	line-height: 2;
 
 	a {
-		color: #fff;
+
+		&:link, &:visited {
+		
+			color: #fff;
+		}	
 	}
 
     .menu-list {

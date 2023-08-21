@@ -39,17 +39,30 @@
 	}
 }
 
-.btn-primary {
+.btn {
 
-	background-color: $blue;
-	border-color: $blue;
+	&.btn-primary {
 
-	&:hover {
-	
-		background-color: $lightBlue;
-		border-color: $lightBlue;
+		color: #fff;
+		background-color: $blue;
+		border-color: $blue;
 		text-decoration: none;
-	}
 
-	transition: none;
+		&:hover {
+		
+			background-color: lighten($blue, 15%);
+			border-color: lighten($blue, 15%);
+			text-decoration: none;
+		}
+
+		&:active {
+	
+			color: #fff;
+			background-color: $blue;
+			border-color: $blue;
+			text-decoration: none;
+		}
+
+		transition: none;
+	}
 }
