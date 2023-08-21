@@ -39,16 +39,18 @@ $query = new WP_Query($args);
 
 					<article>
 
+						<?php
+						if ($query->have_posts()) {
+
+							$projects = $query->get_posts();
+						?>
+
 						<div class="row row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-gap-4">
 
 							<?php
-							if ($query->have_posts()) {
+							foreach ($projects as $project) {
 
-								$projects = $query->get_posts();
-
-								foreach ($projects as $project) {
-
-									$thumbnail = get_thumbnail($project->ID);
+								$thumbnail = get_thumbnail($project->ID);
 							?>
 
 							<div class="col">
@@ -67,9 +69,21 @@ $query = new WP_Query($args);
 							</div>
 
 							<?php
-								}
 							}
 							?>
+
+						</div>
+
+						<?php
+						}
+						else {
+						?>
+
+						No projects exist for this client.
+
+						<?php
+						}
+						?>
 
 					</article>
 

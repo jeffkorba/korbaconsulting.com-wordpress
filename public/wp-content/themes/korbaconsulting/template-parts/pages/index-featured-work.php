@@ -31,9 +31,13 @@ if ($query->have_posts()) {
 					?>
 
 					<div class="col">
+
 						<div class="card h-100">
-							<img class="card-img-top" src="<?php echo get_thumbnail($client->ID)['url']; ?>" alt="<?php echo $client->post_title; ?>">
+
+							<a href="<?php echo get_permalink($client->ID); ?>"><img class="card-img-top" src="<?php echo get_thumbnail($client->ID)['url']; ?>" alt="<?php echo $client->post_title; ?>" /></a>
+							
 						</div>
+
 					</div>
 
 					<?php
