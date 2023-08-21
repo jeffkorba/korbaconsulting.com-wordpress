@@ -22,7 +22,7 @@
 
 			<li><a href="/services">Services</a></li>
 
-			<li><a href="/work">Work</a></li>
+			<li><a href="/portfolio">Portfolio</a></li>
 
 			<li><a href="/company">Company</a></li>
 
