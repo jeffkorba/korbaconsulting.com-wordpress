@@ -55,7 +55,9 @@ $tags = get_the_tags($post->ID);
 					}
 					else {
 					?>
+
 					N/A
+					
 					<?php
 					}
 					?>

@@ -43,11 +43,7 @@ $clients = get_posts($args);
 
 						<div class="col">
 
-							<div class="card h-100">
-
-								<a href="<?php echo get_permalink($client->ID); ?>"><img class="card-img-top" src="<?php echo get_thumbnail($client->ID)['url']; ?>" alt="<?php echo $client->post_title; ?>"></a>
-
-							</div>
+							<a href="<?php echo get_permalink($client->ID); ?>"><img class="img-fluid rounded border" src="<?php echo get_thumbnail($client->ID)['url']; ?>" alt="<?php echo $client->post_title; ?>"></a>
 
 						</div>
 
