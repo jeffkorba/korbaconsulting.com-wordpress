@@ -53,6 +53,11 @@ $tags = get_the_tags($post->ID);
 					<?php
 						}
 					}
+					else {
+					?>
+					N/A
+					<?php
+					}
 					?>
 
 				</article>

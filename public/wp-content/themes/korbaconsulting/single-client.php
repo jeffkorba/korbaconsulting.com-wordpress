@@ -21,7 +21,7 @@ $query = new WP_Query($args);
 
 				<div class="col-lg-12">
 
-					<h1 class="title">Clients</h1>
+					<h1 class="title">Projects</h1>
 
 				</div>
 
@@ -61,7 +61,7 @@ $query = new WP_Query($args);
 									<div class="card-body">
 										<h5 class="card-title"><?php echo $project->post_title ?></h5>
 										<p class="card-text"><?php echo $project->post_excerpt ?></p>
-										<a href="<?php echo get_permalink($project->ID); ?>" class="btn btn-primary">Read More</a>
+										<a href="<?php echo get_permalink($project->ID); ?>" class="btn btn-primary">View Project</a>
 									</div>
 
 								</div>
@@ -73,13 +73,6 @@ $query = new WP_Query($args);
 							?>
 
 						</div>
-
-						<?php
-						}
-						else {
-						?>
-
-						No projects exist for this client.
 
 						<?php
 						}
