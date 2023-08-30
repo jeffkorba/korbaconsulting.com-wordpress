@@ -4,7 +4,7 @@
 
 ### Required Configuration
 The following constants need to be defined in your `wp-config.php` in order for the theme and plugins to function properly.
-```sh
+```php
 define('APP_ENV', '<development|production>');
 define('RECAPTCHA_SITE_KEY', '<RECAPTCHA_SITE_KEY>');
 define('RECAPTCHA_SECRET_KEY', '<RECAPTCHA_SECRET_KEY>');
@@ -14,7 +14,7 @@ define('RECAPTCHA_THRESHOLD', <0.0-1.0>);
 ## Static Assets
 
 ### Install Dependencies
-Adds source dependencies for watching and building static assets (i.e. css, js and vendor).
+Adds source dependencies for watching and building static assets (i.e. css, js and vendor). Must be run from project root.
 ```sh
 npm install
 ```
