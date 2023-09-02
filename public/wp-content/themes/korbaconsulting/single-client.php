@@ -51,6 +51,7 @@ $query = new WP_Query($args);
 							foreach ($projects as $project) {
 
 								$thumbnail = get_thumbnail($project->ID);
+								$terms = get_the_terms($project->ID, 'technology');
 							?>
 
 							<div class="col">
@@ -61,7 +62,11 @@ $query = new WP_Query($args);
 									<div class="card-body">
 										<h5 class="card-title"><?php echo $project->post_title ?></h5>
 										<p class="card-text"><?php echo $project->post_excerpt ?></p>
-										<a href="<?php echo get_permalink($project->ID); ?>" class="btn btn-primary">View Project</a>
+										<?php foreach ($terms as $term) { ?>
+
+											<span class="badge text-bg-secondary"><?php echo $term->name; ?></span>
+
+										<?php } ?>
 									</div>
 
 								</div>

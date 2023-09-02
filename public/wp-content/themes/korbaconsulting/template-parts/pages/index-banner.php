@@ -17,8 +17,8 @@
 				</div>
 				<div class="carousel-item">
 					<div class="carousel-body">
-						<div class="carousel-title">Scalable Design Patterns</div>
-						<div class="carousel-subtitle">Systems need to scale. Using design patterns like MVC and MVVM help enforce architecture that allows your system to scale seamlessly.</div>
+						<div class="carousel-title">Scalable Architectural Patterns</div>
+						<div class="carousel-subtitle">Systems need to scale. Using architectural patterns like MVC and MVVM help enforce architecture that allows your system to scale seamlessly.</div>
 					</div>
 				</div>
 				<div class="carousel-item">
