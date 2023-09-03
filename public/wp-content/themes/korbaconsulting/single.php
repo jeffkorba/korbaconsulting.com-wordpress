@@ -30,71 +30,85 @@ $tags = get_the_tags($post->ID);
 
 		<div class="row">
 
-			<div class="col-lg-8">
+			<div class="col-12">
 
 				<article>
 
-					<h3><?php echo $post->post_title; ?></h3>
+					<div class="row">
 
-					<p><strong><?php echo $author_name; ?></strong> &nbsp;|&nbsp; <?php echo get_the_date(); ?>
+						<div class="col-lg-8">
 
-					<div class="mb-4"><?php echo $post->post_content; ?></div>
+							<section>
 
-					<h5>Tags</h5>
+								<h3><?php echo $post->post_title; ?></h3>
 
-					<?php
-					if ($tags) {
+								<p><strong><?php echo $author_name; ?></strong> &nbsp;|&nbsp; <?php echo get_the_date(); ?>
 
-						foreach ($tags as $tag) {
-					?>
+								<div class="mb-4"><?php echo $post->post_content; ?></div>
 
-						<span class="badge text-bg-secondary"><?php echo $tag->name; ?></span>
+								<h5>Tags</h5>
 
-					<?php
-						}
-					}
-					else {
-					?>
+								<?php
+								if ($tags) {
 
-					N/A
-					
-					<?php
-					}
-					?>
+									foreach ($tags as $tag) {
+								?>
+
+									<span class="badge text-bg-secondary"><?php echo $tag->name; ?></span>
+
+								<?php
+									}
+								}
+								else {
+								?>
+
+								N/A
+								
+								<?php
+								}
+								?>
+
+							</section>
+
+						</div>
+
+						<div class="col-lg-4">
+
+							<aside>
+
+								<?php
+								if (!empty($thumbnail['url'])) {
+								?>
+
+								<figure class="border rounded">
+
+									<img src="<?php echo $thumbnail['url']; ?>" alt="<?php echo $thumbnail['alt_text']; ?>" class="img-fluid rounded" />
+
+									<?php if (!empty($thumbnail['caption'])) { ?>
+
+									<figcaption>
+
+										<?php echo $thumbnail['caption']; ?>
+										
+									</figcaption>
+
+									<?php } ?>
+
+								</figure>
+
+								<?php
+								}
+								?>
+
+							</aside>
+
+						</div>
+
+					</div>
 
 				</article>
 
 			</div>
-
-			<div class="col-lg-4">
-
-				<aside class="mt-5">
-
-					<?php
-					if (!empty($thumbnail['url'])) {
-					?>
-
-					<figure class="border rounded">
-
-						<img src="<?php echo $thumbnail['url']; ?>" alt="<?php echo $thumbnail['alt_text']; ?>" class="img-fluid rounded" />
-
-						<?php if (!empty($thumbnail['caption'])) { ?>
-
-						<figcaption>
-
-							<?php echo $thumbnail['caption']; ?>
-							
-						</figcaption>
-
-						<?php } ?>
-
-					</figure>
-
-					<?php
-					}
-					?>
-
-				</aside>
 
 		</div>
 

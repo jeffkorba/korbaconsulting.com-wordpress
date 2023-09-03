@@ -32,7 +32,7 @@
 
 						<div class="col-md-12 col-lg-8 order-2 order-lg-1">
 
-							<div id="contact">
+							<section id="contact">
 
 								<form v-on:submit.prevent="postContact" v-bind:class="{'was-validated': isSubmitted}" novalidate>
 
@@ -114,7 +114,7 @@
 
 								</form>
 
-							</div>
+							</section>
 
 						</div>
 

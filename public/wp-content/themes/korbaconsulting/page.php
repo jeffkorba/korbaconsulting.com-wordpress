@@ -24,23 +24,35 @@
 
 		<div class="row">
 
-			<div class="col-8">
+			<div class="col-12">
 
 				<article>
 
-					<?php the_content(); ?>
+					<div class="row">
+
+						<div class="col-8">
+
+							<section>
+
+								<?php the_content(); ?>
+
+							</section>
+
+						</div>
+
+						<div class="col-4">
+
+							<aside>
+
+								<?php get_sidebar('social'); ?>
+
+							</aside>
+
+						</div>
+					
+					</div>
 
 				</article>
-
-			</div>
-
-			<div class="col-4">
-
-				<aside>
-
-					<?php get_sidebar('social'); ?>
-
-				</aside>
 
 			</div>
 
