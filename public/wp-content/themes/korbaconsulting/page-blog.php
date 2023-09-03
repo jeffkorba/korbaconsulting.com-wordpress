@@ -42,21 +42,12 @@ $posts = get_posts($args);
 						foreach ($posts as $post) {
 
 							$author_name = get_the_author_meta('display_name', $post->post_author);
+							$post->button_label = 'Read More';
 						?>
 
 						<div class="col">
 
-							<div class="card">
-
-								<img class="card-img-top" src="<?php echo get_thumbnail($post->ID)['url']; ?>" alt="<?php echo $post->post_title; ?>">
-								<div class="card-body">
-									<h5 class="card-title"><?php echo $post->post_title; ?></h5>
-									<p class="card-text"><?php echo wpautop($post->post_excerpt); ?></p>
-									<p class="card-text text-muted"><?php echo $author_name; ?> &nbsp;|&nbsp; <?php echo date('F j, Y', strtotime($post->post_date)); ?></p>
-									<a href="<?php echo get_permalink($post->ID); ?>" class="btn btn-primary">Read More</a>
-								</div>
-
-							</div>
+							<?php get_template_part('template-parts/partials/component', 'card', $post); ?>
 
 						</div>
 

@@ -34,6 +34,16 @@
 
 			</div>
 
+			<div class="col-4">
+
+				<aside>
+
+					<?php get_sidebar('social'); ?>
+
+				</aside>
+
+			</div>
+
 		</div>
 
 	</div>

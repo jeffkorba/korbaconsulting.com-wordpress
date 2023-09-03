@@ -1,41 +1,41 @@
 <?php
-$consulting_slug = 'consulting';
-$development_slug = 'development';
-$design_slug = 'design';
-$managed_services_slug = 'managed-services';
-
 $consulting_args = [
-	'name' => $consulting_slug,
+	'name' => 'consulting',
 	'post_type' => 'page',
 	'post_status' => 'publish',
 	'numberposts' => 1
 ];
 
-$development_slug = [
-	'name' => $development_slug,
+$development_args = [
+	'name' => 'development',
 	'post_type' => 'page',
 	'post_status' => 'publish',
 	'numberposts' => 1
 ];
 
-$design_slug = [
-	'name' => $design_slug,
+$design_args = [
+	'name' => 'design',
 	'post_type' => 'page',
 	'post_status' => 'publish',
 	'numberposts' => 1
 ];
 
-$managed_services_slug = [
-	'name' => $managed_services_slug,
+$managed_services_args = [
+	'name' => 'managed-services',
 	'post_type' => 'page',
 	'post_status' => 'publish',
 	'numberposts' => 1
 ];
 
 $consulting = get_posts($consulting_args)[0];
-$development = get_posts($development_slug)[0];
-$design = get_posts($design_slug)[0];
-$managed_services = get_posts($managed_services_slug)[0];
+$development = get_posts($development_args)[0];
+$design = get_posts($design_args)[0];
+$managed_services = get_posts($managed_services_args)[0];
+
+$consulting->button_label = 'Learn More';
+$development->button_label = 'Learn More';
+$design->button_label = 'Learn More';
+$managed_services->button_label = 'Learn More';
 ?>
 
 <?php get_header(); ?>
@@ -71,47 +71,27 @@ $managed_services = get_posts($managed_services_slug)[0];
 					<div class="row row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-gap-4">
 
 						<div class="col">
-							<div class="card h-100">
-								<img class="card-img-top" src="<?php echo get_thumbnail($consulting->ID)['url']; ?>" alt="<?php echo $consulting->post_title; ?>">
-								<div class="card-body">
-									<h5 class="card-title"><?php echo $consulting->post_title; ?></h5>
-									<p class="card-text"><?php echo wpautop($consulting->post_excerpt); ?></p>
-									<a href="<?php echo get_permalink($consulting->ID)?>" class="btn btn-primary">Learn More</a>
-								</div>
-							</div>
+							
+							<?php get_template_part('template-parts/partials/component', 'card', $consulting); ?>
+
 						</div>
 
 						<div class="col">
-							<div class="card h-100">
-								<img class="card-img-top" src="<?php echo get_thumbnail($development->ID)['url']; ?>" alt="<?php echo $development->post_title; ?>">
-								<div class="card-body">
-									<h5 class="card-title"><?php echo $development->post_title; ?></h5>
-									<p class="card-text"><?php echo wpautop($development->post_excerpt); ?></p>
-									<a href="<?php echo get_permalink($development->ID)?>" class="btn btn-primary">Learn More</a>
-								</div>
-							</div>
+							
+							<?php get_template_part('template-parts/partials/component', 'card', $development); ?>
+
 						</div>
 
 						<div class="col">
-							<div class="card h-100">
-								<img class="card-img-top" src="<?php echo get_thumbnail($design->ID)['url']; ?>" alt="<?php echo $design->post_title; ?>">
-								<div class="card-body">
-									<h5 class="card-title"><?php echo $design->post_title; ?></h5>
-									<p class="card-text"><?php echo wpautop($design->post_excerpt); ?></p>
-									<a href="<?php echo get_permalink($design->ID)?>" class="btn btn-primary">Learn More</a>
-								</div>
-							</div>
+							
+							<?php get_template_part('template-parts/partials/component', 'card', $design); ?>
+
 						</div>
 
 						<div class="col">
-							<div class="card h-100">
-								<img class="card-img-top" src="<?php echo get_thumbnail($managed_services->ID)['url']; ?>" alt="<?php echo $managed_services->post_title; ?>">
-								<div class="card-body">
-									<h5 class="card-title"><?php echo $managed_services->post_title; ?></h5>
-									<p class="card-text"><?php echo wpautop($managed_services->post_excerpt); ?></p>
-									<a href="<?php echo get_permalink($managed_services->ID)?>" class="btn btn-primary">Learn More</a>
-								</div>
-							</div>
+							
+							<?php get_template_part('template-parts/partials/component', 'card', $managed_services); ?>
+
 						</div>
 
 					</div>

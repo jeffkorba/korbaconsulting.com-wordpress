@@ -50,26 +50,14 @@ $query = new WP_Query($args);
 							<?php
 							foreach ($projects as $project) {
 
-								$thumbnail = get_thumbnail($project->ID);
 								$terms = get_the_terms($project->ID, 'technology');
+
+								$project->terms = $terms;
 							?>
 
 							<div class="col">
 
-								<div class="card h-100">
-
-									<img class="card-img-top" src="<?php echo $thumbnail['url']; ?>" alt="<?php echo $project->post_title ?>">
-									<div class="card-body">
-										<h5 class="card-title"><?php echo $project->post_title ?></h5>
-										<p class="card-text"><?php echo $project->post_excerpt ?></p>
-										<?php foreach ($terms as $term) { ?>
-
-											<span class="badge text-bg-secondary"><?php echo $term->name; ?></span>
-
-										<?php } ?>
-									</div>
-
-								</div>
+								<?php get_template_part('template-parts/partials/component', 'card', $project); ?>
 
 							</div>
 

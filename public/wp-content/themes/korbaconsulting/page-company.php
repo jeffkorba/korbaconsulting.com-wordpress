@@ -18,6 +18,9 @@ $about_args = [
 
 $blog = get_posts($blog_args)[0];
 $about = get_posts($about_args)[0];
+
+$blog->button_label = 'View Blog';
+$about->button_label = 'Learn More';
 ?>
 
 <?php get_header(); ?>
@@ -53,25 +56,15 @@ $about = get_posts($about_args)[0];
 					<div class="row row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-gap-4">
 
 						<div class="col">
-							<div class="card h-100">
-								<img class="card-img-top" src="<?php echo get_thumbnail($blog->ID)['url']; ?>" alt="<?php echo $blog->post_title; ?>">
-								<div class="card-body">
-									<h5 class="card-title"><?php echo $blog->post_title; ?></h5>
-									<p class="card-text"><?php echo wpautop($blog->post_excerpt); ?></p>
-									<a href="<?php echo get_permalink($blog->ID); ?>" class="btn btn-primary">Read More</a>
-								</div>
-							</div>
+
+							<?php get_template_part('template-parts/partials/component', 'card', $blog); ?>
+
 						</div>
 
 						<div class="col">
-							<div class="card h-100">
-								<img class="card-img-top" src="<?php echo get_thumbnail($about->ID)['url']; ?>" alt="<?php echo $about->post_title; ?>">
-								<div class="card-body">
-									<h5 class="card-title"><?php echo $about->post_title; ?></h5>
-									<p class="card-text"><?php echo wpautop($about->post_excerpt); ?></p>
-									<a href="<?php echo get_permalink($about->ID); ?>" class="btn btn-primary">Learn More</a>
-								</div>
-							</div>
+
+							<?php get_template_part('template-parts/partials/component', 'card', $about); ?>
+
 						</div>
 
 					</div>
