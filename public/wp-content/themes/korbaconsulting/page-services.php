@@ -1,41 +1,33 @@
 <?php
-$consulting_args = [
+$consulting_posts = get_posts([
 	'name' => 'consulting',
 	'post_type' => 'page',
 	'post_status' => 'publish',
 	'numberposts' => 1
-];
-
-$development_args = [
+]);
+$development_posts = get_posts([
 	'name' => 'development',
 	'post_type' => 'page',
 	'post_status' => 'publish',
 	'numberposts' => 1
-];
-
-$design_args = [
+]);
+$design_posts = get_posts([
 	'name' => 'design',
 	'post_type' => 'page',
 	'post_status' => 'publish',
 	'numberposts' => 1
-];
-
-$managed_services_args = [
+]);
+$managed_services_posts = get_posts([
 	'name' => 'managed-services',
 	'post_type' => 'page',
 	'post_status' => 'publish',
 	'numberposts' => 1
-];
+]);
 
-$consulting = get_posts($consulting_args)[0];
-$development = get_posts($development_args)[0];
-$design = get_posts($design_args)[0];
-$managed_services = get_posts($managed_services_args)[0];
-
-$consulting->button_label = 'Learn More';
-$development->button_label = 'Learn More';
-$design->button_label = 'Learn More';
-$managed_services->button_label = 'Learn More';
+$consulting_card = new Card($consulting_posts[0], ['buttonLabel' => 'Learn More']);
+$development_card = new Card($development_posts[0], ['buttonLabel' => 'Learn More']);
+$design_card = new Card($design_posts[0], ['buttonLabel' => 'Learn More']);
+$managed_services_card = new Card($managed_services_posts[0], ['buttonLabel' => 'Learn More']);
 ?>
 
 <?php get_header(); ?>
@@ -72,25 +64,25 @@ $managed_services->button_label = 'Learn More';
 
 						<div class="col">
 							
-							<?php get_template_part('template-parts/partials/component', 'card', $consulting); ?>
+							<?php $consulting_card->render(); ?>
 
 						</div>
 
 						<div class="col">
 							
-							<?php get_template_part('template-parts/partials/component', 'card', $development); ?>
+							<?php $development_card->render(); ?>
 
 						</div>
 
 						<div class="col">
 							
-							<?php get_template_part('template-parts/partials/component', 'card', $design); ?>
+							<?php $design_card->render(); ?>
 
 						</div>
 
 						<div class="col">
 							
-							<?php get_template_part('template-parts/partials/component', 'card', $managed_services); ?>
+							<?php $managed_services_card->render(); ?>
 
 						</div>
 

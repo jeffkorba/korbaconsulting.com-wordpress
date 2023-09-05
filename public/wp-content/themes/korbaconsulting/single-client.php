@@ -52,12 +52,14 @@ $query = new WP_Query($args);
 
 								$terms = get_the_terms($project->ID, 'technology');
 
-								$project->terms = $terms;
+								$Card = new Card($project);
+								$Card->showButton(false);
+								$Card->setTags($terms);
 							?>
 
 							<div class="col">
 
-								<?php get_template_part('template-parts/partials/component', 'card', $project); ?>
+								<?php $Card->render(); ?>
 
 							</div>
 

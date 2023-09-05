@@ -1,8 +1,6 @@
 <?php
 // Global Constants
-const DEFAULT_EMAIL_ADDRESS = 'contact@korbaconsulting.com';
 const FAVICON_FILE_LOCATION = '/static/images/korba-consulting-logo-750x750.png';
-const NO_IMAGE_FILE_LOCATION = '/static/images/korba-consulting-logo-800x533.png';
 
 // REST API
 require_once 'rest-api/forms/contact.php';
@@ -53,28 +51,6 @@ function enqueue_styles () {
 
 	wp_enqueue_style('bootstrap', get_template_directory_uri() . '/static/vendor/bootstrap/css/bootstrap.min.css', [], '5.3.0');
 	wp_enqueue_style('main', get_template_directory_uri() . '/static/css/main.css', [], '1.2');
-}
-
-function get_thumbnail (Int $post_id, String $size = 'full') {
-
-	$thumbnail_id = get_post_thumbnail_id($post_id);
-	$thumbnail_meta = wp_get_attachment_metadata($thumbnail_id);
-	$thumbnail_url = get_the_post_thumbnail_url($post_id, $size);
-
-	if (empty($thumbnail_url) || file_exists(get_attached_file($thumbnail_id)) === false) {
-
-		$thumbnail_url = get_bloginfo('template_url') . NO_IMAGE_FILE_LOCATION;
-	}
-
-	$thumbnail = [
-		'id' => $thumbnail_id,
-		'alt_text' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true),
-		'meta' => isset($thumbnail_meta['image_meta']) ? $thumbnail_meta['image_meta'] : null,
-		'caption' => wp_get_attachment_caption($thumbnail_id),
-		'url' => $thumbnail_url
-	];
-
-	return $thumbnail;
 }
 
 function get_site_title () {

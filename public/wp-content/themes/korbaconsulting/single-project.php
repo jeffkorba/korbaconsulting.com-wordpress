@@ -1,7 +1,6 @@
 <?php
 $author_name = get_the_author_meta('display_name', $post->post_author);
-$thumbnail = get_thumbnail($post->ID);
-
+$thumbnail = getThumbnailByPostId($post->ID);
 $terms = get_the_terms($post->ID, 'technology');
 ?>
 
@@ -53,7 +52,7 @@ $terms = get_the_terms($post->ID, 'technology');
 
 			<div class="col-lg-4">
 
-				<aside class="mt-5">
+				<aside>
 
 					<?php
 					if (!empty($thumbnail['url'])) {
@@ -61,7 +60,7 @@ $terms = get_the_terms($post->ID, 'technology');
 
 					<figure class="border rounded">
 
-						<img src="<?php echo $thumbnail['url']; ?>" alt="<?php echo $thumbnail['alt_text']; ?>" class="img-fluid rounded" />
+						<img src="<?php echo $thumbnail['url']; ?>" alt="<?php echo $thumbnail['altText']; ?>" class="img-fluid rounded" />
 
 						<?php if (!empty($thumbnail['caption'])) { ?>
 

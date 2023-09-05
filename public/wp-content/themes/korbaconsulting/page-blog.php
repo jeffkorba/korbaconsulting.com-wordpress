@@ -1,9 +1,7 @@
 <?php
-$args = [
+$posts = get_posts([
 	'posts_per_page' => 10
-];
-
-$posts = get_posts($args);
+]);
 ?>
 
 <?php get_header(); ?>
@@ -41,13 +39,12 @@ $posts = get_posts($args);
 						<?php
 						foreach ($posts as $post) {
 
-							$author_name = get_the_author_meta('display_name', $post->post_author);
-							$post->button_label = 'Read More';
+							$card = new Card($post);
 						?>
 
 						<div class="col">
 
-							<?php get_template_part('template-parts/partials/component', 'card', $post); ?>
+							<?php $card->render(); ?>
 
 						</div>
 

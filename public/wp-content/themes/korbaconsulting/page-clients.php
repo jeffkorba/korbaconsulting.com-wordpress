@@ -1,10 +1,8 @@
 <?php
-$args = [
+$clients = get_posts([
 	'numberposts' => -1,
 	'post_type' => 'client'
-];
-
-$clients = get_posts($args);
+]);
 ?>
 
 <?php get_header(); ?>
@@ -43,7 +41,7 @@ $clients = get_posts($args);
 
 						<div class="col">
 
-							<a href="<?php echo get_permalink($client->ID); ?>"><img class="img-fluid rounded border" src="<?php echo get_thumbnail($client->ID)['url']; ?>" alt="<?php echo $client->post_title; ?>"></a>
+							<a href="<?php echo get_permalink($client->ID); ?>"><img class="img-fluid rounded border" src="<?php echo getThumbnailByPostId($client->ID)['url']; ?>" alt="<?php echo $client->post_title; ?>"></a>
 
 						</div>
 

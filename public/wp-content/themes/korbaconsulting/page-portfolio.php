@@ -1,26 +1,20 @@
 <?php
-$clients_slug = 'clients';
-$technology_slug = 'technology';
-
-$clients_args = [
-	'name' => $clients_slug,
+$clients_posts = get_posts([
+	'name' => 'clients',
 	'post_type' => 'page',
 	'post_status' => 'publish',
 	'numberposts' => 1
-];
+]);
 
-$technology_args = [
-	'name' => $technology_slug,
+$technology_posts = get_posts([
+	'name' => 'technology',
 	'post_type' => 'page',
 	'post_status' => 'publish',
 	'numberposts' => 1
-];
+]);
 
-$clients = get_posts($clients_args)[0];
-$technology = get_posts($technology_args)[0];
-
-$clients->button_label = 'View Clients';
-$technology->button_label = 'Learn More';
+$clients_card = new Card($clients_posts[0], ['buttonLabel' => 'View Clients']);
+$technology_card = new Card($technology_posts[0], ['buttonLabel' => 'Learn More']);
 ?>
 
 <?php get_header(); ?>
@@ -57,13 +51,13 @@ $technology->button_label = 'Learn More';
 
 						<div class="col">
 							
-							<?php get_template_part('template-parts/partials/component', 'card', $clients); ?>
+							<?php $clients_card->render(); ?>
 
 						</div>
 
 						<div class="col">
 							
-							<?php get_template_part('template-parts/partials/component', 'card', $technology); ?>
+							<?php $technology_card->render(); ?>
 
 						</div>
 

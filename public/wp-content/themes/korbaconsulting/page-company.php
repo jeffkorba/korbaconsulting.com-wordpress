@@ -1,26 +1,23 @@
 <?php
-$blog_slug = 'blog';
-$about_slug = 'about';
-
-$blog_args = [
-	'name' => $blog_slug,
+$blog_posts = get_posts([
+	'name' => 'blog',
 	'post_type' => 'page',
 	'post_status' => 'publish',
 	'numberposts' => 1
-];
+]);
 
-$about_args = [
-	'name' => $about_slug,
+$about_posts = get_posts([
+	'name' => 'about',
 	'post_type' => 'page',
 	'post_status' => 'publish',
 	'numberposts' => 1
-];
+]);
 
-$blog = get_posts($blog_args)[0];
-$about = get_posts($about_args)[0];
+$BlogCard = new Card($blog_posts[0]);
+$BlogCard->setButtonLabel('View Blog');
 
-$blog->button_label = 'View Blog';
-$about->button_label = 'Learn More';
+$AboutCard = new Card($about_posts[0]);
+$AboutCard->setButtonLabel('Learn More');
 ?>
 
 <?php get_header(); ?>
@@ -57,13 +54,13 @@ $about->button_label = 'Learn More';
 
 						<div class="col">
 
-							<?php get_template_part('template-parts/partials/component', 'card', $blog); ?>
+							<?php $BlogCard->render(); ?>
 
 						</div>
 
 						<div class="col">
 
-							<?php get_template_part('template-parts/partials/component', 'card', $about); ?>
+							<?php $AboutCard->render(); ?>
 
 						</div>
 
