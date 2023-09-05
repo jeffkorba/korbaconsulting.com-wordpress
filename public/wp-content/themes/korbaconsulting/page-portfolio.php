@@ -13,8 +13,11 @@ $technology_posts = get_posts([
 	'numberposts' => 1
 ]);
 
-$clients_card = new Card($clients_posts[0], ['buttonLabel' => 'View Clients']);
-$technology_card = new Card($technology_posts[0], ['buttonLabel' => 'Learn More']);
+$ClientsCard = new Card($clients_posts[0]);
+$ClientsCard->setButtonLabel('View Clients');
+
+$TechnologyCard = new Card($technology_posts[0]);
+$TechnologyCard->setButtonLabel('Learn More');
 ?>
 
 <?php get_header(); ?>
@@ -51,13 +54,13 @@ $technology_card = new Card($technology_posts[0], ['buttonLabel' => 'Learn More'
 
 						<div class="col">
 							
-							<?php $clients_card->render(); ?>
+							<?php $ClientsCard->render(); ?>
 
 						</div>
 
 						<div class="col">
 							
-							<?php $technology_card->render(); ?>
+							<?php $TechnologyCard->render(); ?>
 
 						</div>
 

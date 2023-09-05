@@ -24,10 +24,17 @@ $managed_services_posts = get_posts([
 	'numberposts' => 1
 ]);
 
-$consulting_card = new Card($consulting_posts[0], ['buttonLabel' => 'Learn More']);
-$development_card = new Card($development_posts[0], ['buttonLabel' => 'Learn More']);
-$design_card = new Card($design_posts[0], ['buttonLabel' => 'Learn More']);
-$managed_services_card = new Card($managed_services_posts[0], ['buttonLabel' => 'Learn More']);
+$ConsultingCard = new Card($consulting_posts[0]);
+$ConsultingCard->setButtonLabel('Learn More');
+
+$DevelopmentCard = new Card($development_posts[0]);
+$DevelopmentCard->setButtonLabel('Learn More');
+
+$DesignCard = new Card($design_posts[0]);
+$DesignCard->setButtonLabel('Learn More');
+
+$ManagedServicesCard = new Card($managed_services_posts[0]);
+$ManagedServicesCard->setButtonLabel('Learn More');
 ?>
 
 <?php get_header(); ?>
@@ -64,25 +71,25 @@ $managed_services_card = new Card($managed_services_posts[0], ['buttonLabel' => 
 
 						<div class="col">
 							
-							<?php $consulting_card->render(); ?>
+							<?php $ConsultingCard->render(); ?>
 
 						</div>
 
 						<div class="col">
 							
-							<?php $development_card->render(); ?>
+							<?php $DevelopmentCard->render(); ?>
 
 						</div>
 
 						<div class="col">
 							
-							<?php $design_card->render(); ?>
+							<?php $DesignCard->render(); ?>
 
 						</div>
 
 						<div class="col">
 							
-							<?php $managed_services_card->render(); ?>
+							<?php $ManagedServicesCard->render(); ?>
 
 						</div>
 

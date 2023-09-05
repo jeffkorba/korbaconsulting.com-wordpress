@@ -39,12 +39,12 @@ $posts = get_posts([
 						<?php
 						foreach ($posts as $post) {
 
-							$card = new Card($post);
+							$Card = new Card($post);
 						?>
 
 						<div class="col">
 
-							<?php $card->render(); ?>
+							<?php $Card->render(); ?>
 
 						</div>
 
