@@ -1,17 +1,32 @@
 <?php
-$WordPressCard = new Card();
-$WordPressCard->setTitle('WordPress');
-$WordPressCard->setExcerpt('We excel in custom WordPress solutions, tailoring the world\'s most popular content management system to meet your specific requirements. Whether it\'s building a corporate website, e-commerce platform, or a blog, we leverage the full potential of WordPress to deliver user-friendly and feature-rich websites.');
+$wordpress_posts = get_posts([
+	'name' => 'wordpress',
+	'post_type' => 'page',
+	'post_status' => 'publish',
+	'numberposts' => 1
+]);
+
+$laravel_posts = get_posts([
+	'name' => 'laravel',
+	'post_type' => 'page',
+	'post_status' => 'publish',
+	'numberposts' => 1
+]);
+
+$vue_posts = get_posts([
+	'name' => 'vue-js',
+	'post_type' => 'page',
+	'post_status' => 'publish',
+	'numberposts' => 1
+]);
+
+$WordPressCard = new Card($wordpress_posts[0]);
 $WordPressCard->showButton(false);
 
-$LaravelCard = new Card();
-$LaravelCard->setTitle('Laravel');
-$LaravelCard->setExcerpt('Laravel offers clients the advantage of rapid development, robust security features, and an extensive ecosystem of plugins and packages. This results in faster time-to-market, reduced development costs, and the confidence that their web applications will be both feature-rich and highly secure, ultimately enhancing their online presence and user experiences.');
+$LaravelCard = new Card($laravel_posts[0]);
 $LaravelCard->showButton(false);
 
-$VueCard = new Card();
-$VueCard->setTitle('Vue.js');
-$VueCard->setExcerpt('Vue.js empowers clients with exceptionally responsive and interactive web interfaces, enhancing user engagement and satisfaction. Its modular architecture and strong developer community support ensure that clients receive feature-rich, maintainable web applications that can adapt and scale to meet their evolving business needs.');
+$VueCard = new Card($vue_posts[0]);
 $VueCard->showButton(false);
 ?>
 

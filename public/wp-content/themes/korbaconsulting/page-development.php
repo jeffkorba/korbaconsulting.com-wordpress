@@ -6,7 +6,7 @@ $DevelopmentCard1->showButton(false);
 
 $DevelopmentCard2 = new Card();
 $DevelopmentCard2->setTitle('Microservice Mindset');
-$DevelopmentCard2->setExcerpt('A microservice architecture offers clients increased agility and scalability by breaking down complex systems into smaller, independent services that can be developed, deployed, and scaled individually. This approach enables clients to efficiently adapt to changing market demands, reduce system downtime, and streamline maintenance, ultimately ensuring the long-term success and competitiveness of their web applications.');
+$DevelopmentCard2->setExcerpt('This approach offers clients increased agility and scalability by breaking down complex systems into smaller, independent services that can be developed, deployed, and scaled individually. By enabling clients to efficiently adapt to changing market demands, reduce system downtime, and streamline maintenance, it ultimately ensures the long-term success and competitiveness of their web applications.');
 $DevelopmentCard2->showButton(false);
 
 $DevelopmentCard3 = new Card();
