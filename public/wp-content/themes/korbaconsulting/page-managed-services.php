@@ -1,28 +1,28 @@
 <?php
-$card1 = new Card();
-$card1->setTitle('Focus on Core Business');
-$card1->setExcerpt('Managed services allow web consultancies to offload routine tasks such as server maintenance, security updates, and monitoring, enabling them to focus on delivering high-value web solutions and strategic consulting to clients.');
-$card1->showButton(false);
+$ManagedServicesCard1 = new Card();
+$ManagedServicesCard1->setTitle('Focus on Core Business');
+$ManagedServicesCard1->setExcerpt('Managed services allow web consultancies to offload routine tasks such as server maintenance, security updates, and monitoring, enabling them to focus on delivering high-value web solutions and strategic consulting to clients.');
+$ManagedServicesCard1->showButton(false);
 
-$card2 = new Card();
-$card2->setTitle('Scalability and Flexibility');
-$card2->setExcerpt('Managed services providers often offer scalable solutions, allowing web consultancies to adapt to changing client needs without the burden of infrastructure management, ensuring they can efficiently handle projects of any size.');
-$card2->showButton(false);
+$ManagedServicesCard2 = new Card();
+$ManagedServicesCard2->setTitle('Scalability and Flexibility');
+$ManagedServicesCard2->setExcerpt('Managed services providers often offer scalable solutions, allowing web consultancies to adapt to changing client needs without the burden of infrastructure management, ensuring they can efficiently handle projects of any size.');
+$ManagedServicesCard2->showButton(false);
 
-$card3 = new Card();
-$card3->setTitle('Enhanced Security and Compliance');
-$card3->setExcerpt('Managed services providers typically have specialized expertise in security and compliance, reducing the risk of data breaches and legal issues for web consultancies and their clients.');
-$card3->showButton(false);
+$ManagedServicesCard3 = new Card();
+$ManagedServicesCard3->setTitle('Enhanced Security and Compliance');
+$ManagedServicesCard3->setExcerpt('Managed services providers typically have specialized expertise in security and compliance, reducing the risk of data breaches and legal issues for web consultancies and their clients.');
+$ManagedServicesCard3->showButton(false);
 
-$card4 = new Card();
-$card4->setTitle('Cost Savings');
-$card4->setExcerpt('By outsourcing various technical and operational aspects, web consultancies can reduce their overhead costs, including hiring and training specialized staff, which can lead to improved profitability and competitive pricing for clients.');
-$card4->showButton(false);
+$ManagedServicesCard4 = new Card();
+$ManagedServicesCard4->setTitle('Cost Savings');
+$ManagedServicesCard4->setExcerpt('By outsourcing various technical and operational aspects, web consultancies can reduce their overhead costs, including hiring and training specialized staff, which can lead to improved profitability and competitive pricing for clients.');
+$ManagedServicesCard4->showButton(false);
 
-$card5 = new Card();
-$card5->setTitle('Continuous Innovation');
-$card5->setExcerpt('Managed services providers often stay on the cutting edge of technology, ensuring that web consultancies and their clients benefit from the latest tools and solutions without the need for constant research and development efforts.');
-$card5->showButton(false);
+$ManagedServicesCard5 = new Card();
+$ManagedServicesCard5->setTitle('Continuous Innovation');
+$ManagedServicesCard5->setExcerpt('Managed services providers often stay on the cutting edge of technology, ensuring that web consultancies and their clients benefit from the latest tools and solutions without the need for constant research and development efforts.');
+$ManagedServicesCard5->showButton(false);
 ?>
 
 <?php get_header(); ?>
@@ -59,31 +59,31 @@ $card5->showButton(false);
 
 						<div class="col">
 
-							<?php $card1->render(); ?>
+							<?php $ManagedServicesCard1->render(); ?>
 
 						</div>
 
 						<div class="col">
 
-							<?php $card2->render(); ?>
+							<?php $ManagedServicesCard2->render(); ?>
 
 						</div>
 
 						<div class="col">
 
-							<?php $card3->render(); ?>
+							<?php $ManagedServicesCard3->render(); ?>
 
 						</div>
 
 						<div class="col">
 
-							<?php $card4->render(); ?>
+							<?php $ManagedServicesCard4->render(); ?>
 
 						</div>
 
 						<div class="col">
 
-							<?php $card5->render(); ?>
+							<?php $ManagedServicesCard5->render(); ?>
 
 						</div>
 
