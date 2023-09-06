@@ -9,6 +9,8 @@ define('APP_ENV', '<development|production>');
 define('RECAPTCHA_SITE_KEY', '<RECAPTCHA_SITE_KEY>');
 define('RECAPTCHA_SECRET_KEY', '<RECAPTCHA_SECRET_KEY>');
 define('RECAPTCHA_THRESHOLD', <0.0-1.0>);
+define('DEFAULT_EMAIL_ADDRESS', '<DEFAULT_EMAIL_ADDRESS>');
+define('FALLBACK_IMAGE_LOCATION', '<FALLBACK_IMAGE_LOCATION>');
 ```
 
 ## Static Assets
