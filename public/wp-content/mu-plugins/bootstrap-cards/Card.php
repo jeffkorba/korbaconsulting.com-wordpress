@@ -8,13 +8,11 @@ class Card {
 	private string $permalink = '';
 	private array $tags = [];
 	private string $date = '';
-	private bool $hasButton = true;
+	private bool $showButton = true;
 	private string $buttonLabel = 'Read More';
-	private string $size = 'full';
 	private array $thumbnail = [];
-	private string $fallbackImage = FALLBACK_IMAGE_LOCATION;
 
-	public function __construct (object $post = null, array $options = []) {
+	public function __construct (object $post = null, string $size = 'full') {
 
 		if (isset($post)) {
 		
@@ -24,21 +22,7 @@ class Card {
 			$this->description = apply_filters('the_content', $post->post_content);
 			$this->permalink = get_permalink($post->ID);
 			$this->date = get_the_date('U', $post->ID);
-
-			if (isset($options['fallbackImage'])) {
-		
-				$this->fallbackImage = $options['fallbackImage'];
-			}
-
-			if (isset($options['size'])) {
-			
-				$this->size = $options['size'];
-			}
-
-			$this->setThumbnail([
-				'fallbackImage' => $this->fallbackImage,
-				'size' => $this->size
-			]);
+			$this->thumbnail = Thumbnail::getByPostId($post->ID, $size);
 		}
 	}
 
@@ -77,9 +61,9 @@ class Card {
 		$this->tags = $tags;
 	}
 
-	public function setThumbnail (array $options) {
+	public function setThumbnail (array $thumbnail) {
 	
-		$this->thumbnail = getThumbnailByPostId($this->id, $options);
+		$this->thumbnail = $thumbnail;
 	}
 
 	public function setButtonLabel (string $buttonLabel) {
@@ -87,9 +71,9 @@ class Card {
 		$this->buttonLabel = $buttonLabel;
 	}
 
-	public function showButton (bool $hasButton = true) {
+	public function showButton (bool $showButton = true) {
 	
-		$this->hasButton = $hasButton;
+		$this->showButton = $showButton;
 	}
 
 	public function getTitle ()  {
@@ -134,6 +118,6 @@ class Card {
 
 	public function hasButton () {
 	
-		return $this->hasButton;
+		return $this->showButton;
 	}
 }

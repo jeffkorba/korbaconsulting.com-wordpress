@@ -41,7 +41,7 @@ $clients = get_posts([
 
 						<div class="col">
 
-							<a href="<?php echo get_permalink($client->ID); ?>"><img class="img-fluid rounded border" src="<?php echo getThumbnailByPostId($client->ID)['url']; ?>" alt="<?php echo $client->post_title; ?>"></a>
+							<a href="<?php echo get_permalink($client->ID); ?>"><img class="img-fluid rounded border" src="<?php echo Thumbnail::getByPostId($client->ID)['url']; ?>" alt="<?php echo $client->post_title; ?>"></a>
 
 						</div>
 

@@ -9,5 +9,5 @@ Description: Bootstrap’s cards provide a flexible and extensible content conta
 Text Domain: bootstrap-cards
 */
 
-require_once 'bootstrap-cards/functions.php';
 require_once 'bootstrap-cards/Card.php';
+require_once 'bootstrap-cards/Thumbnail.php';

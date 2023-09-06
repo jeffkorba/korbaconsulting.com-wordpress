@@ -1,6 +1,6 @@
 <?php
 $author_name = get_the_author_meta('display_name', $post->post_author);
-$thumbnail = getThumbnailByPostId($post->ID);
+$thumbnail = Thumbnail::getByPostId($post->ID);
 $tags = get_the_tags($post->ID);
 ?>
 
@@ -82,7 +82,7 @@ $tags = get_the_tags($post->ID);
 
 								<figure class="border rounded">
 
-									<img src="<?php echo $thumbnail['url']; ?>" alt="<?php echo $thumbnail['altText']; ?>" class="img-fluid rounded" />
+									<img src="<?php echo $thumbnail['url']; ?>" alt="<?php echo $thumbnail['alt']; ?>" class="img-fluid rounded" />
 
 									<?php if (!empty($thumbnail['caption'])) { ?>
 
