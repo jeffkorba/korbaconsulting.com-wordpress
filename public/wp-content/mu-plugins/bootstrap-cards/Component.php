@@ -10,7 +10,17 @@
 	}
 	?>
 
-	<div class="card-body">
+	<div class="card-body <?php echo $this->getAlignment(); ?>">
+
+		<?php
+		if ($this->hasIcon()) {
+		?>
+
+		<i class="<?php echo $this->getIcon(); ?> fa-3x mb-3"></i>
+
+		<?php
+		}
+		?>
 
 		<h5 class="card-title"><?php echo $this->getTitle(); ?></h5>
 

@@ -1,28 +1,43 @@
 <?php
-$card1 = new Card();
-$card1->setTitle('Performance-Driven KPI Analysis');
-$card1->setExcerpt('We meticulously analyze key performance indicators (KPIs) to measure the effectiveness of your web solutions. Our data-driven approach helps you make informed decisions and optimize your online presence for maximum ROI.');
-$card1->showButton(false);
+$ConsultingCard1 = new Card();
+$ConsultingCard1->setAlignment('center');
+$ConsultingCard1->setIcon('fa-solid fa-ranking-star');
+$ConsultingCard1->showIcon(true);
+$ConsultingCard1->setTitle('Performance-Driven KPI Analysis');
+$ConsultingCard1->setExcerpt('We meticulously analyze key performance indicators (KPIs) to measure the effectiveness of your web solutions. Our data-driven approach helps you make informed decisions and optimize your online presence for maximum ROI.');
+$ConsultingCard1->showButton(false);
 
-$card2 = new Card();
-$card2->setTitle('ROI-Centric Strategies');
-$card2->setExcerpt('Our services are designed with ROI in mind. We develop and implement strategies that not only enhance your web presence but also deliver tangible returns on your investment, ensuring every dollar spent counts.');
-$card2->showButton(false);
+$ConsultingCard2 = new Card();
+$ConsultingCard2->setAlignment('center');
+$ConsultingCard2->setIcon('fa-solid fa-chart-line');
+$ConsultingCard2->showIcon(true);
+$ConsultingCard2->setTitle('ROI-Centric Strategies');
+$ConsultingCard2->setExcerpt('Our services are designed with ROI in mind. We develop and implement strategies that not only enhance your web presence but also deliver tangible returns on your investment, ensuring every dollar spent counts.');
+$ConsultingCard2->showButton(false);
 
-$card3 = new Card();
-$card3->setTitle('Streamlined Processes');
-$card3->setExcerpt('We optimize web development processes to ensure efficiency and cost-effectiveness. By eliminating bottlenecks and enhancing workflows, we save you time and resources while delivering high-quality solutions on time.');
-$card3->showButton(false);
+$ConsultingCard3 = new Card();
+$ConsultingCard3->setAlignment('center');
+$ConsultingCard3->setIcon('fa-solid fa-bars-progress');
+$ConsultingCard3->showIcon(true);
+$ConsultingCard3->setTitle('Streamlined Processes');
+$ConsultingCard3->setExcerpt('We optimize web development processes to ensure efficiency and cost-effectiveness. By eliminating bottlenecks and enhancing workflows, we save you time and resources while delivering high-quality solutions on time.');
+$ConsultingCard3->showButton(false);
 
-$card4 = new Card();
-$card4->setTitle('Data-Backed Insights');
-$card4->setExcerpt('We leverage effective analysis techniques to provide you with actionable insights. Our data-driven recommendations and continuous monitoring enable you to adapt and improve your web strategies for sustained success.');
-$card4->showButton(false);
+$ConsultingCard4 = new Card();
+$ConsultingCard4->setAlignment('center');
+$ConsultingCard4->setIcon('fa-solid fa-magnifying-glass-chart');
+$ConsultingCard4->showIcon(true);
+$ConsultingCard4->setTitle('Data-Backed Insights');
+$ConsultingCard4->setExcerpt('We leverage effective analysis techniques to provide you with actionable insights. Our data-driven recommendations and continuous monitoring enable you to adapt and improve your web strategies for sustained success.');
+$ConsultingCard4->showButton(false);
 
-$card5 = new Card();
-$card5->setTitle('Customized Solutions');
-$card5->setExcerpt('We understand that one size doesn\'t fit all. Our services are tailored to your unique business needs, ensuring that your web solutions align perfectly with your goals, industry, and target audience.');
-$card5->showButton(false);
+$ConsultingCard5 = new Card();
+$ConsultingCard5->setAlignment('center');
+$ConsultingCard5->setIcon('fa-solid fa-gears');
+$ConsultingCard5->showIcon(true);
+$ConsultingCard5->setTitle('Customized Solutions');
+$ConsultingCard5->setExcerpt('We understand that one size doesn\'t fit all. Our services are tailored to your unique business needs, ensuring that your web solutions align perfectly with your goals, industry, and target audience.');
+$ConsultingCard5->showButton(false);
 ?>
 
 <?php get_header(); ?>
@@ -59,31 +74,31 @@ $card5->showButton(false);
 
 						<div class="col">
 
-							<?php $card1->render(); ?>
+							<?php $ConsultingCard1->render(); ?>
 
 						</div>
 
 						<div class="col">
 
-							<?php $card2->render(); ?>
+							<?php $ConsultingCard2->render(); ?>
 
 						</div>
 
 						<div class="col">
 
-							<?php $card3->render(); ?>
+							<?php $ConsultingCard3->render(); ?>
 
 						</div>
 
 						<div class="col">
 
-							<?php $card4->render(); ?>
+							<?php $ConsultingCard4->render(); ?>
 
 						</div>
 
 						<div class="col">
 
-							<?php $card5->render(); ?>
+							<?php $ConsultingCard5->render(); ?>
 
 						</div>
 

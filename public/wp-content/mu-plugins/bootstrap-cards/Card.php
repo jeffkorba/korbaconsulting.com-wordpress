@@ -9,6 +9,9 @@ class Card {
 	private array $tags = [];
 	private string $date = '';
 	private bool $showButton = true;
+	private bool $showIcon = false;
+	private string $alignment = 'left';
+	private string $icon = '';
 	private string $buttonLabel = 'Read More';
 	private array $thumbnail = [];
 
@@ -29,6 +32,22 @@ class Card {
 	public function render () {
 	
 		require 'Component.php';
+	}
+
+	public function setAlignment (string $alignment)  {
+
+		if ($alignment == 'left') {
+		
+			$this->alignment = 'text-start';
+		}
+		else if ($alignment == 'right') {
+		
+			$this->alignment = 'text-end';
+		}
+		else if ($alignment == 'center') {
+		
+			$this->alignment = 'text-center';
+		}
 	}
 
 	public function setTitle (string $title)  {
@@ -56,6 +75,11 @@ class Card {
 		$this->date = $date;
 	}
 
+	public function setIcon (string $icon)  {
+
+		$this->icon = $icon;
+	}
+
 	public function setTags (array $tags)  {
 
 		$this->tags = $tags;
@@ -76,29 +100,44 @@ class Card {
 		$this->showButton = $showButton;
 	}
 
-	public function getTitle ()  {
+	public function showIcon (bool $showIcon = true) {
+	
+		$this->showIcon = $showIcon;
+	}
+
+	public function getAlignment () {
+	
+		return $this->alignment;
+	}
+
+	public function getTitle () {
 	
 		return $this->title;
 	}
 
-	public function getExcerpt ()  {
+	public function getExcerpt () {
 	
 		return $this->excerpt;
 	}
 
-	public function getDescription ()  {
+	public function getDescription () {
 	
 		return $this->description;
 	}
 
-	public function getPermalink ()  {
+	public function getPermalink () {
 	
 		return $this->permalink;
 	}
 
-	public function getDate ()  {
+	public function getDate () {
 
 		return $this->date;
+	}
+
+	public function getIcon () {
+
+		return $this->icon;
 	}
 
 	public function getTags ()  {
@@ -119,5 +158,10 @@ class Card {
 	public function hasButton () {
 	
 		return $this->showButton;
+	}
+
+	public function hasIcon () {
+	
+		return $this->showIcon;
 	}
 }
