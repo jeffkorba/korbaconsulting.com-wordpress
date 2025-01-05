@@ -6,6 +6,8 @@ use EasyWPSMTP\Admin\DomainChecker;
 use EasyWPSMTP\Admin\SetupWizard;
 use EasyWPSMTP\Conflicts;
 use EasyWPSMTP\Debug;
+use EasyWPSMTP\Helpers\Helpers;
+use EasyWPSMTP\OptimizedEmailSending;
 use EasyWPSMTP\Options;
 
 /**
@@ -90,7 +92,7 @@ class UsageTracking {
 	 */
 	public function get_user_agent() {
 
-		return 'EasyWPSMTP/' . EasyWPSMTP_PLUGIN_VERSION . '; ' . get_bloginfo( 'url' );
+		return Helpers::get_default_user_agent();
 	}
 
 	/**
@@ -117,29 +119,30 @@ class UsageTracking {
 			$this->get_additional_data(),
 			[
 				// Generic data (environment).
-				'mysql_version'                            => $wpdb->db_version(),
-				'server_version'                           => isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : '',
-				'is_ssl'                                   => is_ssl(),
-				'is_multisite'                             => is_multisite(),
-				'sites_count'                              => $this->get_sites_total(),
-				'theme_name'                               => $theme_data->name,
-				'theme_version'                            => $theme_data->version,
-				'locale'                                   => get_locale(),
-				'timezone_offset'                          => $this->get_timezone_offset(),
+				'mysql_version'                                    => $wpdb->db_version(),
+				'server_version'                                   => isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : '',
+				'is_ssl'                                           => is_ssl(),
+				'is_multisite'                                     => is_multisite(),
+				'sites_count'                                      => $this->get_sites_total(),
+				'theme_name'                                       => $theme_data->name,
+				'theme_version'                                    => $theme_data->version,
+				'locale'                                           => get_locale(),
+				'timezone_offset'                                  => $this->get_timezone_offset(),
 				// Easy WP SMTP - specific data.
-				'easy_wp_smtp_version'                     => EasyWPSMTP_PLUGIN_VERSION,
-				'easy_wp_smtp_activated'                   => get_option( 'easy_wp_smtp_activated_time', 0 ),
-				'easy_wp_smtp_mailer'                      => $options->get( 'mail', 'mailer' ),
-				'easy_wp_smtp_from_email_force'            => (bool) $options->get( 'mail', 'from_email_force' ),
-				'easy_wp_smtp_from_name_force'             => (bool) $options->get( 'mail', 'from_name_force' ),
-				'easy_wp_smtp_return_path'                 => (bool) $options->get( 'mail', 'return_path' ),
-				'easy_wp_smtp_do_not_send'                 => (bool) $options->get( 'general', 'do_not_send' ),
-				'easy_wp_smtp_is_const_enabled'            => (bool) $options->is_const_enabled(),
-				'easy_wp_smtp_conflicts_is_detected'       => ( new Conflicts() )->is_detected(),
-				'easy_wp_smtp_is_mailer_complete'          => empty( $mailer ) ? false : $mailer->is_mailer_complete(),
-				'easy_wp_smtp_setup_wizard_launched_time'  => isset( $setup_wizard_stats['launched_time'] ) ? (int) $setup_wizard_stats['launched_time'] : 0,
-				'easy_wp_smtp_setup_wizard_completed_time' => isset( $setup_wizard_stats['completed_time'] ) ? (int) $setup_wizard_stats['completed_time'] : 0,
+				'easy_wp_smtp_version'                             => EasyWPSMTP_PLUGIN_VERSION,
+				'easy_wp_smtp_activated'                           => get_option( 'easy_wp_smtp_activated_time', 0 ),
+				'easy_wp_smtp_mailer'                              => $options->get( 'mail', 'mailer' ),
+				'easy_wp_smtp_from_email_force'                    => (bool) $options->get( 'mail', 'from_email_force' ),
+				'easy_wp_smtp_from_name_force'                     => (bool) $options->get( 'mail', 'from_name_force' ),
+				'easy_wp_smtp_return_path'                         => (bool) $options->get( 'mail', 'return_path' ),
+				'easy_wp_smtp_do_not_send'                         => (bool) $options->get( 'general', 'do_not_send' ),
+				'easy_wp_smtp_is_const_enabled'                    => (bool) $options->is_const_enabled(),
+				'easy_wp_smtp_conflicts_is_detected'               => ( new Conflicts() )->is_detected(),
+				'easy_wp_smtp_is_mailer_complete'                  => empty( $mailer ) ? false : $mailer->is_mailer_complete(),
+				'easy_wp_smtp_setup_wizard_launched_time'          => isset( $setup_wizard_stats['launched_time'] ) ? (int) $setup_wizard_stats['launched_time'] : 0,
+				'easy_wp_smtp_setup_wizard_completed_time'         => isset( $setup_wizard_stats['completed_time'] ) ? (int) $setup_wizard_stats['completed_time'] : 0,
 				'easy_wp_smtp_setup_wizard_completed_successfully' => ! empty( $setup_wizard_stats['was_successful'] ),
+				'easy_wp_smtp_optimize_email_sending'              => OptimizedEmailSending::is_enabled(),
 			]
 		);
 

@@ -355,7 +355,7 @@ class SiteHealth {
 		);
 
 		// Add the optional sending domain parameter.
-		if ( in_array( $mailer, [ 'mailgun', 'sendinblue' ], true ) ) {
+		if ( in_array( $mailer, [ 'mailgun', 'sendinblue', 'sendgrid' ], true ) ) {
 			$domain = $options->get( $mailer, 'domain' );
 		}
 

@@ -3,6 +3,7 @@
 namespace EasyWPSMTP\Providers\SMTPcom;
 
 use EasyWPSMTP\ConnectionInterface;
+use EasyWPSMTP\Helpers\UI;
 use EasyWPSMTP\Providers\OptionsAbstract;
 
 /**
@@ -98,17 +99,25 @@ class Options extends OptionsAbstract {
 					/>
 					<?php $this->display_const_set_message( 'EASY_WP_SMTP_SMTPCOM_API_KEY' ); ?>
 				<?php else : ?>
-					<input type="password" spellcheck="false"
-						name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][api_key]"
-						value="<?php echo esc_attr( $this->connection_options->get( $this->get_slug(), 'api_key' ) ); ?>"
-						id="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-api_key"
-					/>
+					<?php
+					$slug  = $this->get_slug();
+					$value = $this->connection_options->get( $slug, 'api_key' );
+
+					UI::hidden_password_field(
+						[
+							'name'       => "easy-wp-smtp[{$slug}][api_key]",
+							'id'         => "easy-wp-smtp-setting-{$slug}-api_key",
+							'value'      => $value,
+							'clear_text' => esc_html__( 'Remove API Key', 'easy-wp-smtp' ),
+						]
+					);
+					?>
 				<?php endif; ?>
 				<p class="desc">
 					<?php
 					printf( /* translators: %s - API key link. */
 						esc_html__( 'Follow this link to get an API Key from SMTP.com: %s.', 'easy-wp-smtp' ),
-						'<a href="https://my.smtp.com/settings/api" target="_blank" rel="noopener noreferrer">' .
+						'<a href="https://my.smtp.com/account?tab=manage_api_keys" target="_blank" rel="noopener noreferrer">' .
 						esc_html__( 'Get API Key', 'easy-wp-smtp' ) .
 						'</a>'
 					);
@@ -137,7 +146,7 @@ class Options extends OptionsAbstract {
 					<?php
 					printf( /* translators: %s - Channel/Sender Name link for smtp.com documentation. */
 						esc_html__( 'Follow this link to get a Sender Name from SMTP.com: %s.', 'easy-wp-smtp' ),
-						'<a href="https://my.smtp.com/senders/" target="_blank" rel="noopener noreferrer">' .
+						'<a href="https://my.smtp.com/account?tab=manage_channels" target="_blank" rel="noopener noreferrer">' .
 						esc_html__( 'Get Sender Name', 'easy-wp-smtp' ) .
 						'</a>'
 					);

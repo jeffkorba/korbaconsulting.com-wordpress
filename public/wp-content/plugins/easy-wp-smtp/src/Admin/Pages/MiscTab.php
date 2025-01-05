@@ -4,10 +4,11 @@ namespace EasyWPSMTP\Admin\Pages;
 
 use EasyWPSMTP\Admin\Area;
 use EasyWPSMTP\Admin\PageAbstract;
+use EasyWPSMTP\OptimizedEmailSending;
 use EasyWPSMTP\Options;
-use EasyWPSMTP\UsageTracking\UsageTracking;
 use EasyWPSMTP\Reports\Emails\Summary as SummaryReportEmail;
 use EasyWPSMTP\Tasks\Reports\SummaryEmailTask as SummaryReportEmailTask;
+use EasyWPSMTP\UsageTracking\UsageTracking;
 use EasyWPSMTP\WP;
 
 /**
@@ -91,9 +92,9 @@ class MiscTab extends PageAbstract {
 							<div class="easy-wp-smtp-setting-row__sub-row">
 								<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-domain_check">
 									<input name="easy-wp-smtp[general][domain_check]" type="checkbox" value="true"
-												 id="easy-wp-smtp-setting-domain_check"
-												 <?php echo $options->is_const_defined( 'general', 'domain_check' ) ? 'disabled' : ''; ?>
-												 <?php checked( true, $options->get( 'general', 'domain_check' ) ); ?>
+									       id="easy-wp-smtp-setting-domain_check"
+										<?php echo $options->is_const_defined( 'general', 'domain_check' ) ? 'disabled' : ''; ?>
+										<?php checked( true, $options->get( 'general', 'domain_check' ) ); ?>
 									/>
 									<span class="easy-wp-smtp-toggle__switch"></span>
 									<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--checked"><?php esc_html_e( 'On', 'easy-wp-smtp' ); ?></span>
@@ -106,9 +107,9 @@ class MiscTab extends PageAbstract {
 
 							<div class="easy-wp-smtp-setting-row__sub-row">
 								<input name="easy-wp-smtp[general][domain_check_allowed_domains]" type="text"
-											 value="<?php echo esc_attr( $options->get( 'general', 'domain_check_allowed_domains' ) ); ?>"
-											 <?php echo $options->is_const_defined( 'general', 'domain_check_allowed_domains' ) || ! $options->get( 'general', 'domain_check' ) ? 'disabled' : ''; ?>
-											 id="easy-wp-smtp-setting-domain_check_allowed_domains" spellcheck="false"
+								       value="<?php echo esc_attr( $options->get( 'general', 'domain_check_allowed_domains' ) ); ?>"
+								       id="easy-wp-smtp-setting-domain_check_allowed_domains" spellcheck="false"
+									<?php echo $options->is_const_defined( 'general', 'domain_check_allowed_domains' ) || ! $options->get( 'general', 'domain_check' ) ? 'disabled' : ''; ?>
 								/>
 								<p class="desc">
 									<?php esc_html_e( 'Comma separated domains list. (Example: domain1.com, domain2.com)', 'easy-wp-smtp' ); ?>
@@ -118,9 +119,9 @@ class MiscTab extends PageAbstract {
 							<div class="easy-wp-smtp-setting-row__sub-row">
 								<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-domain_check_do_not_send">
 									<input name="easy-wp-smtp[general][domain_check_do_not_send]" type="checkbox" value="true"
-												 id="easy-wp-smtp-setting-domain_check_do_not_send"
-												 <?php echo $options->is_const_defined( 'general', 'domain_check_do_not_send' ) || ! $options->get( 'general', 'domain_check' ) ? 'disabled' : ''; ?>
-												 <?php checked( true, $options->get( 'general', 'domain_check_do_not_send' ) ); ?>
+									       id="easy-wp-smtp-setting-domain_check_do_not_send"
+										<?php echo $options->is_const_defined( 'general', 'domain_check_do_not_send' ) || ! $options->get( 'general', 'domain_check' ) ? 'disabled' : ''; ?>
+										<?php checked( true, $options->get( 'general', 'domain_check_do_not_send' ) ); ?>
 									/>
 									<span class="easy-wp-smtp-toggle__switch"></span>
 									<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--static"><?php esc_html_e( 'Block all emails', 'easy-wp-smtp' ); ?></span>
@@ -142,8 +143,8 @@ class MiscTab extends PageAbstract {
 						<div class="easy-wp-smtp-setting-row__field">
 							<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-do_not_send">
 								<input name="easy-wp-smtp[general][do_not_send]" type="checkbox" value="true" id="easy-wp-smtp-setting-do_not_send"
-											 <?php echo $options->is_const_defined( 'general', 'do_not_send' ) ? 'disabled' : ''; ?>
-											 <?php checked( true, $options->get( 'general', 'do_not_send' ) ); ?>
+									<?php echo $options->is_const_defined( 'general', 'do_not_send' ) ? 'disabled' : ''; ?>
+									<?php checked( true, $options->get( 'general', 'do_not_send' ) ); ?>
 								/>
 								<span class="easy-wp-smtp-toggle__switch"></span>
 								<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--static"><?php esc_html_e( 'Stop sending all emails', 'easy-wp-smtp' ); ?></span>
@@ -172,8 +173,8 @@ class MiscTab extends PageAbstract {
 						<div class="easy-wp-smtp-setting-row__field">
 							<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-allow_smtp_insecure_ssl">
 								<input name="easy-wp-smtp[general][allow_smtp_insecure_ssl]" type="checkbox" value="true" id="easy-wp-smtp-setting-allow_smtp_insecure_ssl"
-											 <?php echo $options->is_const_defined( 'general', 'allow_smtp_insecure_ssl' ) ? 'disabled' : ''; ?>
-											 <?php checked( true, $options->get( 'general', 'allow_smtp_insecure_ssl' ) ); ?>
+									<?php echo $options->is_const_defined( 'general', 'allow_smtp_insecure_ssl' ) ? 'disabled' : ''; ?>
+									<?php checked( true, $options->get( 'general', 'allow_smtp_insecure_ssl' ) ); ?>
 								/>
 								<span class="easy-wp-smtp-toggle__switch"></span>
 								<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--checked"><?php esc_html_e( 'On', 'easy-wp-smtp' ); ?></span>
@@ -199,8 +200,8 @@ class MiscTab extends PageAbstract {
 							<div class="easy-wp-smtp-setting-row__field">
 								<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-debug_log_enabled">
 									<input name="easy-wp-smtp[deprecated][debug_log_enabled]" type="checkbox"
-												 value="true" <?php checked( true, $options->get( 'deprecated', 'debug_log_enabled' ) ); ?>
-												 id="easy-wp-smtp-setting-debug_log_enabled"
+									       value="true" <?php checked( true, $options->get( 'deprecated', 'debug_log_enabled' ) ); ?>
+									       id="easy-wp-smtp-setting-debug_log_enabled"
 									/>
 									<span class="easy-wp-smtp-toggle__switch"></span>
 									<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--checked"><?php esc_html_e( 'On', 'easy-wp-smtp' ); ?></span>
@@ -236,8 +237,8 @@ class MiscTab extends PageAbstract {
 						<div class="easy-wp-smtp-setting-row__field">
 							<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-am_notifications_hidden">
 								<input name="easy-wp-smtp[general][am_notifications_hidden]" type="checkbox"
-											 value="true" <?php checked( true, ! $options->get( 'general', 'am_notifications_hidden' ) ); ?>
-											 id="easy-wp-smtp-setting-am_notifications_hidden"
+								       value="true" <?php checked( true, ! $options->get( 'general', 'am_notifications_hidden' ) ); ?>
+								       id="easy-wp-smtp-setting-am_notifications_hidden"
 								/>
 								<span class="easy-wp-smtp-toggle__switch"></span>
 								<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--checked"><?php esc_html_e( 'On', 'easy-wp-smtp' ); ?></span>
@@ -267,8 +268,8 @@ class MiscTab extends PageAbstract {
 									<input type="checkbox" disabled id="easy-wp-smtp-setting-email_delivery_errors_hidden">
 								<?php else : ?>
 									<input name="easy-wp-smtp[general][email_delivery_errors_hidden]" type="checkbox" value="true"
-												 <?php checked( true, ! $options->get( 'general', 'email_delivery_errors_hidden' ) ); ?>
-												 id="easy-wp-smtp-setting-email_delivery_errors_hidden"
+										<?php checked( true, ! $options->get( 'general', 'email_delivery_errors_hidden' ) ); ?>
+										   id="easy-wp-smtp-setting-email_delivery_errors_hidden"
 									/>
 								<?php endif; ?>
 								<span class="easy-wp-smtp-toggle__switch"></span>
@@ -307,8 +308,8 @@ class MiscTab extends PageAbstract {
 						<div class="easy-wp-smtp-setting-row__field">
 							<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-top_level_menu_hidden">
 								<input name="easy-wp-smtp[general][top_level_menu_hidden]" type="checkbox"
-											 value="true" <?php checked( true, $options->get( 'general', 'top_level_menu_hidden' ) ); ?>
-											 id="easy-wp-smtp-setting-top_level_menu_hidden"
+								       value="true" <?php checked( true, $options->get( 'general', 'top_level_menu_hidden' ) ); ?>
+								       id="easy-wp-smtp-setting-top_level_menu_hidden"
 								/>
 								<span class="easy-wp-smtp-toggle__switch"></span>
 								<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--checked"><?php esc_html_e( 'On', 'easy-wp-smtp' ); ?></span>
@@ -317,6 +318,9 @@ class MiscTab extends PageAbstract {
 
 							<div class="desc">
 								<?php esc_html_e( 'Enabling this will condense navigation and move Easy WP SMTP under the WordPress Settings menu.', 'easy-wp-smtp' ); ?>
+								<?php if ( is_network_admin() ) : ?>
+									<?php esc_html_e( 'This setting will be applied only to subsites.', 'easy-wp-smtp' ); ?>
+								<?php endif; ?>
 							</div>
 						</div>
 					</div>
@@ -332,8 +336,8 @@ class MiscTab extends PageAbstract {
 							<div class="easy-wp-smtp-setting-row__field">
 								<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-usage-tracking">
 									<input name="easy-wp-smtp[general][<?php echo esc_attr( UsageTracking::SETTINGS_SLUG ); ?>]"
-												 type="checkbox" value="true" id="easy-wp-smtp-setting-usage-tracking"
-												 <?php checked( true, $options->get( 'general', UsageTracking::SETTINGS_SLUG ) ); ?>
+									       type="checkbox" value="true" id="easy-wp-smtp-setting-usage-tracking"
+										<?php checked( true, $options->get( 'general', UsageTracking::SETTINGS_SLUG ) ); ?>
 									/>
 									<span class="easy-wp-smtp-toggle__switch"></span>
 									<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--checked"><?php esc_html_e( 'On', 'easy-wp-smtp' ); ?></span>
@@ -357,8 +361,8 @@ class MiscTab extends PageAbstract {
 						<div class="easy-wp-smtp-setting-row__field">
 							<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-dashboard_widget_hidden">
 								<input name="easy-wp-smtp[general][dashboard_widget_hidden]" type="checkbox"
-											 value="true" <?php checked( true, $options->get( 'general', 'dashboard_widget_hidden' ) ); ?>
-											 id="easy-wp-smtp-setting-dashboard_widget_hidden"
+								       value="true" <?php checked( true, $options->get( 'general', 'dashboard_widget_hidden' ) ); ?>
+								       id="easy-wp-smtp-setting-dashboard_widget_hidden"
 								/>
 								<span class="easy-wp-smtp-toggle__switch"></span>
 								<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--checked"><?php esc_html_e( 'On', 'easy-wp-smtp' ); ?></span>
@@ -381,9 +385,9 @@ class MiscTab extends PageAbstract {
 						<div class="easy-wp-smtp-setting-row__field">
 							<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-summary-report-email">
 								<input name="easy-wp-smtp[general][<?php echo esc_attr( SummaryReportEmail::SETTINGS_SLUG ); ?>]"
-											 type="checkbox" id="easy-wp-smtp-setting-summary-report-email" value="true"
-											 <?php checked( true, SummaryReportEmail::is_disabled() ); ?>
-											 <?php disabled( $options->is_const_defined( 'general', SummaryReportEmail::SETTINGS_SLUG ) || ( easy_wp_smtp()->is_pro() && empty( Options::init()->get( 'logs', 'enabled' ) ) ) ); ?>
+								       type="checkbox" id="easy-wp-smtp-setting-summary-report-email" value="true"
+									<?php checked( true, SummaryReportEmail::is_disabled() ); ?>
+									<?php disabled( $options->is_const_defined( 'general', SummaryReportEmail::SETTINGS_SLUG ) || ( easy_wp_smtp()->is_pro() && empty( Options::init()->get( 'logs', 'enabled' ) ) ) ); ?>
 								/>
 								<span class="easy-wp-smtp-toggle__switch"></span>
 								<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--checked"><?php esc_html_e( 'On', 'easy-wp-smtp' ); ?></span>
@@ -416,12 +420,67 @@ class MiscTab extends PageAbstract {
 								}
 
 								if ( $options->is_const_defined( 'general', SummaryReportEmail::SETTINGS_SLUG ) ) {
-									echo '<br>' . $options->get_const_set_message( 'EasyWPSMTP_SUMMARY_REPORT_EMAIL_DISABLED' ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+									echo '<br>' . $options->get_const_set_message( 'EASY_WP_SMTP_SUMMARY_REPORT_EMAIL_DISABLED' ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								}
 								?>
 							</p>
 						</div>
 					</div>
+
+					<!-- Optimize email sending -->
+					<div id="easy-wp-smtp-setting-row-optimize-email-sending" class="easy-wp-smtp-row  easy-wp-smtp-setting-row easy-wp-smtp-row--has-divider">
+						<div class="easy-wp-smtp-setting-row__label">
+							<label for="easy-wp-smtp-setting-optimize-email-sending">
+								<?php esc_html_e( 'Optimize Email Sending', 'easy-wp-smtp' ); ?>
+							</label>
+						</div>
+						<div class="easy-wp-smtp-setting-row__field">
+							<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-optimize-email-sending">
+								<input name="easy-wp-smtp[general][<?php echo esc_attr( OptimizedEmailSending::SETTINGS_SLUG ); ?>]"
+								       type="checkbox"
+								       value="true"
+								       id="easy-wp-smtp-setting-optimize-email-sending"
+									<?php checked( true, OptimizedEmailSending::is_enabled() ); ?>
+									<?php disabled( $options->is_const_defined( 'general', OptimizedEmailSending::SETTINGS_SLUG ) ); ?>/>
+								<span class="easy-wp-smtp-toggle__switch"></span>
+								<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--checked"><?php esc_html_e( 'On', 'easy-wp-smtp' ); ?></span>
+								<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--unchecked"><?php esc_html_e( 'Off', 'easy-wp-smtp' ); ?></span>
+							</label>
+
+							<p class="desc">
+								<?php
+								printf(
+									wp_kses( /* translators: %1$s - Documentation URL. */
+										__( 'Send emails asynchronously, which will make pages with email requests load faster, but may delay email delivery by a minute or two. <a href="%1$s" target="_blank" rel="noopener noreferrer">Learn More</a>', 'easy-wp-smtp' ),
+										[
+											'a' => [
+												'href'   => [],
+												'rel'    => [],
+												'target' => [],
+											],
+										]
+									),
+									esc_url(
+										easy_wp_smtp()->get_utm_url(
+											'https://easywpsmtp.com/docs/a-complete-guide-to-miscellaneous-settings/#optimize-email-sending',
+											[
+												'medium'  => 'misc-settings',
+												'content' => 'Optimize Email Sending - support article',
+											]
+										)
+									)
+								);
+
+								if ( $options->is_const_defined( 'general', OptimizedEmailSending::SETTINGS_SLUG ) ) {
+									echo '<br>' . $options->get_const_set_message( 'EASY_WP_SMTP_OPTIMIZED_EMAIL_SENDING_ENABLED' ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								}
+								?>
+							</p>
+						</div>
+					</div>
+
+					<!-- Rate limit -->
+					<?php $this->display_rate_limit_settings(); ?>
 
 					<!-- Uninstall -->
 					<div id="easy-wp-smtp-setting-row-uninstall" class="easy-wp-smtp-row easy-wp-smtp-setting-row">
@@ -433,8 +492,8 @@ class MiscTab extends PageAbstract {
 						<div class="easy-wp-smtp-setting-row__field">
 							<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-uninstall">
 								<input name="easy-wp-smtp[general][uninstall]" type="checkbox"
-											 value="true" <?php checked( true, $options->get( 'general', 'uninstall' ) ); ?>
-											 id="easy-wp-smtp-setting-uninstall"
+								       value="true" <?php checked( true, $options->get( 'general', 'uninstall' ) ); ?>
+								       id="easy-wp-smtp-setting-uninstall"
 								/>
 								<span class="easy-wp-smtp-toggle__switch"></span>
 								<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--checked"><?php esc_html_e( 'On', 'easy-wp-smtp' ); ?></span>
@@ -453,6 +512,68 @@ class MiscTab extends PageAbstract {
 
 		</form>
 
+		<?php
+	}
+
+	/**
+	 * Display rate limit settings.
+	 *
+	 * @since 2.6.0
+	 */
+	protected function display_rate_limit_settings() {
+
+		$upgrade_link_url = add_query_arg(
+			[ 'discount' => 'LITEUPGRADE' ],
+			easy_wp_smtp()->get_upgrade_link(
+				[
+					'medium'  => 'Email Rate Limit',
+					'content' => 'Upgrade to Pro Link',
+				]
+			)
+		);
+		?>
+		<div id="easy-wp-smtp-setting-row-rate_limit-lite" class="easy-wp-smtp-row easy-wp-smtp-row--has-divider">
+			<div class="easy-wp-smtp-setting-row">
+				<div class="easy-wp-smtp-setting-row__label">
+					<label for="easy-wp-smtp-setting-rate_limit-lite">
+						<?php esc_html_e( 'Email Rate Limiting', 'easy-wp-smtp' ); ?>
+					</label>
+				</div>
+				<div class="easy-wp-smtp-setting-row__field">
+					<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-rate_limit-lite" data-disabled-text="<?php esc_html_e( 'Pro', 'easy-wp-smtp' ); ?>">
+						<input type="checkbox" id="easy-wp-smtp-setting-rate_limit-lite"/>
+						<span class=" easy-wp-smtp-toggle__switch"></span>
+						<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--checked"><?php esc_html_e( 'On', 'easy-wp-smtp' ); ?></span>
+						<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--unchecked"><?php esc_html_e( 'Off', 'easy-wp-smtp' ); ?></span>
+					</label>
+					<p class="desc">
+						<?php
+						echo wp_kses(
+							sprintf( /* translators: %s - EasyWPSMTP.com Upgrade page URL. */
+								__( 'Limit the number of emails this site will send in each time interval (per minute, hour, day, week and month). Emails that will cross those set limits will be queued and sent as soon as your limits allow. <a href="%s" target="_blank" rel="noopener noreferrer">Learn More</a>.', 'easy-wp-smtp' ),
+								esc_url(
+									easy_wp_smtp()->get_utm_url(
+										'https://easywpsmtp.com/docs/a-complete-guide-to-miscellaneous-settings/#email-rate-limiting',
+										[
+											'medium'  => 'misc-settings',
+											'content' => 'Optimize Email Sending - support article',
+										]
+									)
+								)
+							),
+							[
+								'a' => [
+									'href'   => [],
+									'rel'    => [],
+									'target' => [],
+								],
+							]
+						);
+						?>
+					</p>
+				</div>
+			</div>
+		</div>
 		<?php
 	}
 
@@ -478,6 +599,7 @@ class MiscTab extends PageAbstract {
 			'uninstall',
 			UsageTracking::SETTINGS_SLUG,
 			SummaryReportEmail::SETTINGS_SLUG,
+			OptimizedEmailSending::SETTINGS_SLUG,
 			'dashboard_widget_hidden',
 		];
 

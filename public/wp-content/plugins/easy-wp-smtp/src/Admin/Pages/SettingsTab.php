@@ -137,6 +137,8 @@ class SettingsTab extends PageAbstract {
 			echo $settings_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 
+			<?php $this->display_backup_connection_education(); ?>
+
 			<?php $this->display_save_btn(); ?>
 		</form>
 
@@ -218,7 +220,7 @@ class SettingsTab extends PageAbstract {
 				</div>
 
 				<p class="desc">
-					<?php esc_html_e( 'Already purchased? Simply enter your license key below to connect with Easy WP SMTP Pro!', 'easy-wp-smtp' ); ?>
+					<?php esc_html_e( 'Already purchased? Simply enter your license key above to connect with Easy WP SMTP Pro!', 'easy-wp-smtp' ); ?>
 				</p>
 			</div>
 		</div>
@@ -348,12 +350,14 @@ class SettingsTab extends PageAbstract {
 								<ul>
 									<li><?php esc_html_e( 'Open and click tracking', 'easy-wp-smtp' ); ?></li>
 									<li><?php esc_html_e( 'Status (was the email delivered, sent, pending, or failed)', 'easy-wp-smtp' ); ?></li>
-									<li><?php esc_html_e( 'Email log export (.eml, .csv, .xlsl) and bulk exporter', 'easy-wp-smtp' ); ?></li>
+									<li><?php esc_html_e( 'Email log export (.eml, .csv, .xlsx) and bulk exporter', 'easy-wp-smtp' ); ?></li>
 									<li><?php esc_html_e( 'Source (which plugin/theme sent the email and it\'s path location)', 'easy-wp-smtp' ); ?></li>
 								</ul>
 							</li>
 						</ul>
 						<ul>
+							<li><?php esc_html_e( 'Backup Connection - send emails through a backup if the primary connection fails', 'easy-wp-smtp' ); ?></li>
+							<li><?php esc_html_e( 'Smart Routing - set specific conditions for how your emails are sent', 'easy-wp-smtp' ); ?></li>
 							<li><?php esc_html_e( 'Pro mailers: Amazon SES and Microsoft 365 / Outlook', 'easy-wp-smtp' ); ?></li>
 							<li><?php esc_html_e( 'Advanced Email Reports', 'easy-wp-smtp' ); ?></li>
 							<li><?php esc_html_e( 'Intuitive Dashboard Widget with email stats', 'easy-wp-smtp' ); ?></li>
@@ -365,6 +369,112 @@ class SettingsTab extends PageAbstract {
 					<a href="<?php echo esc_url( $button_upgrade_link ); ?>" target="_blank" rel="noopener noreferrer" class="easy-wp-smtp-btn easy-wp-smtp-btn--lg easy-wp-smtp-btn--green">
 						<?php esc_html_e( 'Upgrade to Easy WP SMTP Pro', 'easy-wp-smtp' ); ?>
 					</a>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Display backup connection education section.
+	 *
+	 * @since 2.6.0
+	 */
+	private function display_backup_connection_education() {
+
+		if ( easy_wp_smtp()->is_pro() ) {
+			return;
+		}
+
+		$upgrade_button_url = add_query_arg(
+			[ 'discount' => 'LITEUPGRADE' ],
+			easy_wp_smtp()->get_upgrade_link(
+				[
+					'medium'  => 'Backup Connections',
+					'content' => 'Upgrade to Pro Button',
+				]
+			)
+		);
+		$upgrade_link_url   = add_query_arg(
+			[ 'discount' => 'LITEUPGRADE' ],
+			easy_wp_smtp()->get_upgrade_link(
+				[
+					'medium'  => 'Backup Connections',
+					'content' => 'Upgrade to Pro Link',
+				]
+			)
+		);
+		?>
+		<div class="easy-wp-smtp-meta-box">
+			<div class="easy-wp-smtp-meta-box__header">
+				<div class="easy-wp-smtp-meta-box__heading">
+					<?php esc_html_e( 'Backup Connection', 'easy-wp-smtp' ); ?>
+				</div>
+
+				<a href="<?php echo esc_url( $upgrade_button_url ); ?>" target="_blank" rel="noopener noreferrer" class="easy-wp-smtp-btn easy-wp-smtp-btn--sm easy-wp-smtp-btn--green">
+					<?php esc_html_e( 'Upgrade to Pro', 'easy-wp-smtp' ); ?>
+				</a>
+			</div>
+			<div class="easy-wp-smtp-meta-box__content">
+				<!-- Backup Connection Section Title -->
+				<div class="easy-wp-smtp-row easy-wp-smtp-row--has-divider">
+					<div class="easy-wp-smtp-row__desc">
+						<p>
+							<?php
+							echo wp_kses(
+								sprintf( /* translators: %s - EasyWPSMTP.com Upgrade page URL. */
+									__( 'Avoid the risk of losing emails by adding an additional connection and setting it as your Backup Connection. Should the Primary Connection fail to send an email, the Backup Connection will take over. <a href="%s" target="_blank" rel="noopener noreferrer">Upgrade to Easy WP SMTP Pro</a>.', 'easy-wp-smtp' ),
+									esc_url( $upgrade_link_url )
+								),
+								[
+									'a' => [
+										'href'   => [],
+										'rel'    => [],
+										'target' => [],
+									],
+								]
+							);
+							?>
+						</p>
+					</div>
+				</div>
+
+				<!-- Backup Connection Selector -->
+				<div id="easy-wp-smtp-setting-row-backup_connection" class="easy-wp-smtp-row easy-wp-smtp-setting-row">
+					<div class="easy-wp-smtp-setting-row__label">
+						<label>
+							<?php esc_html_e( 'Backup Connection', 'easy-wp-smtp' ); ?>
+						</label>
+					</div>
+					<div class="easy-wp-smtp-setting-row__field">
+						<div class="easy-wp-smtp-radio-group easy-wp-smtp-connection-selector">
+							<label class="easy-wp-smtp-radio" for="easy-wp-smtp-setting-row-backup_connection_none">
+								<input type="radio" id="easy-wp-smtp-setting-row-backup_connection_none" checked/>
+								<span class="easy-wp-smtp-radio__checkmark"></span>
+								<span class="easy-wp-smtp-radio__label"><?php esc_html_e( 'None', 'easy-wp-smtp' ); ?></span>
+							</label>
+						</div>
+						<p class="desc">
+							<?php
+							echo wp_kses(
+								sprintf( /* translators: %s - Additional connections settings page url. */
+									__( 'Once you add an <a href="%s">additional connection</a>, you can select it here.', 'easy-wp-smtp' ),
+									add_query_arg(
+										[
+											'tab' => 'connections',
+										],
+										easy_wp_smtp()->get_admin()->get_admin_page_url()
+									)
+								),
+								[
+									'a' => [
+										'href' => [],
+									],
+								]
+							);
+							?>
+						</p>
+					</div>
 				</div>
 			</div>
 		</div>

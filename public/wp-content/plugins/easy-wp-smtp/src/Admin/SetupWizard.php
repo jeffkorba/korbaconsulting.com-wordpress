@@ -4,11 +4,13 @@ namespace EasyWPSMTP\Admin;
 
 use EasyWPSMTP\Admin\Pages\TestTab;
 use EasyWPSMTP\Connect;
+use EasyWPSMTP\Helpers\Helpers;
 use EasyWPSMTP\Options;
 use EasyWPSMTP\UsageTracking\UsageTracking;
 use EasyWPSMTP\WP;
 use EasyWPSMTP\Reports\Emails\Summary as SummaryReportEmail;
 use EasyWPSMTP\Tasks\Reports\SummaryEmailTask as SummaryReportEmailTask;
+use Plugin_Upgrader;
 
 /**
  * Class for the plugin's Setup Wizard.
@@ -77,7 +79,7 @@ class SetupWizard {
 				isset( $_GET['page'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				Area::SLUG . '-setup-wizard' === $_GET['page'] && // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				$this->should_setup_wizard_load() &&
-				current_user_can( 'manage_options' )
+				current_user_can( easy_wp_smtp()->get_capability_manage_options() )
 			)
 		) {
 			return;
@@ -92,6 +94,10 @@ class SetupWizard {
 
 		// Remove an action in the Gutenberg plugin ( not core Gutenberg ) which throws an error.
 		remove_action( 'admin_print_styles', 'gutenberg_block_editor_admin_print_styles' );
+
+		// Remove hooks for deprecated functions in WordPress 6.4.0.
+		remove_action( 'admin_print_styles', 'print_emoji_styles' );
+		remove_action( 'admin_head', 'wp_admin_bar_header' );
 
 		$this->load_setup_wizard();
 	}
@@ -120,7 +126,7 @@ class SetupWizard {
 		}
 
 		// Only do this for single site installs.
-		if ( isset( $_GET['activate-multi'] ) || is_network_admin() ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['activate-multi'] ) || is_network_admin() || WP::use_global_plugin_settings() ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return;
 		}
 
@@ -151,7 +157,7 @@ class SetupWizard {
 			return;
 		}
 
-		add_submenu_page( '', '', '', 'manage_options', Area::SLUG . '-setup-wizard', '' );
+		add_submenu_page( '', '', '', easy_wp_smtp()->get_capability_manage_options(), Area::SLUG . '-setup-wizard', '' );
 	}
 
 	/**
@@ -551,7 +557,7 @@ class SetupWizard {
 
 		check_ajax_referer( 'easywpsmtp-admin-nonce', 'nonce' );
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( easy_wp_smtp()->get_capability_manage_options() ) ) {
 			wp_send_json_error( esc_html__( 'You don\'t have permission to change options for this WP site!', 'easy-wp-smtp' ) );
 		}
 
@@ -569,7 +575,7 @@ class SetupWizard {
 
 		check_ajax_referer( 'easywpsmtp-admin-nonce', 'nonce' );
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( easy_wp_smtp()->get_capability_manage_options() ) ) {
 			wp_send_json_error( esc_html__( 'You don\'t have permission to change options for this WP site!', 'easy-wp-smtp' ) );
 		}
 
@@ -591,7 +597,7 @@ class SetupWizard {
 
 		check_ajax_referer( 'easywpsmtp-admin-nonce', 'nonce' );
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( easy_wp_smtp()->get_capability_manage_options() ) ) {
 			wp_send_json_error();
 		}
 
@@ -659,7 +665,7 @@ class SetupWizard {
 
 		check_ajax_referer( 'easywpsmtp-admin-nonce', 'nonce' );
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( easy_wp_smtp()->get_capability_manage_options() ) ) {
 			wp_send_json_error();
 		}
 
@@ -669,7 +675,7 @@ class SetupWizard {
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$settings = isset( $_POST['settings'] ) ? wp_slash( json_decode( wp_unslash( $_POST['settings'] ), true ) ) : [];
 
-		if ( empty( $mailer ) || empty( $settings ) ) {
+		if ( empty( $mailer ) ) {
 			wp_send_json_error();
 		}
 
@@ -692,7 +698,7 @@ class SetupWizard {
 
 		check_ajax_referer( 'easywpsmtp-admin-nonce', 'nonce' );
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( easy_wp_smtp()->get_capability_manage_options() ) ) {
 			wp_send_json_error();
 		}
 
@@ -742,8 +748,20 @@ class SetupWizard {
 			wp_send_json_error( esc_html__( 'Could not install the plugin. Plugin slug is missing.', 'easy-wp-smtp' ) );
 		}
 
+		if ( ! in_array( $slug, [ 'wpforms-lite', 'all-in-one-seo-pack' ], true ) ) {
+			wp_send_json_error( esc_html__( 'Could not install the plugin. Plugin is not whitelisted.', 'easy-wp-smtp' ) );
+		}
+
 		$url   = esc_url_raw( WP::admin_url( 'admin.php?page=' . Area::SLUG . '-setup-wizard' ) );
+
+		/*
+		 * The `request_filesystem_credentials` function will output a credentials form in case of failure.
+		 * We don't want that, since it will break AJAX response. So just hide output with a buffer.
+		 */
+		ob_start();
+		// phpcs:ignore WPForms.Formatting.EmptyLineAfterAssigmentVariables.AddEmptyLine
 		$creds = request_filesystem_credentials( $url, '', false, false, null );
+		ob_end_clean();
 
 		// Check for file system permissions.
 		if ( false === $creds ) {
@@ -757,8 +775,11 @@ class SetupWizard {
 		// Do not allow WordPress to search/download translations, as this will break JS output.
 		remove_action( 'upgrader_process_complete', [ 'Language_Pack_Upgrader', 'async_upgrade' ], 20 );
 
+		// Import the plugin upgrader.
+		Helpers::include_plugin_upgrader();
+
 		// Create the plugin upgrader with our custom skin.
-		$installer = new PluginsInstallUpgrader( new PluginsInstallSkin() );
+		$installer = new Plugin_Upgrader( new PluginsInstallSkin() );
 
 		// Error check.
 		if ( ! method_exists( $installer, 'install' ) || empty( $slug ) ) {
@@ -813,21 +834,6 @@ class SetupWizard {
 			// Activate the plugin silently.
 			$activated = activate_plugin( $plugin_basename );
 
-			// Disable the RafflePress redirect after plugin activation.
-			if ( $slug === 'rafflepress' ) {
-				delete_transient( '_rafflepress_welcome_screen_activation_redirect' );
-			}
-
-			// Disable the MonsterInsights redirect after plugin activation.
-			if ( $slug === 'google-analytics-for-wordpress' ) {
-				delete_transient( '_monsterinsights_activation_redirect' );
-			}
-
-			// Disable the SeedProd redirect after the plugin activation.
-			if ( $slug === 'coming-soon' ) {
-				delete_transient( '_seedprod_welcome_screen_activation_redirect' );
-			}
-
 			if ( ! is_wp_error( $activated ) ) {
 				wp_send_json_success(
 					[
@@ -875,7 +881,6 @@ class SetupWizard {
 		foreach ( $installed_plugins as $basename => $plugin_info ) {
 			if ( in_array( $basename, $contact_form_basenames, true ) ) {
 				$contact_form_plugin_already_installed = true;
-
 				break;
 			}
 		}
@@ -921,7 +926,8 @@ class SetupWizard {
 		wp_remote_post(
 			'https://connect.easywpsmtp.com/subscribe/drip/',
 			[
-				'body' => $body,
+				'user-agent' => Helpers::get_default_user_agent(),
+				'body'       => $body,
 			]
 		);
 
@@ -931,7 +937,7 @@ class SetupWizard {
 	/**
 	 * Get the WPForms version type if it's installed.
 	 *
-	 * @since {VERSION}
+	 * @since 2.2.0
 	 *
 	 * @return false|string Return `false` if WPForms is not installed, otherwise return either `lite` or `pro`.
 	 */
@@ -1021,7 +1027,7 @@ class SetupWizard {
 		}
 
 		// Add the optional sending domain parameter.
-		if ( in_array( $mailer, [ 'mailgun', 'sendinblue' ], true ) ) {
+		if ( in_array( $mailer, [ 'mailgun', 'sendinblue', 'sendgrid' ], true ) ) {
 			$domain = $options->get( $mailer, 'domain' );
 		}
 
@@ -1059,7 +1065,8 @@ class SetupWizard {
 		wp_remote_post(
 			'https://easywpsmtp.com/wizard-feedback/',
 			[
-				'body' => [
+				'user-agent' => Helpers::get_default_user_agent(),
+				'body'       => [
 					'wpforms' => [
 						'id'     => 2271,
 						'fields' => [
@@ -1086,10 +1093,9 @@ class SetupWizard {
 		global $wp_version;
 
 		return [
-			'php_version'          => phpversion(),
-			'php_version_below_56' => apply_filters( 'easy_wp_smtp_temporarily_hide_php_under_55_upgrade_warnings', version_compare( phpversion(), '5.6', '<' ) ),
-			'wp_version'           => $wp_version,
-			'wp_version_below_52'  => version_compare( $wp_version, '5.2', '<' ),
+			'php_version'         => phpversion(),
+			'wp_version'          => $wp_version,
+			'wp_version_below_52' => version_compare( $wp_version, '5.2', '<' ),
 		];
 	}
 
@@ -1194,32 +1200,41 @@ class SetupWizard {
 		}
 
 		$constants = [
-			'EasyWPSMTP_MAIL_FROM'                     => [ 'mail', 'from_email' ],
-			'EasyWPSMTP_MAIL_FROM_FORCE'               => [ 'mail', 'from_email_force' ],
-			'EasyWPSMTP_MAIL_FROM_NAME'                => [ 'mail', 'from_name' ],
-			'EasyWPSMTP_MAIL_FROM_NAME_FORCE'          => [ 'mail', 'from_name_force' ],
-			'EasyWPSMTP_MAILER'                        => [ 'mail', 'mailer' ],
-			'EasyWPSMTP_SMTPCOM_API_KEY'               => [ 'smtpcom', 'api_key' ],
-			'EasyWPSMTP_SMTPCOM_CHANNEL'               => [ 'smtpcom', 'channel' ],
-			'EasyWPSMTP_SENDINBLUE_API_KEY'            => [ 'sendinblue', 'api_key' ],
-			'EasyWPSMTP_SENDINBLUE_DOMAIN'             => [ 'sendinblue', 'domain' ],
-			'EasyWPSMTP_AMAZONSES_CLIENT_ID'           => [ 'amazonses', 'client_id' ],
-			'EasyWPSMTP_AMAZONSES_CLIENT_SECRET'       => [ 'amazonses', 'client_secret' ],
-			'EasyWPSMTP_AMAZONSES_REGION'              => [ 'amazonses', 'region' ],
-			'EasyWPSMTP_MAILGUN_API_KEY'               => [ 'mailgun', 'api_key' ],
-			'EasyWPSMTP_MAILGUN_DOMAIN'                => [ 'mailgun', 'domain' ],
-			'EasyWPSMTP_MAILGUN_REGION'                => [ 'mailgun', 'region' ],
-			'EasyWPSMTP_OUTLOOK_CLIENT_ID'             => [ 'outlook', 'client_id' ],
-			'EasyWPSMTP_OUTLOOK_CLIENT_SECRET'         => [ 'outlook', 'client_secret' ],
-			'EasyWPSMTP_SMTP_HOST'                     => [ 'smtp', 'host' ],
-			'EasyWPSMTP_SMTP_PORT'                     => [ 'smtp', 'port' ],
-			'EasyWPSMTP_SSL'                           => [ 'smtp', 'encryption' ],
-			'EasyWPSMTP_SMTP_AUTH'                     => [ 'smtp', 'auth' ],
-			'EasyWPSMTP_SMTP_AUTOTLS'                  => [ 'smtp', 'autotls' ],
-			'EasyWPSMTP_SMTP_USER'                     => [ 'smtp', 'user' ],
-			'EasyWPSMTP_SMTP_PASS'                     => [ 'smtp', 'pass' ],
-			'EasyWPSMTP_LOGS_ENABLED'                  => [ 'logs', 'enabled' ],
-			'EasyWPSMTP_SUMMARY_REPORT_EMAIL_DISABLED' => [ 'general', SummaryReportEmail::SETTINGS_SLUG ],
+			'EASY_WP_SMTP_MAIL_FROM'                     => [ 'mail', 'from_email' ],
+			'EASY_WP_SMTP_MAIL_FROM_FORCE'               => [ 'mail', 'from_email_force' ],
+			'EASY_WP_SMTP_MAIL_FROM_NAME'                => [ 'mail', 'from_name' ],
+			'EASY_WP_SMTP_MAIL_FROM_NAME_FORCE'          => [ 'mail', 'from_name_force' ],
+			'EASY_WP_SMTP_MAILER'                        => [ 'mail', 'mailer' ],
+			'EASY_WP_SMTP_SMTPCOM_API_KEY'               => [ 'smtpcom', 'api_key' ],
+			'EASY_WP_SMTP_SMTPCOM_CHANNEL'               => [ 'smtpcom', 'channel' ],
+			'EASY_WP_SMTP_SENDINBLUE_API_KEY'            => [ 'sendinblue', 'api_key' ],
+			'EASY_WP_SMTP_SENDINBLUE_DOMAIN'             => [ 'sendinblue', 'domain' ],
+			'EASY_WP_SMTP_AMAZONSES_CLIENT_ID'           => [ 'amazonses', 'client_id' ],
+			'EASY_WP_SMTP_AMAZONSES_CLIENT_SECRET'       => [ 'amazonses', 'client_secret' ],
+			'EASY_WP_SMTP_AMAZONSES_REGION'              => [ 'amazonses', 'region' ],
+			'EASY_WP_SMTP_MAILGUN_API_KEY'               => [ 'mailgun', 'api_key' ],
+			'EASY_WP_SMTP_MAILGUN_DOMAIN'                => [ 'mailgun', 'domain' ],
+			'EASY_WP_SMTP_MAILGUN_REGION'                => [ 'mailgun', 'region' ],
+			'EASY_WP_SMTP_OUTLOOK_CLIENT_ID'             => [ 'outlook', 'client_id' ],
+			'EASY_WP_SMTP_OUTLOOK_CLIENT_SECRET'         => [ 'outlook', 'client_secret' ],
+			'EASY_WP_SMTP_SENDGRID_API_KEY'              => [ 'sendgrid', 'api_key' ],
+			'EASY_WP_SMTP_SENDGRID_DOMAIN'               => [ 'sendgrid', 'domain' ],
+			'EASY_WP_SMTP_POSTMARK_SERVER_API_TOKEN'     => [ 'postmark', 'server_api_token' ],
+			'EASY_WP_SMTP_POSTMARK_MESSAGE_STREAM'       => [ 'postmark', 'message_stream' ],
+			'EASY_WP_SMTP_SPARKPOST_API_KEY'             => [ 'sparkpost', 'api_key' ],
+			'EASY_WP_SMTP_SPARKPOST_REGION'              => [ 'sparkpost', 'region' ],
+			'EASY_WP_SMTP_ZOHO_DOMAIN'                   => [ 'zoho', 'domain' ],
+			'EASY_WP_SMTP_ZOHO_CLIENT_ID'                => [ 'zoho', 'client_id' ],
+			'EASY_WP_SMTP_ZOHO_CLIENT_SECRET'            => [ 'zoho', 'client_secret' ],
+			'EASY_WP_SMTP_SMTP_HOST'                     => [ 'smtp', 'host' ],
+			'EASY_WP_SMTP_SMTP_PORT'                     => [ 'smtp', 'port' ],
+			'EASY_WP_SMTP_SSL'                           => [ 'smtp', 'encryption' ],
+			'EASY_WP_SMTP_SMTP_AUTH'                     => [ 'smtp', 'auth' ],
+			'EASY_WP_SMTP_SMTP_AUTOTLS'                  => [ 'smtp', 'autotls' ],
+			'EASY_WP_SMTP_SMTP_USER'                     => [ 'smtp', 'user' ],
+			'EASY_WP_SMTP_SMTP_PASS'                     => [ 'smtp', 'pass' ],
+			'EASY_WP_SMTP_LOGS_ENABLED'                  => [ 'logs', 'enabled' ],
+			'EASY_WP_SMTP_SUMMARY_REPORT_EMAIL_DISABLED' => [ 'general', SummaryReportEmail::SETTINGS_SLUG ],
 		];
 
 		$defined = [];

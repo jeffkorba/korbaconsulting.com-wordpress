@@ -323,6 +323,7 @@ class TestTab extends PageAbstract {
 		$this->connection = apply_filters( 'easy_wp_smtp_admin_pages_test_tab_process_post_connection', $connection, $data );
 
 		if ( ! empty( $data['test']['email'] ) ) {
+			$data['test']['email'] = wp_unslash( $data['test']['email'] );
 			$data['test']['email'] = filter_var( $data['test']['email'], FILTER_VALIDATE_EMAIL );
 		}
 
@@ -403,7 +404,7 @@ class TestTab extends PageAbstract {
 			$domain             = '';
 
 			// Add the optional sending domain parameter.
-			if ( in_array( $mailer, [ 'mailgun', 'sendinblue' ], true ) ) {
+			if ( in_array( $mailer, [ 'mailgun', 'sendinblue', 'sendgrid' ], true ) ) {
 				$domain = $connection_options->get( $mailer, 'domain' );
 			}
 
@@ -648,7 +649,7 @@ https://easywpsmtp.com/lite-upgrade/
 Unlock These Powerful Features with Easy WP SMTP Pro:
 
 + Log all emails and export your email logs in different formats
-+ Send emails with Amazon SES / Microsoft 365
++ Send emails with Amazon SES / Microsoft 365/ Zoho Mail
 + Track opens and clicks to measure engagement
 + Resend failed emails from your email log
 + Create email reports and graphs
@@ -754,7 +755,7 @@ CEO, SendLayer';
 		if ( $connection_options->is_mailer_smtp() ) {
 			$smtp_text = '<strong>SMTP Debug:</strong><br>';
 			if ( ! empty( $smtp_debug ) ) {
-				$smtp_text .= '<pre>' . $smtp_debug . '</pre>';
+				$smtp_text .= $smtp_debug;
 			} else {
 				$smtp_text .= '[empty]';
 			}
@@ -832,6 +833,23 @@ CEO, SendLayer';
 					esc_html__( 'If using "Other SMTP" Mailer, contact your SMTP host to confirm they are accepting outside connections with the settings you have configured (address, username, port, security, etc).', 'easy-wp-smtp' ),
 				],
 			],
+			// [sendgrid] - cURL error 18 - potential incorrect API key.
+			[
+				'mailer'      => 'sendgrid',
+				'errors'      => [
+					[ 'cURL error 18' ],
+				],
+				'title'       => esc_html__( 'Invalid SendGrid API key', 'easy-wp-smtp' ),
+				'description' => [
+					esc_html__( 'It looks like your SendGrid API Key is invalid.', 'easy-wp-smtp' ),
+				],
+				'steps'       => [
+					esc_html__( 'Go to Easy WP SMTP plugin Settings page.', 'easy-wp-smtp' ),
+					esc_html__( 'Make sure your API Key in the SendGrid mailer settings is correct and valid.', 'easy-wp-smtp' ),
+					esc_html__( 'Save the plugin settings.', 'easy-wp-smtp' ),
+					esc_html__( 'If updating the API Key doesn\'t resolve this issue, please contact our support.', 'easy-wp-smtp' ),
+				],
+			],
 			// [any] - cURL error XX (other).
 			[
 				'mailer'      => 'any',
@@ -897,7 +915,7 @@ CEO, SendLayer';
 					esc_html__( 'Typically this error is returned when you are sending too many e-mails or e-mails that have been identified as spam.', 'easy-wp-smtp' ),
 				],
 				'steps'       => [
-					esc_html__( 'Check the emails that are sending are sending individually. Example: email is not sending to 30 recipients. You can install any WordPress e-mail logging plugin to do that.', 'easy-wp-smtp' ),
+					esc_html__( 'Make sure you are not sending emails with too many recipients. Example: single email should not have 10+ recipients. You can install any WordPress e-mail logging plugin to check your recipients (TO, CC and BCC).', 'easy-wp-smtp' ),
 					esc_html__( 'Contact your SMTP host to ask about sending/rate limits.', 'easy-wp-smtp' ),
 					esc_html__( 'Verify with them your SMTP account is in good standing and your account has not been flagged.', 'easy-wp-smtp' ),
 				],
@@ -1021,12 +1039,12 @@ CEO, SendLayer';
 				],
 				'title'       => esc_html__( 'Mailgun failed.', 'easy-wp-smtp' ),
 				'description' => [
-					esc_html__( 'Typically this error occurs because there is an issue with your Mailgun settings, in many cases Private API Key, Domain Name, or Region is incorrect.', 'easy-wp-smtp' ),
+					esc_html__( 'Typically this error occurs because there is an issue with your Mailgun settings, in many cases Mailgun API Key, Domain Name, or Region is incorrect.', 'easy-wp-smtp' ),
 				],
 				'steps'       => [
 					sprintf(
 						wp_kses( /* translators: %1$s - Mailgun API Key area URL. */
-							__( 'Go to your Mailgun account and verify that your <a href="%1$s" target="_blank" rel="noopener noreferrer">Private API Key</a> is correct.', 'easy-wp-smtp' ),
+							__( 'Go to your Mailgun account and verify that your <a href="%1$s" target="_blank" rel="noopener noreferrer">Mailgun API Key</a> is correct.', 'easy-wp-smtp' ),
 							[
 								'a' => [
 									'href'   => [],
@@ -1035,7 +1053,7 @@ CEO, SendLayer';
 								],
 							]
 						),
-						'https://app.mailgun.com/app/account/security/api_keys'
+						'https://app.mailgun.com/settings/api_security'
 					),
 					sprintf(
 						wp_kses( /* translators: %1$s - Mailgun domains area URL. */
@@ -1048,7 +1066,7 @@ CEO, SendLayer';
 								],
 							]
 						),
-						'https://app.mailgun.com/app/sending/domains'
+						'https://app.mailgun.com/mg/sending/domains'
 					),
 					esc_html__( 'Verify your domain Region is correct.', 'easy-wp-smtp' ),
 				],
@@ -1082,6 +1100,212 @@ CEO, SendLayer';
 					esc_html__( 'Complete the steps in section "2. Verify Your Domain".', 'easy-wp-smtp' ),
 				],
 			],
+			// [gmail] - 401: Login Required.
+			[
+				'mailer'      => 'gmail',
+				'errors'      => [
+					[ '401', 'Login Required' ],
+				],
+				'title'       => esc_html__( 'Google API Error.', 'easy-wp-smtp' ),
+				'description' => [
+					esc_html__( 'You have not properly configured Gmail mailer.', 'easy-wp-smtp' ),
+					esc_html__( 'Make sure that you have clicked the "Allow plugin to send emails using your Google account" button under Gmail settings.', 'easy-wp-smtp' ),
+				],
+				'steps'       => [
+					esc_html__( 'Go to plugin Settings page and click the "Allow plugin to send emails using your Google account" button.', 'easy-wp-smtp' ),
+					esc_html__( 'After the click you should be redirected to a Gmail authorization screen, where you will be asked a permission to send emails on your behalf.', 'easy-wp-smtp' ),
+					esc_html__( 'Please click "Agree", if you see that button. If not - you will need to enable less secure apps first:', 'easy-wp-smtp' )
+					. '<ul>'
+					. '<li>' .
+					sprintf(
+						wp_kses( /* translators: %s - Google support article URL. */
+							__( 'if you are using regular Gmail account, please <a href="%s" target="_blank" rel="noopener noreferrer">read this article</a> to proceed.', 'easy-wp-smtp' ),
+							[
+								'a' => [
+									'href'   => [],
+									'target' => [],
+									'rel'    => [],
+								],
+							]
+						),
+						'https://support.google.com/accounts/answer/6010255?hl=en'
+					)
+					. '</li>'
+					. '<li>' .
+					sprintf(
+						wp_kses( /* translators: %s - Google support article URL. */
+							__( 'if you are using Google Workspace, please <a href="%s" target="_blank" rel="noopener noreferrer">read this article</a> to proceed.', 'easy-wp-smtp' ),
+							[
+								'a' => [
+									'href'   => [],
+									'target' => [],
+									'rel'    => [],
+								],
+							]
+						),
+						'https://support.google.com/cloudidentity/answer/6260879?hl=en'
+					)
+					. '</li>'
+					. '</ul>',
+				],
+			],
+			// [gmail] - 400: Recipient address required.
+			[
+				'mailer'      => 'gmail',
+				'errors'      => [
+					[ '400', 'Recipient address required' ],
+				],
+				'title'       => esc_html__( 'Google API Error.', 'easy-wp-smtp' ),
+				'description' => [
+					esc_html__( 'Typically this error occurs because the address to which the email was sent to is invalid or was empty.', 'easy-wp-smtp' ),
+				],
+				'steps'       => [
+					esc_html__( 'Check the "Send To" email address used and confirm it is a valid email and was not empty.', 'easy-wp-smtp' ),
+					sprintf( /* translators: 1 - correct email address example. 2 - incorrect email address example. */
+						esc_html__( 'It should be something like this: %1$s. These are incorrect values: %2$s.', 'easy-wp-smtp' ),
+						'<code>info@example.com</code>',
+						'<code>info@localhost</code>, <code>info@192.168.1.1</code>'
+					),
+					esc_html__( 'Make sure that the generated email has a TO header, useful when you are responsible for email creation.', 'easy-wp-smtp' ),
+				],
+			],
+			// [gmail] - Token has been expired or revoked.
+			[
+				'mailer'      => 'gmail',
+				'errors'      => [
+					[ 'invalid_grant', 'Token has been expired or revoked' ],
+				],
+				'title'       => esc_html__( 'Google API Error.', 'easy-wp-smtp' ),
+				'description' => [
+					esc_html__( 'Unfortunately, this error can be due to many different reasons.', 'easy-wp-smtp' ),
+					sprintf(
+						wp_kses( /* translators: %s - Blog article URL. */
+							__( 'Please <a href="%s" target="_blank" rel="noopener noreferrer">read this article</a> to learn more about what can cause this error and follow the steps below.', 'easy-wp-smtp' ),
+							[
+								'a' => [
+									'href'   => [],
+									'target' => [],
+									'rel'    => [],
+								],
+							]
+						),
+						'https://blog.timekit.io/google-oauth-invalid-grant-nightmare-and-how-to-fix-it-9f4efaf1da35'
+					),
+				],
+				'steps'       => [
+					esc_html__( 'Go to Easy WP SMTP plugin settings page. Click the “Remove OAuth Connection” button.', 'easy-wp-smtp' ),
+					esc_html__( 'Then click the “Allow plugin to send emails using your Google account” button and re-enable access.', 'easy-wp-smtp' ),
+				],
+			],
+			// [gmail] - Code was already redeemed.
+			[
+				'mailer'      => 'gmail',
+				'errors'      => [
+					[ 'invalid_grant', 'Code was already redeemed' ],
+				],
+				'title'       => esc_html__( 'Google API Error.', 'easy-wp-smtp' ),
+				'description' => [
+					esc_html__( 'Authentication code that Google returned to you has already been used on your previous auth attempt.', 'easy-wp-smtp' ),
+				],
+				'steps'       => [
+					esc_html__( 'Make sure that you are not trying to manually clean up the plugin options to retry the "Allow..." step.', 'easy-wp-smtp' ),
+					esc_html__( 'Reinstall the plugin with clean plugin data turned on on Misc page. This will remove all the plugin options and you will be safe to retry.', 'easy-wp-smtp' ),
+					esc_html__( 'Make sure there is no aggressive caching on site admin area pages or try to clean cache between attempts.', 'easy-wp-smtp' ),
+				],
+			],
+			// [gmail] - 400: Mail service not enabled.
+			[
+				'mailer'      => 'gmail',
+				'errors'      => [
+					[ '400', 'Mail service not enabled' ],
+				],
+				'title'       => esc_html__( 'Google API Error.', 'easy-wp-smtp' ),
+				'description' => [
+					esc_html__( 'There are various reasons for that, please review the steps below.', 'easy-wp-smtp' ),
+				],
+				'steps'       => [
+					sprintf(
+						wp_kses( /* translators: %s - Google Google Workspace Admin area URL. */
+							__( 'Make sure that your Google Workspace trial period has not expired. You can check the status <a href="%s" target="_blank" rel="noopener noreferrer">here</a>.', 'easy-wp-smtp' ),
+							[
+								'a' => [
+									'href'   => [],
+									'rel'    => [],
+									'target' => [],
+								],
+							]
+						),
+						'https://admin.google.com'
+					),
+					sprintf(
+						wp_kses( /* translators: %s - Google Google Workspace Admin area URL. */
+							__( 'Make sure that Gmail app in your Google Workspace is actually enabled. You can check that in Apps list in <a href="%s" target="_blank" rel="noopener noreferrer">Google Workspace Admin</a> area.', 'easy-wp-smtp' ),
+							[
+								'a' => [
+									'href'   => [],
+									'rel'    => [],
+									'target' => [],
+								],
+							]
+						),
+						'https://admin.google.com'
+					),
+					sprintf(
+						wp_kses( /* translators: %s - Google Developers Console URL. */
+							__( 'Make sure that you have Gmail API enabled, and you can do that <a href="%s" target="_blank" rel="noopener noreferrer">here</a>.', 'easy-wp-smtp' ),
+							[
+								'a' => [
+									'href'   => [],
+									'rel'    => [],
+									'target' => [],
+								],
+							]
+						),
+						'https://console.developers.google.com/'
+					),
+				],
+			],
+			// [gmail] - 403: Project X is not found and cannot be used for API calls.
+			[
+				'mailer'      => 'gmail',
+				'errors'      => [
+					[ '403', 'is not found and cannot be used for API calls' ],
+				],
+				'title'       => esc_html__( 'Google API Error.', 'easy-wp-smtp' ),
+				'description' => [],
+				'steps'       => [
+					esc_html__( 'Make sure that the used Client ID/Secret correspond to a proper project that has Gmail API enabled.', 'easy-wp-smtp' ),
+					sprintf(
+						wp_kses( /* translators: %s - Gmail documentation URL. */
+							esc_html__( 'Please follow our <a href="%s" target="_blank" rel="noopener noreferrer">Gmail tutorial</a> to be sure that all the correct project and data is applied.', 'easy-wp-smtp' ),
+							[
+								'a' => [
+									'href'   => [],
+									'rel'    => [],
+									'target' => [],
+								],
+							]
+						),
+						// phpcs:ignore WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound
+						esc_url( easy_wp_smtp()->get_utm_url( 'https://easywpsmtp.com/docs/setting-up-the-gmail-mailer/', [ 'medium' => 'email-test', 'content' => 'Gmail tutorial' ] ) )
+					),
+				],
+			],
+			// [gmail] - The OAuth client was disabled.
+			[
+				'mailer'      => 'gmail',
+				'errors'      => [
+					[ 'disabled_client', 'The OAuth client was disabled' ],
+				],
+				'title'       => esc_html__( 'Google API Error.', 'easy-wp-smtp' ),
+				'description' => [
+					esc_html__( 'You may have added a new API to a project', 'easy-wp-smtp' ),
+				],
+				'steps'       => [
+					esc_html__( 'Make sure that the used Client ID/Secret correspond to a proper project that has Gmail API enabled.', 'easy-wp-smtp' ),
+					esc_html__( 'Try to use a separate project for your emails, so the project has only 1 Gmail API in it enabled. You will need to remove the old project and create a new one from scratch.', 'easy-wp-smtp' ),
+				],
+			],
 			// [SMTP.com] - The "channel - not found" issue.
 			[
 				'mailer'      => 'smtpcom',
@@ -1094,6 +1318,49 @@ CEO, SendLayer';
 				],
 				'steps'       => [
 					esc_html__( 'Please make sure you entered an accurate Sender Name in Easy WP SMTP plugin settings.', 'easy-wp-smtp' ),
+				],
+			],
+			// [sparkpost] - Forbidden.
+			[
+				'mailer'      => 'sparkpost',
+				'errors'      => [
+					[ 'Forbidden' ],
+				],
+				'title'       => esc_html__( 'SparkPost API failed.', 'easy-wp-smtp' ),
+				'description' => [
+					esc_html__( 'Typically this error occurs because there is an issue with your SparkPost settings, in many cases an incorrect API key.', 'easy-wp-smtp' ),
+				],
+				'steps'       => [
+					sprintf(
+						wp_kses( /* translators: %1$s - SparkPost API Keys area URL, %1$s - SparkPost EU API Keys area URL. */
+							__( 'Go to your <a href="%1$s" target="_blank" rel="noopener noreferrer">SparkPost account</a> or <a href="%2$s" target="_blank" rel="noopener noreferrer">SparkPost EU account</a> and verify that your API key is correct.', 'easy-wp-smtp' ),
+							[
+								'a' => [
+									'href'   => [],
+									'rel'    => [],
+									'target' => [],
+								],
+								'b' => [],
+							]
+						),
+						'https://app.sparkpost.com/account/api-keys',
+						'https://app.eu.sparkpost.com/account/api-keys'
+					),
+					esc_html__( 'Verify that your API key has "Transmissions: Read/Write" permission.', 'easy-wp-smtp' ),
+				],
+			],
+			// [sparkpost] - Unauthorized.
+			[
+				'mailer'      => 'sparkpost',
+				'errors'      => [
+					[ 'Unauthorized' ],
+				],
+				'title'       => esc_html__( 'SparkPost API failed.', 'easy-wp-smtp' ),
+				'description' => [
+					esc_html__( 'Typically this error occurs because there is an issue with your SparkPost settings, in many cases an incorrect region.', 'easy-wp-smtp' ),
+				],
+				'steps'       => [
+					esc_html__( 'Verify that your SparkPost account region is selected in Easy WP SMTP settings.', 'easy-wp-smtp' ),
 				],
 			],
 		];
@@ -1172,7 +1439,7 @@ CEO, SendLayer';
 				. '</ul>',
 			],
 			'steps'       => [
-				esc_html__( 'Triple check the plugin settings, consider reconfiguring to make sure everything is correct (eg bad copy and paste).', 'easy-wp-smtp' ),
+				esc_html__( 'Triple-check the plugin settings and consider reconfiguring to make sure everything is correct. Maybe there was an issue with copy&pasting.', 'easy-wp-smtp' ),
 				wp_kses(
 					__( 'Contact your web hosting provider and ask them to verify your server can make outside connections. Additionally, ask them if a firewall or security policy may be preventing the connection - many shared hosts block certain ports.<br><strong>Note: this is the most common cause of this issue.</strong>', 'easy-wp-smtp' ),
 					[
@@ -1345,7 +1612,9 @@ CEO, SendLayer';
 			</p>
 
 			<div class="easy-wp-smtp-error-log notice-error notice-inline">
-				<?php echo wp_kses( $this->debug['error_log'], $allowed_tags ); ?>
+				<blockquote>
+					<?php echo wp_kses( $this->debug['error_log'], $allowed_tags ); ?>
+				</blockquote>
 			</div>
 		</div>
 		<?php

@@ -3,6 +3,7 @@
 namespace EasyWPSMTP;
 
 use WP_Error;
+use WP_Filesystem_Direct;
 
 /**
  * EasyWPSMTP uploads.
@@ -69,7 +70,6 @@ class Uploads {
 			'url'  => trailingslashit( $upload_dir['baseurl'] ) . $dir,
 		];
 	}
-
 
 	/**
 	 * Create .htaccess file in the EasyWPSMTP upload directory.
@@ -195,5 +195,35 @@ class Uploads {
 
 		// Create empty index.html.
 		return file_put_contents( $index_file, '' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+	}
+
+	/**
+	 * Delete the Easy WP SMTP uploads directory.
+	 *
+	 * @since 2.6.0
+	 *
+	 * @return void
+	 */
+	public static function delete_upload_dir() {
+
+		// Get the upload dir.
+		$upload_dir = self::upload_dir();
+
+		// If there is an error, return.
+		if ( is_wp_error( $upload_dir ) ) {
+			return;
+		}
+
+		$upload_root = $upload_dir['path'];
+
+		// Get WP Filesystem base files.
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+
+		// Initialize WP_Filesystem_Direct.
+		$wp_filesystem = new WP_Filesystem_Direct( false );
+
+		// Delete the directory.
+		$wp_filesystem->delete( $upload_root, true );
 	}
 }

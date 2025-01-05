@@ -32,8 +32,25 @@ class UserFeedback {
 	 */
 	public function init() {
 
-		add_action( 'admin_notices', [ $this, 'maybe_display' ] );
+		add_action( 'admin_init', [ $this, 'admin_notices' ] );
 		add_action( 'wp_ajax_easy_wp_smtp_feedback_notice_dismiss', [ $this, 'feedback_notice_dismiss' ] );
+	}
+
+	/**
+	 * Display notices only in Network Admin if in Multisite.
+	 * Otherwise, display in Admin Dashboard.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @return void
+	 */
+	public function admin_notices() {
+
+		if ( is_multisite() ) {
+			add_action( 'network_admin_notices', [ $this, 'maybe_display' ] );
+		} else {
+			add_action( 'admin_notices', [ $this, 'maybe_display' ] );
+		}
 	}
 
 	/**

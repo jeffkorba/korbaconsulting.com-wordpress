@@ -22,6 +22,7 @@ var EasyWPSMTPDashboardWidget = window.EasyWPSMTPDashboardWidget || ( function( 
 		$summaryReportEmailBlock        : $( '.easy-wp-smtp-dash-widget-summary-report-email-block' ),
 		$summaryReportEmailDismissBtn   : $( '.easy-wp-smtp-dash-widget-summary-report-email-dismiss' ),
 		$summaryReportEmailEnableInput  : $( '#easy-wp-smtp-dash-widget-summary-report-email-enable' ),
+		$emailAlertsDismissBtn          : $( '#easy-wp-smtp-dash-widget-dismiss-email-alert-block' ),
 	};
 
 	/**
@@ -251,6 +252,14 @@ var EasyWPSMTPDashboardWidget = window.EasyWPSMTPDashboardWidget || ( function( 
 						$self.show();
 						$loader.hide();
 					} );
+			} );
+
+			// Hide email alerts banner on dismiss icon click.
+			el.$emailAlertsDismissBtn.on( 'click', function( event ) {
+				event.preventDefault();
+
+				$( '#easy-wp-smtp-dash-widget-email-alerts-education' ).remove();
+				app.saveWidgetMeta( 'hide_email_alerts_banner', 1 );
 			} );
 
 			chart.init();

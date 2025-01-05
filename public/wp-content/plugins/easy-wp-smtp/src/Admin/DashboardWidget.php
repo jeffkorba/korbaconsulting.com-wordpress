@@ -2,6 +2,7 @@
 
 namespace EasyWPSMTP\Admin;
 
+use EasyWPSMTP\Admin\DebugEvents\DebugEvents;
 use EasyWPSMTP\Helpers\Helpers;
 use EasyWPSMTP\Options;
 use EasyWPSMTP\WP;
@@ -29,15 +30,7 @@ class DashboardWidget {
 	 *
 	 * @since 2.1.0
 	 */
-	public function __construct() {
-
-		// Prevent the class initialization, if the dashboard widget hidden setting is enabled.
-		if ( Options::init()->get( 'general', 'dashboard_widget_hidden' ) ) {
-			return;
-		}
-
-		add_action( 'admin_init', [ $this, 'init' ] );
-	}
+	public function __construct() {}
 
 	/**
 	 * Init class.
@@ -46,23 +39,33 @@ class DashboardWidget {
 	 */
 	public function init() {
 
-		// This widget should be displayed for certain high-level users only.
-		if ( ! current_user_can( 'manage_options' ) ) {
+		// Prevent the class initialization, if the dashboard widget hidden setting is enabled.
+		if ( Options::init()->get( 'general', 'dashboard_widget_hidden' ) ) {
 			return;
 		}
 
-		/**
-		 * Filters whether the initialization of the dashboard widget should be allowed.
-		 *
-		 * @since 2.1.0
-		 *
-		 * @param bool $var If the dashboard widget should be initialized.
-		 */
-		if ( ! apply_filters( 'easy_wp_smtp_admin_dashboard_widget', '__return_true' ) ) {
-			return;
-		}
+		add_action(
+			'admin_init',
+			function() {
+				// This widget should be displayed for certain high-level users only.
+				if ( ! current_user_can( easy_wp_smtp()->get_capability_manage_options() ) ) {
+					return;
+				}
 
-		$this->hooks();
+				/**
+				 * Filters whether the initialization of the dashboard widget should be allowed.
+				 *
+				 * @since 2.1.0
+				 *
+				 * @param bool $var If the dashboard widget should be initialized.
+				 */
+				if ( ! apply_filters( 'easy_wp_smtp_admin_dashboard_widget', '__return_true' ) ) {
+					return;
+				}
+
+				$this->hooks();
+			}
+		);
 	}
 
 	/**
@@ -108,14 +111,6 @@ class DashboardWidget {
 			EasyWPSMTP_PLUGIN_VERSION
 		);
 
-		wp_enqueue_script(
-			'easy-wp-smtp-moment',
-			easy_wp_smtp()->assets_url . '/js/vendor/moment.min.js',
-			[],
-			'2.29.4',
-			true
-		);
-
 		wp_enqueue_style(
 			'easy-wp-smtp-chart',
 			easy_wp_smtp()->assets_url . '/css/vendor/apexcharts.css',
@@ -133,7 +128,7 @@ class DashboardWidget {
 		wp_enqueue_script(
 			'easy-wp-smtp-dashboard-widget',
 			easy_wp_smtp()->assets_url . "/js/smtp-dashboard-widget{$min}.js",
-			[ 'jquery', 'easy-wp-smtp-chart' ],
+			[ 'jquery', 'moment', 'easy-wp-smtp-chart' ],
 			EasyWPSMTP_PLUGIN_VERSION,
 			true
 		);
@@ -171,7 +166,8 @@ class DashboardWidget {
 		unset( $normal_dashboard[ $widget_key ] );
 		$sorted_dashboard = array_merge( $widget_instance, $normal_dashboard );
 
-		$wp_meta_boxes['dashboard']['normal']['core'] = $sorted_dashboard; //phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		//phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$wp_meta_boxes['dashboard']['normal']['core'] = $sorted_dashboard;
 	}
 
 	/**
@@ -183,7 +179,7 @@ class DashboardWidget {
 
 		check_admin_referer( 'easy_wp_smtp_' . static::SLUG . '_nonce' );
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( easy_wp_smtp()->get_capability_manage_options() ) ) {
 			wp_send_json_error();
 		}
 
@@ -204,7 +200,7 @@ class DashboardWidget {
 
 		check_admin_referer( 'easy_wp_smtp_' . static::SLUG . '_nonce' );
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( easy_wp_smtp()->get_capability_manage_options() ) ) {
 			wp_send_json_error();
 		}
 
@@ -242,8 +238,7 @@ class DashboardWidget {
 	 */
 	private function widget_content_html() {
 
-		$hide_graph                      = (bool) $this->widget_meta( 'get', 'hide_graph' );
-		$hide_summary_report_email_block = (bool) $this->widget_meta( 'get', 'hide_summary_report_email_block' );
+		$hide_graph = (bool) $this->widget_meta( 'get', 'hide_graph' );
 		?>
 
 		<?php if ( ! $hide_graph ) : ?>
@@ -281,37 +276,156 @@ class DashboardWidget {
 			<?php $this->email_stats_block(); ?>
 		</div>
 
-		<?php if ( SummaryReportEmail::is_disabled() && ! $hide_summary_report_email_block ) : ?>
-			<div id="easy-wp-smtp-dash-widget-summary-report-email-block" class="easy-wp-smtp-dash-widget-block easy-wp-smtp-dash-widget-summary-report-email-block">
-				<div>
-					<div class="easy-wp-smtp-dash-widget-summary-report-email-block-setting">
-						<label for="easy-wp-smtp-dash-widget-summary-report-email-enable">
-							<input type="checkbox" id="easy-wp-smtp-dash-widget-summary-report-email-enable">
-							<i class="easy-wp-smtp-dash-widget-loader"></i>
-							<span>
-								<?php
-								echo wp_kses(
-									__( '<b>NEW!</b> Enable Weekly Email Summaries', 'easy-wp-smtp' ),
-									[
-										'b' => [],
-									]
-								);
-								?>
-							</span>
-						</label>
-						<a href="<?php echo esc_url( SummaryReportEmail::get_preview_link() ); ?>" target="_blank">
-							<?php esc_html_e( 'View Example', 'easy-wp-smtp' ); ?>
-						</a>
-						<i class="dashicons dashicons-dismiss easy-wp-smtp-dash-widget-summary-report-email-dismiss"></i>
-					</div>
-					<div class="easy-wp-smtp-dash-widget-summary-report-email-block-applied hidden">
-						<i class="easy-wp-smtp-dashicons-yes-alt-green"></i>
-						<span><?php esc_attr_e( 'Weekly Email Summaries have been enabled', 'easy-wp-smtp' ); ?></span>
-					</div>
+		<?php
+
+		$this->display_after_email_stats_block_content();
+	}
+
+	/**
+	 * Display the content after the email stats block.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @return void
+	 */
+	private function display_after_email_stats_block_content() {
+
+		if ( empty( $this->widget_meta( 'get', 'hide_email_alerts_banner' ) ) ) {
+			// Check if we have error debug events.
+			$error_debug_events_count = DebugEvents::get_error_debug_events_count();
+
+			if ( ! is_wp_error( $error_debug_events_count ) && ! empty( $error_debug_events_count ) ) {
+				$this->show_email_alerts_banner( $error_debug_events_count );
+
+				return;
+			}
+		}
+
+		$hide_summary_report_email_block = (bool) $this->widget_meta( 'get', 'hide_summary_report_email_block' );
+
+		if ( SummaryReportEmail::is_disabled() && ! $hide_summary_report_email_block ) {
+			$this->show_summary_report_email_block();
+		}
+
+		$this->show_upgrade_footer();
+	}
+
+	/**
+	 * Display the email alerts banner.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param int $error_count The number of debug events error.
+	 *
+	 * @return void
+	 */
+	private function show_email_alerts_banner( $error_count ) {
+		?>
+
+		<div id="easy-wp-smtp-dash-widget-email-alerts-education" class="easy-wp-smtp-dash-widget-block easy-wp-smtp-dash-widget-email-alerts-education">
+			<div class="easy-wp-smtp-dash-widget-email-alerts-education-error-icon">
+				<?php
+				printf(
+					'<img src="%s" alt="%s"/>',
+					esc_url( easy_wp_smtp()->assets_url . '/images/icons/exclamation-circle-red.svg' ),
+					esc_attr__( 'Error icon', 'easy-wp-smtp' )
+				);
+				?>
+			</div>
+			<div class="easy-wp-smtp-dash-widget-email-alerts-education-content">
+				<?php
+				if ( $error_count === 1 ) {
+					$error_title = __( 'We detected a failed email in the last 30 days.', 'easy-wp-smtp' );
+				} else {
+					$error_title = sprintf(
+					/* translators: %d - number of failed emails. */
+						__( 'We detected %d failed emails in the last 30 days.', 'easy-wp-smtp' ),
+						$error_count
+					);
+				}
+
+				$content = sprintf(
+				/* translators: %s - URL to EasyWPSMTP.com. */
+					__( '<a href="%s" target="_blank" rel="noopener noreferrer">Upgrade to Pro</a> and get instant alert notifications when they fail.', 'easy-wp-smtp' ),
+					esc_url( easy_wp_smtp()->get_upgrade_link( [ 'medium' => 'dashboard-widget-alerts', 'content' => 'upgrade-to-pro' ] ) ) // phpcs:ignore WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound
+				);
+				?>
+				<p>
+					<strong><?php echo esc_html( $error_title ); ?></strong><br />
+					<?php
+					echo wp_kses(
+						$content,
+						[
+							'a' => [
+								'href'   => [],
+								'target' => [],
+								'rel'    => [],
+							],
+						]
+					);
+					?>
+				</p>
+			</div>
+
+			<button type="button" id="easy-wp-smtp-dash-widget-dismiss-email-alert-block" class="easy-wp-smtp-dash-widget-dismiss-email-alert-block" title="<?php esc_attr_e( 'Dismiss email alert block', 'easy-wp-smtp' ); ?>">
+				<span class="dashicons dashicons-no-alt"></span>
+			</button>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Show the summary report email block.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @return void
+	 */
+	private function show_summary_report_email_block() {
+
+		?>
+		<div id="easy-wp-smtp-dash-widget-summary-report-email-block" class="easy-wp-smtp-dash-widget-block easy-wp-smtp-dash-widget-summary-report-email-block">
+			<div>
+				<div class="easy-wp-smtp-dash-widget-summary-report-email-block-setting">
+					<label for="easy-wp-smtp-dash-widget-summary-report-email-enable">
+						<input type="checkbox" id="easy-wp-smtp-dash-widget-summary-report-email-enable">
+						<i class="easy-wp-smtp-dash-widget-loader"></i>
+						<span>
+							<?php
+							echo wp_kses(
+								__( '<b>NEW!</b> Enable Weekly Email Summaries', 'easy-wp-smtp' ),
+								[
+									'b' => [],
+								]
+							);
+							?>
+						</span>
+					</label>
+					<a href="<?php echo esc_url( SummaryReportEmail::get_preview_link() ); ?>" target="_blank">
+						<?php esc_html_e( 'View Example', 'easy-wp-smtp' ); ?>
+					</a>
+					<i class="dashicons dashicons-dismiss easy-wp-smtp-dash-widget-summary-report-email-dismiss"></i>
+				</div>
+				<div class="easy-wp-smtp-dash-widget-summary-report-email-block-applied hidden">
+					<i class="easy-wp-smtp-dashicons-yes-alt-green"></i>
+					<span><?php esc_attr_e( 'Weekly Email Summaries have been enabled', 'easy-wp-smtp' ); ?></span>
 				</div>
 			</div>
-		<?php endif; ?>
+		</div>
+		<?php
+	}
 
+	/**
+	 * Show the upgrade footer.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @return void
+	 */
+	private function show_upgrade_footer() {
+
+		$hide_graph = (bool) $this->widget_meta( 'get', 'hide_graph' );
+		?>
 		<div id="easy-wp-smtp-dash-widget-upgrade-footer" class="easy-wp-smtp-dash-widget-block easy-wp-smtp-dash-widget-upgrade-footer easy-wp-smtp-dash-widget-upgrade-footer--<?php echo ! $hide_graph ? 'hide' : 'show'; ?>">
 			<p>
 				<?php
@@ -326,7 +440,8 @@ class DashboardWidget {
 							],
 						]
 					),
-					esc_url( easy_wp_smtp()->get_upgrade_link( [ 'medium' => 'dashboard-widget', 'content' => 'upgrade-to-pro' ] ) ) // phpcs:ignore WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound
+					// phpcs:ignore WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound
+					esc_url( easy_wp_smtp()->get_upgrade_link( [ 'medium' => 'dashboard-widget', 'content' => 'upgrade-to-pro' ] ) )
 				);
 				?>
 			</p>
@@ -500,24 +615,12 @@ class DashboardWidget {
 			return false;
 		}
 
-		$defaults = [
-			'hide_graph'                      => 0,
-			'hide_summary_report_email_block' => 0,
-		];
-
-		if ( ! array_key_exists( $meta, $defaults ) ) {
-			return false;
+		if ( $action === 'get' ) {
+			return $this->get_widget_meta( $meta );
 		}
 
-		$meta_key = 'easy_wp_smtp_' . static::SLUG . '_' . $meta;
-
-		if ( 'get' === $action ) {
-			$meta_value = get_user_meta( get_current_user_id(), $meta_key, true );
-
-			return empty( $meta_value ) ? $defaults[ $meta ] : $meta_value;
-		}
-
-		$value = sanitize_key( $value );
+		$meta_key = $this->get_widget_meta_key( $meta );
+		$value    = sanitize_key( $value );
 
 		if ( 'set' === $action && ! empty( $value ) ) {
 			return update_user_meta( get_current_user_id(), $meta_key, $value );
@@ -528,5 +631,41 @@ class DashboardWidget {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get the widget meta value.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param string $meta Meta name.
+	 *
+	 * @return mixed
+	 */
+	private function get_widget_meta( $meta ) {
+
+		$defaults = [
+			'hide_graph'                      => 0,
+			'hide_summary_report_email_block' => 0,
+			'hide_email_alerts_banner'        => 0,
+		];
+
+		$meta_value = get_user_meta( get_current_user_id(), $this->get_widget_meta_key( $meta ), true );
+
+		return empty( $meta_value ) ? $defaults[ $meta ] : $meta_value;
+	}
+
+	/**
+	 * Retrieve the meta key.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param string $meta Meta name.
+	 *
+	 * @return string
+	 */
+	private function get_widget_meta_key( $meta ) {
+
+		return 'easy_wp_smtp_' . static::SLUG . '_' . $meta;
 	}
 }

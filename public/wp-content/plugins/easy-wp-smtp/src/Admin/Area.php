@@ -2,8 +2,8 @@
 
 namespace EasyWPSMTP\Admin;
 
-use EasyWPSMTP\WP;
 use EasyWPSMTP\Options;
+use EasyWPSMTP\WP;
 
 /**
  * Class Area registers and process all wp-admin display functionality.
@@ -53,17 +53,15 @@ class Area {
 	 *
 	 * @since 2.0.0
 	 */
-	public function __construct() {
-
-		$this->hooks();
-	}
+	public function __construct() {}
 
 	/**
 	 * Assign all hooks to proper places.
 	 *
 	 * @since 2.0.0
+	 * @since 2.3.0 Changed visibility to public.
 	 */
-	protected function hooks() {
+	public function hooks() {
 
 		// Redirect from deprecated settings page.
 		if ( isset( $_GET['page'] ) && $_GET['page'] === 'swpsmtp_settings' && WP::in_wp_admin() ) {
@@ -76,6 +74,12 @@ class Area {
 
 		// Add the options page.
 		add_action( 'admin_menu', [ $this, 'add_admin_options_page' ] );
+
+		// Add inline styles for "Upgrade to Pro" left sidebar menu item.
+		add_action( 'admin_head', [ $this, 'style_upgrade_pro_link' ] );
+
+		// Add network-wide setting page for product education.
+		add_action( 'network_admin_menu', [ $this, 'add_network_wide_setting_product_education_page' ] );
 
 		// Register on load Email Log admin menu hook.
 		add_action( 'load-' . $this->get_admin_page_hook( 'logs' ), [ $this, 'maybe_redirect_email_log_menu_to_email_log_settings_tab' ] );
@@ -98,6 +102,12 @@ class Area {
 		// Admin footer text.
 		add_filter( 'admin_footer_text', [ $this, 'get_admin_footer' ], 1, 2 );
 
+		// Outputs the plugin promotional admin footer.
+		add_action( 'in_admin_footer', [ $this, 'display_admin_footer' ] );
+
+		// Outputs the plugin version in the admin footer.
+		add_filter( 'update_footer', [ $this, 'display_update_footer' ], PHP_INT_MAX );
+
 		// Hide all unrelated to the plugin notices on the plugin admin pages.
 		add_action( 'admin_print_scripts', [ $this, 'hide_unrelated_notices' ] );
 
@@ -118,8 +128,26 @@ class Area {
 				global $pagenow;
 
 				// Redirect from `options-general.php`.
-				if ( WP::in_wp_admin() && $pagenow === 'options-general.php' ) {
-					wp_safe_redirect( $this->get_admin_page_url() );
+				if (
+					WP::in_wp_admin() &&
+					$pagenow === 'options-general.php' &&
+					$this->get_current_tab() !== 'auth'
+				) {
+
+					/**
+					 * Filter the default redirect URL for the
+					 * main menu entry while in compact mode.
+					 *
+					 * @since 2.7.0
+					 *
+					 * @param string $url Redirect URL.
+					 */
+					$redirect_url = apply_filters(
+						'easy_wp_smtp_compact_mode_redirect_url',
+						$this->get_admin_page_url()
+					);
+
+					wp_safe_redirect( $redirect_url );
 					exit();
 				}
 
@@ -158,7 +186,7 @@ class Area {
 			return;
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( easy_wp_smtp()->get_capability_manage_options() ) ) {
 			return;
 		}
 
@@ -237,7 +265,7 @@ class Area {
 	public function add_admin_options_page() {
 
 		// Options pages access capability.
-		$access_capability = 'manage_options';
+		$access_capability = easy_wp_smtp()->get_capability_manage_options();
 
 		if ( $this->is_top_level_menu_hidden() ) {
 			$this->hook = add_options_page(
@@ -296,6 +324,17 @@ class Area {
 				$access_capability,
 				self::SLUG . '-' . $page->get_slug(),
 				[ $this, 'display' ]
+			);
+		}
+
+		if ( ! easy_wp_smtp()->is_pro() ) {
+			add_submenu_page(
+				self::SLUG,
+				esc_html__( 'Upgrade to Pro', 'easy-wp-smtp' ),
+				esc_html__( 'Upgrade to Pro', 'easy-wp-smtp' ),
+				$access_capability,
+				// phpcs:ignore WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound
+				esc_url( easy_wp_smtp()->get_upgrade_link( [ 'medium' => 'admin-menu', 'content' => 'Upgrade to Pro' ] ) )
 			);
 		}
 	}
@@ -408,6 +447,10 @@ class Area {
 					esc_url( easy_wp_smtp()->get_utm_url( 'https://easywpsmtp.com/docs/how-to-upgrade-easy-wp-smtp-to-pro-version/', [ 'medium' => 'plugin-settings', 'content' => 'Pro Mailer Popup - Already purchased' ] ) ),
 					esc_html__( 'Already purchased?', 'easy-wp-smtp' )
 				),
+				'rate_limit'        => [
+					'upgrade_title'   => esc_html__( 'Email Rate Limiting is a Pro Feature', 'easy-wp-smtp' ),
+					'upgrade_content' => esc_html__( 'We\'re sorry, Email Rate Limiting is not available on your plan. Please upgrade to the Pro plan to unlock all these awesome features.', 'easy-wp-smtp' ),
+				],
 			],
 			'all_mailers_supports'    => easy_wp_smtp()->get_providers()->get_supports_all(),
 			'nonce'                   => wp_create_nonce( 'easy-wp-smtp-admin' ),
@@ -484,6 +527,32 @@ class Area {
 	}
 
 	/**
+	 * Whether a page is visible while in Compact Mode.
+	 *
+	 * @since 2.7.0
+	 *
+	 * @param string $page Page slug.
+	 * @param string $tab  Tab slug.
+	 *
+	 * @return bool
+	 */
+	private function compact_mode_can_access_page( $page = '', $tab = '' ) {
+
+		/**
+		 * Filters whether a page is visible while in Compact Mode.
+		 *
+		 * @since 2.7.0
+		 *
+		 * @param bool   $visible Whether the page is visible. Default true.
+		 * @param string $page    Page slug.
+		 * @param string $tab     Tab slug.
+		 *
+		 * @return bool
+		 */
+		return apply_filters( 'easy_wp_smtp_compact_mode_can_access_page', true, $page, $tab );
+	}
+
+	/**
 	 * Outputs the plugin admin header.
 	 *
 	 * @since 2.0.0
@@ -505,12 +574,22 @@ class Area {
 
 				<?php if ( $this->is_top_level_menu_hidden() ) : ?>
 					<div class="easy-wp-smtp-header-menu easy-wp-smtp-header__menu">
-						<a href="<?php echo esc_url( $this->get_admin_page_url() ); ?>" class="easy-wp-smtp-header-menu__link<?php echo $this->is_admin_page('general') ? ' easy-wp-smtp-header-menu__link--active' : ''; ?>"><?php esc_html_e( 'General', 'easy-wp-smtp' ); ?></a>
-						<a href="<?php echo esc_url( $this->get_admin_page_url( self::SLUG . '-tools', 'test' ) ); ?>" class="easy-wp-smtp-header-menu__link"><?php esc_html_e( 'Send a Test', 'easy-wp-smtp' ); ?></a>
-						<a href="<?php echo esc_url( $this->get_admin_page_url( self::SLUG . '-logs' ) ); ?>" class="easy-wp-smtp-header-menu__link<?php echo $this->is_admin_page('logs') ? ' easy-wp-smtp-header-menu__link--active' : ''; ?>"><?php esc_html_e( 'Email Log', 'easy-wp-smtp' ); ?></a>
+						<?php if ( $this->compact_mode_can_access_page( self::SLUG ) ) : ?>
+							<a href="<?php echo esc_url( $this->get_admin_page_url() ); ?>" class="easy-wp-smtp-header-menu__link<?php echo $this->is_admin_page( 'general' ) ? ' easy-wp-smtp-header-menu__link--active' : ''; ?>"><?php esc_html_e( 'General', 'easy-wp-smtp' ); ?></a>
+						<?php endif; ?>
+
+						<?php if ( $this->compact_mode_can_access_page( self::SLUG . '-tools', 'test' ) ) : ?>
+							<a href="<?php echo esc_url( $this->get_admin_page_url( self::SLUG . '-tools', 'test' ) ); ?>" class="easy-wp-smtp-header-menu__link"><?php esc_html_e( 'Send a Test', 'easy-wp-smtp' ); ?></a>
+						<?php endif; ?>
+
+						<?php if ( $this->compact_mode_can_access_page( self::SLUG . '-logs' ) ) : ?>
+							<a href="<?php echo esc_url( $this->get_admin_page_url( self::SLUG . '-logs' ) ); ?>" class="easy-wp-smtp-header-menu__link<?php echo $this->is_admin_page( 'logs' ) ? ' easy-wp-smtp-header-menu__link--active' : ''; ?>"><?php esc_html_e( 'Email Log', 'easy-wp-smtp' ); ?></a>
+						<?php endif; ?>
 
 						<?php foreach ( $this->get_parent_pages() as $parent_page ) : ?>
-							<a href="<?php echo esc_url( $parent_page->get_link() ); ?>" class="easy-wp-smtp-header-menu__link<?php echo $this->is_admin_page( $parent_page->get_slug() ) ? ' easy-wp-smtp-header-menu__link--active' : ''; ?>"><?php echo esc_html( $parent_page->get_label() ); ?></a>
+							<?php if ( $this->compact_mode_can_access_page( self::SLUG . '-' . $parent_page->get_slug() ) ) : ?>
+								<a href="<?php echo esc_url( $parent_page->get_link() ); ?>" class="easy-wp-smtp-header-menu__link<?php echo $this->is_admin_page( $parent_page->get_slug() ) ? ' easy-wp-smtp-header-menu__link--active' : ''; ?>"><?php echo esc_html( $parent_page->get_label() ); ?></a>
+							<?php endif; ?>
 						<?php endforeach; ?>
 					</div>
 				<?php endif; ?>
@@ -661,7 +740,10 @@ class Area {
 		 *
 		 * @param string $capability Email logs access capability.
 		 */
-		return apply_filters( 'easy_wp_smtp_admin_area_get_logs_access_capability', 'manage_options' );
+		return apply_filters(
+			'easy_wp_smtp_admin_area_get_logs_access_capability',
+			easy_wp_smtp()->get_capability_manage_options()
+		);
 	}
 
 	/**
@@ -793,6 +875,10 @@ class Area {
 			$this->pages = [
 				'settings'    => new Pages\SettingsTab(),
 				'logs'        => new Pages\LogsTab(),
+				'alerts'      => new Pages\AlertsTab(),
+				'connections' => new Pages\AdditionalConnectionsTab(),
+				'routing'     => new Pages\SmartRoutingTab(),
+				'control'     => new Pages\ControlTab(),
 				'misc'        => new Pages\MiscTab(),
 				'auth'        => new Pages\AuthTab(),
 			];
@@ -956,7 +1042,7 @@ class Area {
 		$data = [];
 
 		// Only admins can fire these ajax requests.
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( easy_wp_smtp()->get_capability_manage_options() ) ) {
 			wp_send_json_error( $data );
 		}
 
@@ -1044,7 +1130,7 @@ class Area {
 			return $links;
 		}
 
-		$custom['pro'] = sprintf(
+		$custom['easy-wp-smtp-pro'] = sprintf(
 			'<a href="%1$s" aria-label="%2$s" target="_blank" rel="noopener noreferrer" 
 				style="color: #00a32a; font-weight: 700;" 
 				onmouseover="this.style.color=\'#008a20\';" 
@@ -1056,14 +1142,14 @@ class Area {
 			esc_html__( 'Get Easy WP SMTP Pro', 'easy-wp-smtp' )
 		);
 
-		$custom['settings'] = sprintf(
+		$custom['easy-wp-smtp-settings'] = sprintf(
 			'<a href="%s" aria-label="%s">%s</a>',
 			esc_url( $this->get_admin_page_url() ),
 			esc_attr__( 'Go to Easy WP SMTP Settings page', 'easy-wp-smtp' ),
 			esc_html__( 'Settings', 'easy-wp-smtp' )
 		);
 
-		$custom['docs'] = sprintf(
+		$custom['easy-wp-smtp-docs'] = sprintf(
 			'<a href="%1$s" target="_blank" aria-label="%2$s" rel="noopener noreferrer">%3$s</a>',
 			// phpcs:ignore WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound
 			esc_url( easy_wp_smtp()->get_utm_url( 'https://easywpsmtp.com/docs/', [ 'medium' => 'all-plugins', 'content' => 'Documentation' ] ) ),
@@ -1127,6 +1213,10 @@ class Area {
 	 * @return bool
 	 */
 	public function is_top_level_menu_hidden() {
+
+		if ( is_multisite() && is_network_admin() ) {
+			return false;
+		}
 
 		// Apply changes after settings update.
 		if ( isset( $_POST['easy-wp-smtp-post'] ) && isset( $_GET['tab'] ) && $_GET['tab'] === 'misc' ) {
@@ -1197,5 +1287,275 @@ class Area {
 		}
 
 		return $hook;
+	}
+
+	/**
+	 * Display the promotional footer in our plugin pages.
+	 *
+	 * @since 2.4.0
+	 */
+	public function display_admin_footer() { //phpcs:ignore Generic.Metrics.CyclomaticComplexity.TooHigh
+
+		// Bail early on non-plugin pages.
+		if ( ! $this->is_admin_page() ) {
+			return;
+		}
+
+		$title = esc_html__( 'Made with ♥ by the Easy WP SMTP team', 'easy-wp-smtp' );
+		$links = [
+			[
+				'url'    => easy_wp_smtp()->is_pro() ?
+					easy_wp_smtp()->get_utm_url(
+						'https://easywpsmtp.com/account/support/',
+						[
+							'medium'  => 'Plugin Footer',
+							'content' => 'Contact Support',
+						]
+					) : 'https://wordpress.org/support/plugin/easy-wp-smtp/',
+				'text'   => esc_html__( 'Support', 'easy-wp-smtp' ),
+				'target' => '_blank',
+			],
+			[
+				'url'    => easy_wp_smtp()->get_utm_url(
+					'https://easywpsmtp.com/docs/',
+					[
+						'medium'  => 'Plugin Footer',
+						'content' => 'Plugin Documentation',
+					]
+				),
+				'text'   => esc_html__( 'Docs', 'easy-wp-smtp' ),
+				'target' => '_blank',
+			],
+		];
+
+		$links_count = count( $links );
+		?>
+		<div class="easy-wp-smtp-footer-promotion">
+			<p><?php echo esc_html( $title ); ?></p>
+			<ul class="easy-wp-smtp-footer-promotion-links">
+				<?php foreach ( $links as $key => $item ) : ?>
+					<li>
+						<?php
+						$attrs = 'href="' . esc_url( $item['url'] ) . '"';
+
+						if ( isset( $item['target'] ) ) {
+							$attrs .= ' target="' . esc_attr( $item['target'] ) . '"';
+							$attrs .= ' rel="noopener noreferrer"';
+						}
+
+						$text    = esc_html( $item['text'] );
+						$divider = $links_count !== $key + 1 ? '<span>/</span>' : '';
+
+						printf(
+							'<a %1$s>%2$s</a>%3$s',
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							$attrs,
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							$text,
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							$divider
+						);
+						?>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Display the plugin version in the footer of our plugin pages.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param string $text Text of the footer.
+	 */
+	public function display_update_footer( $text ) {
+
+		if ( $this->is_admin_page() ) {
+			return 'Easy WP SMTP ' . EasyWPSMTP_PLUGIN_VERSION;
+		}
+
+		return $text;
+	}
+
+	/**
+	 * Define inline styles for "Upgrade to Pro" left sidebar menu item.
+	 *
+	 * @since 2.4.0
+	 */
+	public function style_upgrade_pro_link() {
+
+		global $submenu;
+
+		// Bail if plugin menu is not registered.
+		if ( ! isset( $submenu[ self::SLUG ] ) ) {
+			return;
+		}
+
+		$upgrade_link_position = key(
+			array_filter(
+				$submenu[ self::SLUG ],
+				function ( $item ) {
+					return strpos( urldecode( $item[2] ), 'easywpsmtp.com/lite-upgrade' ) !== false;
+				}
+			)
+		);
+
+		// Bail if "Upgrade to Pro" menu item is not registered.
+		if ( is_null( $upgrade_link_position ) ) {
+			return;
+		}
+
+		// Prepare a HTML class.
+		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
+		if ( isset( $submenu[ self::SLUG ][ $upgrade_link_position ][4] ) ) {
+			$submenu[ self::SLUG ][ $upgrade_link_position ][4] .= ' easy-wp-smtp-sidebar-upgrade-pro';
+		} else {
+			$submenu[ self::SLUG ][ $upgrade_link_position ][] = 'easy-wp-smtp-sidebar-upgrade-pro';
+		}
+
+		$current_screen      = get_current_screen();
+		$upgrade_utm_content = $current_screen === null ? 'Upgrade to Pro' : 'Upgrade to Pro - ' . $current_screen->base;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$upgrade_utm_content = empty( $_GET['tab'] ) ? $upgrade_utm_content : $upgrade_utm_content . ' -- ' . sanitize_key( $_GET['tab'] );
+
+		// Add the correct utm_content to the menu item.
+		$submenu[ self::SLUG ][ $upgrade_link_position ][2] =
+			esc_url( easy_wp_smtp()->get_upgrade_link( [ 'medium' => 'admin-menu', 'content' => $upgrade_utm_content ] ) ); // phpcs:ignore WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound
+		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		// Output inline styles.
+		echo '<style>a.easy-wp-smtp-sidebar-upgrade-pro { background-color: #0f8a56 !important; color: #fff !important; font-weight: 600 !important; }</style>';
+	}
+
+	/**
+	 * Add network admin settings page for product education.
+	 *
+	 * @since 2.7.0
+	 */
+	public function add_network_wide_setting_product_education_page() {
+
+		add_menu_page(
+			esc_html__( 'Easy WP SMTP', 'easy-wp-smtp' ),
+			esc_html__( 'Easy WP SMTP', 'easy-wp-smtp' ),
+			easy_wp_smtp()->get_capability_manage_options(),
+			self::SLUG,
+			[ $this, 'display_network_product_education_page' ],
+			'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMTMiIHZpZXdCb3g9IjAgMCAyMCAxMyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTUuODgyMTEgMTEuMzI4NkM2LjAxMzM2IDExLjI1ODggNi4xNjAxMiAxMS4yMjIyIDYuMzA5MjIgMTEuMjIyMkwxMy42OTA4IDExLjIyMjJDMTMuODM5OSAxMS4yMjIyIDEzLjk4NjYgMTEuMjU4OCAxNC4xMTc5IDExLjMyODZDMTQuOTQxMiAxMS43NjY2IDE0LjYyNiAxMyAxMy42OTA4IDEzTDYuMzA5MjEgMTNDNS4zNzQwMSAxMyA1LjA1ODgzIDExLjc2NjYgNS44ODIxMSAxMS4zMjg2WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTMuMTMzNTQgOC4yMTc0OUMzLjI2MjYzIDguMTQ3NjcgMy40MDY5OCA4LjExMTExIDMuNTUzNjIgOC4xMTExMUwxNi40NDY0IDguMTExMTFDMTYuNTkzIDguMTExMTEgMTYuNzM3NCA4LjE0NzY3IDE2Ljg2NjUgOC4yMTc0OUMxNy42NzYyIDguNjU1NSAxNy4zNjYyIDkuODg4ODkgMTYuNDQ2NCA5Ljg4ODg5TDMuNTUzNjIgOS44ODg4OUMyLjYzMzc5IDkuODg4ODkgMi4zMjM4IDguNjU1NSAzLjEzMzU0IDguMjE3NDlaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMi4yNjMzNCAwLjUzNjY5M0MyLjEyMTQyIDAuNjY4NzY5IDEuOTk5MDIgMC44MjQwMzMgMS45MDIzNSAwLjk5ODgyM0wwLjIzNTM4MiA0LjAxMjg3Qy0wLjQ1MTQ3OCA1LjI1NDc4IDAuNDQ3MTA2IDYuNzc3NzggMS44NjY3MSA2Ljc3Nzc4TDE4LjEzMzMgNi43Nzc3OEMxOS41NTI5IDYuNzc3NzggMjAuNDUxNSA1LjI1NDc4IDE5Ljc2NDYgNC4wMTI4N0wxOC4wOTc2IDAuOTk4ODIyQzE3Ljk5MjMgMC44MDgzNTQgMTcuODU2NCAwLjY0MTA3MiAxNy42OTggMC41MDE3MTRDMTYuMDk1OSAxLjUwNTg5IDEyLjA5MTQgMy44NzM3NyA5Ljk1MjcyIDMuODczNzdDNy44Mzg0OSAzLjg3Mzc3IDMuOTAwODcgMS41NTk3MyAyLjI2MzM0IDAuNTM2NjkzWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTIuOTYwNjMgMC4xMjcyMzNDNC43MjU2NiAxLjE5ODU5IDguMDk5MzEgMy4wODY3NyA5Ljk1MjcyIDMuMDg2NzdDMTEuODE3MiAzLjA4Njc3IDE1LjIyMDIgMS4xNzU5MiAxNi45NzYzIDAuMTA4MDlDMTYuODEyNyAwLjA2MTU0MjMgMTYuNjQxMyAwLjAzNzAzOSAxNi40NjYzIDAuMDM3MDM5TDMuNTMzNjggMC4wMzcwMzc4QzMuMzM2MTIgMC4wMzcwMzc5IDMuMTQzMSAwLjA2ODI4MjcgMi45NjA2MyAwLjEyNzIzM1oiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=',
+			$this->get_menu_item_position()
+		);
+	}
+
+	/**
+	 * HTML output for the network admin settings page product education.
+	 *
+	 * @since 2.7.0
+	 */
+	public function display_network_product_education_page() {
+
+		// Skip if not on multisite and not on network admin site.
+		if ( ! is_multisite() || ! is_network_admin() ) {
+			return;
+		}
+
+		$upgrade_link_url = easy_wp_smtp()->get_upgrade_link(
+			[
+				'medium'  => 'Multisite',
+				'content' => 'Upgrade to Easy WP SMTP Pro Link',
+			]
+		);
+
+		$upgrade_button_url = easy_wp_smtp()->get_upgrade_link(
+			[
+				'medium'  => 'Multisite',
+				'content' => 'Upgrade to Easy WP SMTP Pro Button',
+			]
+		);
+		?>
+
+		<div class="wrap" id="easy-wp-smtp">
+			<div class="easy-wp-smtp-page easy-wp-smtp-page-general easy-wp-smtp-tab-multisite">
+				<div class="easy-wp-smtp-container">
+					<div class="easy-wp-smtp-nav-menu">
+						<div class="easy-wp-smtp-nav-menu__inner">
+							<a href="#" class="easy-wp-smtp-nav-menu__item easy-wp-smtp-nav-menu__item--active">
+								<?php esc_html_e( 'Settings', 'easy-wp-smtp' ); ?>
+							</a>
+						</div>
+					</div>
+
+					<div class="easy-wp-smtp-page-content">
+						<h1 class="screen-reader-text">
+							<?php esc_html_e( 'Settings', 'easy-wp-smtp' ); ?>
+						</h1>
+
+						<?php do_action( 'easy_wp_smtp_admin_pages_before_content' ); ?>
+
+						<div class="easy-wp-smtp-meta-box">
+							<div class="easy-wp-smtp-meta-box__header">
+								<div class="easy-wp-smtp-meta-box__heading">
+									<?php esc_html_e( 'Multisite', 'easy-wp-smtp' ); ?>
+								</div>
+								<a href="<?php echo esc_url( $upgrade_button_url ); ?>" target="_blank" rel="noopener noreferrer" class="easy-wp-smtp-btn easy-wp-smtp-btn--sm easy-wp-smtp-btn--green">
+									<?php esc_html_e( 'Upgrade to Pro', 'easy-wp-smtp' ); ?>
+								</a>
+							</div>
+							<div class="easy-wp-smtp-meta-box__content">
+								<!-- Multisite Section Title -->
+								<div class="easy-wp-smtp-row">
+									<div class="easy-wp-smtp-row__desc">
+										<?php
+										echo wp_kses(
+											sprintf( /* translators: %s - EasyWPSMTP.com Upgrade page URL. */
+												__( 'Just activate the network-wide settings, and all sites on your network will automatically use the same SMTP configuration. This allows you to set up your SMTP provider only once, saving valuable time. <a href="%s" target="_blank" rel="noopener noreferrer">Upgrade to Easy WP SMTP Pro!</a>', 'easy-wp-smtp' ),
+												esc_url( $upgrade_link_url )
+											),
+											[
+												'a' => [
+													'href'   => [],
+													'rel'    => [],
+													'target' => [],
+												],
+											]
+										);
+										?>
+									</div>
+								</div>
+
+								<!-- Network wide setting -->
+								<div class="easy-wp-smtp-row easy-wp-smtp-setting-row">
+									<div class="easy-wp-smtp-setting-row__label">
+										<label for="easy-wp-smtp-setting-license_key">
+											<?php esc_html_e( 'Settings Control', 'easy-wp-smtp' ); ?>
+										</label>
+									</div>
+									<div class="easy-wp-smtp-setting-row__field">
+										<label for="easy-wp-smtp-setting-from_name_force" class="easy-wp-smtp-toggle">
+											<input type="checkbox" value="true" id="easy-wp-smtp-setting-from_name_force" disabled/>
+											<span class="easy-wp-smtp-toggle__switch"></span>
+											<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--static">
+												<?php esc_html_e( 'Make the plugin settings global network-wide', 'easy-wp-smtp' ); ?>
+											</span>
+										</label>
+										<p class="desc">
+											<?php esc_html_e( 'When disabled, each subsite of the multisite will need to configure its Easy WP SMTP settings separately.', 'easy-wp-smtp' ); ?>
+											<br>
+											<?php esc_html_e( 'When enabled, the global settings will control email sending for all subsites in the multisite network.', 'easy-wp-smtp' ); ?>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<a href="<?php echo esc_url( $upgrade_button_url ); ?>" target="_blank" rel="noopener noreferrer" class="easy-wp-smtp-btn easy-wp-smtp-btn--lg easy-wp-smtp-btn--green">
+							<?php esc_html_e( 'Upgrade to Easy WP SMTP Pro', 'easy-wp-smtp' ); ?>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<?php
 	}
 }

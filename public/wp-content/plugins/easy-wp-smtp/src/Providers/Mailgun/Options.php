@@ -3,6 +3,7 @@
 namespace EasyWPSMTP\Providers\Mailgun;
 
 use EasyWPSMTP\ConnectionInterface;
+use EasyWPSMTP\Helpers\UI;
 use EasyWPSMTP\Providers\OptionsAbstract;
 
 /**
@@ -56,7 +57,7 @@ class Options extends OptionsAbstract {
 		<!-- API Key -->
 		<div id="easy-wp-smtp-setting-row-<?php echo esc_attr( $this->get_slug() ); ?>-api_key" class="easy-wp-smtp-row easy-wp-smtp-setting-row easy-wp-smtp-setting-row--text">
 			<div class="easy-wp-smtp-setting-row__label">
-				<label for="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-api_key"><?php esc_html_e( 'Private API Key', 'easy-wp-smtp' ); ?></label>
+				<label for="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-api_key"><?php esc_html_e( 'Mailgun API Key', 'easy-wp-smtp' ); ?></label>
 			</div>
 			<div class="easy-wp-smtp-setting-row__field">
 				<?php if ( $this->connection_options->is_const_defined( $this->get_slug(), 'api_key' ) ) : ?>
@@ -65,20 +66,34 @@ class Options extends OptionsAbstract {
 					/>
 					<?php $this->display_const_set_message( 'EASY_WP_SMTP_MAILGUN_API_KEY' ); ?>
 				<?php else : ?>
-					<input type="password" spellcheck="false"
-						name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][api_key]"
-						value="<?php echo esc_attr( $this->connection_options->get( $this->get_slug(), 'api_key' ) ); ?>"
-						id="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-api_key"
-					/>
+					<?php
+					$slug  = $this->get_slug();
+					$value = $this->connection_options->get( $slug, 'api_key' );
+
+					UI::hidden_password_field(
+						[
+							'name'       => "easy-wp-smtp[{$slug}][api_key]",
+							'id'         => "easy-wp-smtp-setting-{$slug}-api_key",
+							'value'      => $value,
+							'clear_text' => esc_html__( 'Remove API Key', 'easy-wp-smtp' ),
+						]
+					);
+					?>
 				<?php endif; ?>
 				<p class="desc">
 					<?php
-					printf(
-						/* translators: %s - API key link. */
-						esc_html__( 'Follow this link to get a Private API Key from Mailgun: %s.', 'easy-wp-smtp' ),
-						'<a href="https://app.mailgun.com/app/account/security/api_keys" target="_blank" rel="noopener noreferrer">' .
-						esc_html__( 'Get a Private API Key', 'easy-wp-smtp' ) .
-						'</a>'
+					echo wp_kses(
+						sprintf( /* translators: %s - API key URL. */
+							__( 'Follow this link to <a href="%s" target="_blank" rel="noopener noreferrer">get a Mailgun API Key</a>. Generate a key in the "Mailgun API Keys" section.', 'easy-wp-smtp' ),
+							'https://app.mailgun.com/settings/api_security'
+						),
+						[
+							'a' => [
+								'href'   => [],
+								'rel'    => [],
+								'target' => [],
+							],
+						]
 					);
 					?>
 				</p>
@@ -101,7 +116,7 @@ class Options extends OptionsAbstract {
 					printf(
 						/* translators: %s - Domain Name link. */
 						esc_html__( 'Follow this link to get a Domain Name from Mailgun: %s.', 'easy-wp-smtp' ),
-						'<a href="https://app.mailgun.com/app/domains" target="_blank" rel="noopener noreferrer">' .
+						'<a href="https://app.mailgun.com/mg/sending/domains" target="_blank" rel="noopener noreferrer">' .
 						esc_html__( 'Get a Domain Name', 'easy-wp-smtp' ) .
 						'</a>'
 					);

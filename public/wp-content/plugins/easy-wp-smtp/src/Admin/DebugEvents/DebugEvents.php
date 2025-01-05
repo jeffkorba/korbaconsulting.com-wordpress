@@ -6,6 +6,7 @@ use EasyWPSMTP\Admin\Area;
 use EasyWPSMTP\Options;
 use EasyWPSMTP\Tasks\DebugEventsCleanupTask;
 use EasyWPSMTP\WP;
+use WP_Error;
 
 /**
  * Debug Events class.
@@ -13,6 +14,15 @@ use EasyWPSMTP\WP;
  * @since 2.0.0
  */
 class DebugEvents {
+
+	/**
+	 * Transient name for the error debug events.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @var string
+	 */
+	const ERROR_DEBUG_EVENTS_TRANSIENT = 'easy_wp_smtp_error_debug_events_transient';
 
 	/**
 	 * Register hooks.
@@ -90,8 +100,12 @@ class DebugEvents {
 			wp_send_json_error( esc_html__( 'Access rejected.', 'easy-wp-smtp' ) );
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( easy_wp_smtp()->get_capability_manage_options() ) ) {
 			wp_send_json_error( esc_html__( 'You don\'t have the capability to perform this action.', 'easy-wp-smtp' ) );
+		}
+
+		if ( ! self::is_valid_db() ) {
+			wp_send_json_error( esc_html__( 'For some reason the database table was not installed correctly. Please contact plugin support team to diagnose and fix the issue.', 'easy-wp-smtp' ) );
 		}
 
 		global $wpdb;
@@ -129,8 +143,12 @@ class DebugEvents {
 			wp_send_json_error( esc_html__( 'Access rejected.', 'easy-wp-smtp' ) );
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( easy_wp_smtp()->get_capability_manage_options() ) ) {
 			wp_send_json_error( esc_html__( 'You don\'t have the capability to perform this action.', 'easy-wp-smtp' ) );
+		}
+
+		if ( ! self::is_valid_db() ) {
+			wp_send_json_error( esc_html__( 'For some reason the database table was not installed correctly. Please contact plugin support team to diagnose and fix the issue.', 'easy-wp-smtp' ) );
 		}
 
 		$event_id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : false;
@@ -160,6 +178,10 @@ class DebugEvents {
 	 * @return bool|int
 	 */
 	public static function add( $message = '', $type = 0 ) {
+
+		if ( ! self::is_valid_db() ) {
+			return false;
+		}
 
 		if ( ! in_array( $type, array_keys( Event::get_types() ), true ) ) {
 			return false;
@@ -245,6 +267,51 @@ class DebugEvents {
 			},
 			$events_data
 		);
+	}
+
+	/**
+	 * Returns the number of error debug events in a given time span.
+	 *
+	 * By default it returns the number of error debug events in the last 30 days.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param string $span_of_time The time span to count the events for. Default '-30 days'.
+	 *
+	 * @return int|WP_Error The number of error debug events or WP_Error on failure.
+	 */
+	public static function get_error_debug_events_count( $span_of_time = '-30 days' ) {
+
+		$timestamp = strtotime( $span_of_time );
+
+		if ( ! $timestamp || $timestamp > time() ) {
+			return new WP_Error( 'easy_wp_smtp_admin_debug_events_get_error_debug_events_count_invalid_time', 'Invalid time span.' );
+		}
+
+		$transient_key             = self::ERROR_DEBUG_EVENTS_TRANSIENT . '_' . sanitize_title_with_dashes( $span_of_time );
+		$cached_error_events_count = get_transient( $transient_key );
+
+		if ( $cached_error_events_count !== false ) {
+			return (int) $cached_error_events_count;
+		}
+
+		global $wpdb;
+
+		// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnquotedComplexPlaceholder
+		$sql = $wpdb->prepare(
+			'SELECT COUNT(*) FROM `%1$s` WHERE event_type = %2$d AND created_at >= "%3$s"',
+			self::get_table_name(),
+			Event::TYPE_ERROR,
+			gmdate( WP::datetime_mysql_format(), $timestamp )
+		);
+		// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.UnquotedComplexPlaceholder
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+		$error_events_count = (int) $wpdb->get_var( $sql );
+
+		set_transient( $transient_key, $error_events_count, HOUR_IN_SECONDS );
+
+		return $error_events_count;
 	}
 
 	/**
@@ -358,7 +425,8 @@ class DebugEvents {
 
 		$table = self::get_table_name();
 
-		$is_valid = (bool) $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s;', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
+		$is_valid = (bool) $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s;', $table ) );
 
 		return $is_valid;
 	}

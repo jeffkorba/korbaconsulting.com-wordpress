@@ -2,12 +2,26 @@
 
 namespace EasyWPSMTP\Compatibility\Plugin;
 
+use EasyWPSMTP\WP;
+
 /**
  * Admin 2020 Lite compatibility plugin.
  *
  * @since 2.1.0
  */
 class Admin2020 extends PluginAbstract {
+
+	/**
+	 * If plugin can be loaded.
+	 *
+	 * @since 2.6.0
+	 *
+	 * @return bool
+	 */
+	public static function is_applicable() {
+
+		return parent::is_applicable() && WP::in_wp_admin();
+	}
 
 	/**
 	 * Get plugin name.

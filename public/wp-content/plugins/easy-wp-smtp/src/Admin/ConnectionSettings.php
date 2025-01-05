@@ -53,8 +53,9 @@ class ConnectionSettings {
 		$mailer             = $this->connection->get_mailer_slug();
 		$connection_options = $this->connection->get_options();
 
-		$disabled_email = in_array( $mailer, [], true ) ? 'disabled' : '';
-		$disabled_name  = in_array( $mailer, [ 'outlook' ], true ) ? 'disabled' : '';
+		$disabled_email    = in_array( $mailer, [ 'zoho' ], true ) ? 'disabled' : '';
+		$disabled_name     = in_array( $mailer, [ 'outlook' ], true ) ? 'disabled' : '';
+		$disabled_reply_to = in_array( $mailer, [ 'zoho' ], true ) ? 'disabled' : '';
 
 		if ( empty( $mailer ) || ! in_array( $mailer, Options::$mailers, true ) ) {
 			$mailer = 'mail';
@@ -75,11 +76,11 @@ class ConnectionSettings {
 						<p>
 							<?php esc_html_e( 'Choose a mailer or use an SMTP server.', 'easy-wp-smtp' ); ?>
 
-							<?php if ( ! is_network_admin() ) : ?>
+							<?php if ( ! is_network_admin() && $this->connection->is_primary() ) : ?>
 								<?php
 								printf(
 									wp_kses( /* translators: %s - URL to Setup Wizard. */
-										__( 'If you’d like a guided set up, run through our <a href="%s">Setup Wizard</a>.', 'easy-wp-smtp' ),
+										__( 'If you’d like a guided setup, run through our <a href="%s">Setup Wizard</a>.', 'easy-wp-smtp' ),
 										[
 											'a' => [
 												'href'   => [],
@@ -116,35 +117,34 @@ class ConnectionSettings {
 						<?php foreach ( easy_wp_smtp()->get_providers()->get_options_all( $this->connection ) as $provider ) : ?>
 
 							<div class="easy-wp-smtp-mailers-picker__item">
-								<div class="easy-wp-smtp-mailers-picker__mailer <?php echo 'easy-wp-smtp-mailers-picker__mailer--' . esc_attr( $provider->get_slug() ); ?><?php echo $mailer === $provider->get_slug() ? ' easy-wp-smtp-mailers-picker__mailer--active' : ''; ?><?php echo $provider->is_recommended() ? ' easy-wp-smtp-mailers-picker__mailer--recommended' : ''; ?><?php echo $provider->is_disabled() ? ' easy-wp-smtp-mailers-picker__mailer--disabled' : ''; ?>"<?php echo $provider->is_recommended() ? ' data-recommended-text="' . esc_html__( 'Recommended', 'easy-wp-smtp' ) . '"' : ''; ?><?php echo $provider->is_disabled() ? ' data-disabled-text="' . esc_html__( 'Pro', 'easy-wp-smtp' ) . '"' : ''; ?>>
-									<div class="easy-wp-smtp-mailers-picker__image">
+								<?php if ( $provider->is_disabled() ) : ?>
+									<input type="radio" name="easy-wp-smtp[mail][mailer]" disabled
+									       class="easy-wp-smtp-mailers-picker__input easy-wp-smtp-educate"
+									       id="easy-wp-smtp-setting-mailer-<?php echo esc_attr( $provider->get_slug() ); ?>"
+									       value="<?php echo esc_attr( $provider->get_slug() ); ?>"
+									       data-title="<?php echo esc_attr( $provider->get_title() ); ?>"
+									/>
+								<?php else : ?>
+									<input id="easy-wp-smtp-setting-mailer-<?php echo esc_attr( $provider->get_slug() ); ?>"
+									       type="radio" name="easy-wp-smtp[mail][mailer]"
+									       value="<?php echo esc_attr( $provider->get_slug() ); ?>"
+									       class="easy-wp-smtp-mailers-picker__input"
+										<?php checked( $provider->get_slug(), $mailer ); ?>
+										<?php disabled( $connection_options->is_const_defined( 'mail', 'mailer' ) ); ?>
+									/>
+								<?php endif; ?>
+								<label for="easy-wp-smtp-setting-mailer-<?php echo esc_attr( $provider->get_slug() ); ?>" class="easy-wp-smtp-mailers-picker__mailer <?php echo 'easy-wp-smtp-mailers-picker__mailer--' . esc_attr( $provider->get_slug() ); ?><?php echo $provider->is_recommended() ? ' easy-wp-smtp-mailers-picker__mailer--recommended' : ''; ?><?php echo $provider->is_disabled() ? ' easy-wp-smtp-mailers-picker__mailer--disabled' : ''; ?>"<?php echo $provider->is_recommended() ? ' data-recommended-text="' . esc_html__( 'Recommended', 'easy-wp-smtp' ) . '"' : ''; ?><?php echo $provider->is_disabled() ? ' data-disabled-text="' . esc_html__( 'Pro', 'easy-wp-smtp' ) . '"' : ''; ?>>
+									<span class="easy-wp-smtp-mailers-picker__image">
 										<img src="<?php echo esc_url( $provider->get_logo_url() ); ?>"
-												 alt="<?php echo esc_attr( $provider->get_title() ); ?>">
-									</div>
+										     alt="<?php echo esc_attr( $provider->get_title() ); ?>">
+									</span>
 
 									<?php if ( in_array( $provider->get_slug(), [ 'mail', 'smtp' ], true ) ) : ?>
-										<div class="easy-wp-smtp-mailers-picker__title">
+										<span class="easy-wp-smtp-mailers-picker__title">
 											<?php echo esc_html( $provider->get_title() ); ?>
-										</div>
+										</span>
 									<?php endif; ?>
-
-									<?php if ( $provider->is_disabled() ) : ?>
-										<input type="radio" name="easy-wp-smtp[mail][mailer]" disabled
-													 class="easy-wp-smtp-mailers-picker__input easy-wp-smtp-educate"
-													 id="easy-wp-smtp-setting-mailer-<?php echo esc_attr( $provider->get_slug() ); ?>"
-													 value="<?php echo esc_attr( $provider->get_slug() ); ?>"
-													 data-title="<?php echo esc_attr( $provider->get_title() ); ?>"
-										/>
-									<?php else : ?>
-										<input id="easy-wp-smtp-setting-mailer-<?php echo esc_attr( $provider->get_slug() ); ?>"
-													 type="radio" name="easy-wp-smtp[mail][mailer]"
-													 value="<?php echo esc_attr( $provider->get_slug() ); ?>"
-													 class="easy-wp-smtp-mailers-picker__input"
-											<?php checked( $provider->get_slug(), $mailer ); ?>
-											<?php disabled( $connection_options->is_const_defined( 'mail', 'mailer' ) ); ?>
-										/>
-									<?php endif; ?>
-								</div>
+								</label>
 							</div>
 						<?php endforeach; ?>
 					</div>
@@ -168,12 +168,14 @@ class ConnectionSettings {
 								if ( ! empty( $provider_edu_notice ) && ! $is_dismissed ) :
 									?>
 									<div class="easy-wp-smtp-notice easy-wp-smtp-notice--info easy-wp-smtp-notice--dismissible"
-										 data-notice="educational"
-										 data-mailer="<?php echo esc_attr( $provider->get_slug() ); ?>"
-										 style="margin: 25px 0 25px 0;">
+									     data-notice="educational"
+									     data-mailer="<?php echo esc_attr( $provider->get_slug() ); ?>"
+									     style="margin: 25px 0 25px 0;">
 										<a href="#" title="<?php esc_attr_e( 'Dismiss this notice', 'easy-wp-smtp' ); ?>"
-											 class="easy-wp-smtp-notice__dismiss js-easy-wp-smtp-mailer-notice-dismiss">
-											<svg fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="m8 0.25c-4.2812 0-7.75 3.4688-7.75 7.75 0 4.2812 3.4688 7.75 7.75 7.75 4.2812 0 7.75-3.4688 7.75-7.75 0-4.2812-3.4688-7.75-7.75-7.75zm0 14c-3.4688 0-6.25-2.7812-6.25-6.25 0-3.4375 2.7812-6.25 6.25-6.25 3.4375 0 6.25 2.8125 6.25 6.25 0 3.4688-2.8125 6.25-6.25 6.25zm3.1562-8.1875c0.1563-0.125 0.1563-0.375 0-0.53125l-0.6874-0.6875c-0.1563-0.15625-0.4063-0.15625-0.5313 0l-1.9375 1.9375-1.9688-1.9375c-0.125-0.15625-0.375-0.15625-0.53125 0l-0.6875 0.6875c-0.15625 0.15625-0.15625 0.40625 0 0.53125l1.9375 1.9375-1.9375 1.9688c-0.15625 0.12505-0.15625 0.37505 0 0.53125l0.6875 0.6875c0.15625 0.1563 0.40625 0.1563 0.53125 0l1.9688-1.9375 1.9375 1.9375c0.125 0.1563 0.375 0.1563 0.5313 0l0.6874-0.6875c0.1563-0.1562 0.1563-0.4062 0-0.53125l-1.9374-1.9688 1.9374-1.9375z" fill="currentColor"/></svg>
+										   class="easy-wp-smtp-notice__dismiss js-easy-wp-smtp-mailer-notice-dismiss">
+											<svg fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+												<path d="m8 0.25c-4.2812 0-7.75 3.4688-7.75 7.75 0 4.2812 3.4688 7.75 7.75 7.75 4.2812 0 7.75-3.4688 7.75-7.75 0-4.2812-3.4688-7.75-7.75-7.75zm0 14c-3.4688 0-6.25-2.7812-6.25-6.25 0-3.4375 2.7812-6.25 6.25-6.25 3.4375 0 6.25 2.8125 6.25 6.25 0 3.4688-2.8125 6.25-6.25 6.25zm3.1562-8.1875c0.1563-0.125 0.1563-0.375 0-0.53125l-0.6874-0.6875c-0.1563-0.15625-0.4063-0.15625-0.5313 0l-1.9375 1.9375-1.9688-1.9375c-0.125-0.15625-0.375-0.15625-0.53125 0l-0.6875 0.6875c-0.15625 0.15625-0.15625 0.40625 0 0.53125l1.9375 1.9375-1.9375 1.9688c-0.15625 0.12505-0.15625 0.37505 0 0.53125l0.6875 0.6875c0.15625 0.1563 0.40625 0.1563 0.53125 0l1.9688-1.9375 1.9375 1.9375c0.125 0.1563 0.375 0.1563 0.5313 0l0.6874-0.6875c0.1563-0.1562 0.1563-0.4062 0-0.53125l-1.9374-1.9688 1.9374-1.9375z" fill="currentColor"/>
+											</svg>
 										</a>
 
 										<?php echo wp_kses_post( $provider_edu_notice ); ?>
@@ -210,34 +212,42 @@ class ConnectionSettings {
 					<div class="easy-wp-smtp-setting-row__field">
 						<div class="easy-wp-smtp-setting-row__sub-row js-easy-wp-smtp-setting-from_email" style="display: <?php echo empty( $mailer_supported_settings['from_email'] ) ? 'none' : 'block'; ?>;">
 							<input name="easy-wp-smtp[mail][from_email]" type="email"
-										 value="<?php echo esc_attr( $connection_options->get( 'mail', 'from_email' ) ); ?>"
-										 id="easy-wp-smtp-setting-from_email" spellcheck="false"
-										 placeholder="<?php echo esc_attr( easy_wp_smtp()->get_processor()->get_default_email() ); ?>"
-										 <?php disabled( $connection_options->is_const_defined( 'mail', 'from_email' ) || ! empty( $disabled_email ) ); ?>
+							       value="<?php echo esc_attr( $connection_options->get( 'mail', 'from_email' ) ); ?>"
+							       id="easy-wp-smtp-setting-from_email" spellcheck="false"
+							       placeholder="<?php echo esc_attr( easy_wp_smtp()->get_processor()->get_default_email() ); ?>"
+								<?php disabled( $connection_options->is_const_defined( 'mail', 'from_email' ) || ! empty( $disabled_email ) ); ?>
 							/>
 							<p class="desc">
 								<?php esc_html_e( 'The email address that emails are sent from.', 'easy-wp-smtp' ); ?>
 							</p>
-							<p class="desc">
-								<?php esc_html_e( 'Please note that other plugins can change this. Enable the Force From Email setting below to prevent them from doing so.', 'easy-wp-smtp' ); ?>
-							</p>
+							<?php if ( ! $disabled_email ) : ?>
+								<p class="desc">
+									<?php esc_html_e( 'Please note that other plugins can change this. Enable the Force From Email setting below to prevent them from doing so.', 'easy-wp-smtp' ); ?>
+								</p>
+							<?php endif; ?>
 						</div>
 
 						<div class="easy-wp-smtp-setting-row__sub-row js-easy-wp-smtp-setting-from_email_force" style="display: <?php echo empty( $mailer_supported_settings['from_email_force'] ) ? 'none' : 'block'; ?>;">
 							<label for="easy-wp-smtp-setting-from_email_force" class="easy-wp-smtp-toggle">
 								<input name="easy-wp-smtp[mail][from_email_force]" type="checkbox"
-											 value="true" id="easy-wp-smtp-setting-from_email_force"
-											 <?php checked( true, (bool) $connection_options->get( 'mail', 'from_email_force' ) ); ?>
-											 <?php disabled( $connection_options->is_const_defined( 'mail', 'from_email_force' ) || ! empty( $disabled_email ) ); ?>
+								       value="true" id="easy-wp-smtp-setting-from_email_force"
+									<?php checked( true, (bool) $connection_options->get( 'mail', 'from_email_force' ) || ! empty( $disabled_email ) ); ?>
+									<?php disabled( $connection_options->is_const_defined( 'mail', 'from_email_force' ) || ! empty( $disabled_email ) ); ?>
 								/>
 								<span class="easy-wp-smtp-toggle__switch"></span>
 								<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--static">
 									<?php esc_html_e( 'Force From Email', 'easy-wp-smtp' ); ?>
 								</span>
 							</label>
-							<p class="desc">
-								<?php esc_html_e( 'If enabled, your specified From Email Address will be used for all outgoing emails, regardless of values set by other plugins.', 'easy-wp-smtp' ); ?>
-							</p>
+							<?php if ( ! $disabled_email ) : ?>
+								<p class="desc">
+									<?php esc_html_e( 'If enabled, your specified From Email Address will be used for all outgoing emails, regardless of values set by other plugins.', 'easy-wp-smtp' ); ?>
+								</p>
+							<?php else : ?>
+								<p class="desc">
+									<?php esc_html_e( 'Current provider will automatically force From Email to be the email address that you use to set up the OAuth connection above.', 'easy-wp-smtp' ); ?>
+								</p>
+							<?php endif; ?>
 						</div>
 					</div>
 				</div>
@@ -250,10 +260,10 @@ class ConnectionSettings {
 					<div class="easy-wp-smtp-setting-row__field">
 						<div class="easy-wp-smtp-setting-row__sub-row js-easy-wp-smtp-setting-from_name" style="display: <?php echo empty( $mailer_supported_settings['from_name'] ) ? 'none' : 'block'; ?>;">
 							<input name="easy-wp-smtp[mail][from_name]" type="text"
-										 value="<?php echo esc_attr( $connection_options->get( 'mail', 'from_name' ) ); ?>"
-										 id="easy-wp-smtp-setting-from_name" spellcheck="false"
-										 placeholder="<?php echo esc_attr( easy_wp_smtp()->get_processor()->get_default_name() ); ?>"
-										 <?php disabled( $connection_options->is_const_defined( 'mail', 'from_name' ) || ! empty( $disabled_name ) ); ?>
+							       value="<?php echo esc_attr( $connection_options->get( 'mail', 'from_name' ) ); ?>"
+							       id="easy-wp-smtp-setting-from_name" spellcheck="false"
+							       placeholder="<?php echo esc_attr( easy_wp_smtp()->get_processor()->get_default_name() ); ?>"
+								<?php disabled( $connection_options->is_const_defined( 'mail', 'from_name' ) || ! empty( $disabled_name ) ); ?>
 							/>
 
 							<?php if ( empty( $disabled_name ) ) : ?>
@@ -266,9 +276,9 @@ class ConnectionSettings {
 						<div class="easy-wp-smtp-setting-row__sub-row js-easy-wp-smtp-setting-from_name_force" style="display: <?php echo empty( $mailer_supported_settings['from_name_force'] ) ? 'none' : 'block'; ?>;">
 							<label for="easy-wp-smtp-setting-from_name_force" class="easy-wp-smtp-toggle">
 								<input name="easy-wp-smtp[mail][from_name_force]" type="checkbox"
-											 value="true" id="easy-wp-smtp-setting-from_name_force"
-											 <?php checked( true, (bool) $connection_options->get( 'mail', 'from_name_force' ) ); ?>
-											 <?php disabled( $connection_options->is_const_defined( 'mail', 'from_name_force' ) || ! empty( $disabled_name ) ); ?>
+								       value="true" id="easy-wp-smtp-setting-from_name_force"
+									<?php checked( true, (bool) $connection_options->get( 'mail', 'from_name_force' ) ); ?>
+									<?php disabled( $connection_options->is_const_defined( 'mail', 'from_name_force' ) || ! empty( $disabled_name ) ); ?>
 								/>
 								<span class="easy-wp-smtp-toggle__switch"></span>
 								<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--static">
@@ -289,104 +299,108 @@ class ConnectionSettings {
 					</div>
 				</div>
 
-				<!-- Advanced options -->
-				<div id="easy-wp-smtp-setting-row-advanced" class="easy-wp-smtp-row easy-wp-smtp-setting-row">
-					<div class="easy-wp-smtp-setting-row__label">
-						<label for="easy-wp-smtp-setting-advanced">
-							<?php esc_html_e( 'Advanced Settings', 'easy-wp-smtp' ); ?>
-						</label>
-					</div>
-					<div class="easy-wp-smtp-setting-row__field">
-						<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-advanced">
-							<input name="easy-wp-smtp[mail][advanced]" type="checkbox"
-										 value="true" <?php checked( true, $connection_options->get( 'mail', 'advanced' ) ); ?>
-										 id="easy-wp-smtp-setting-advanced"
-							/>
-							<span class="easy-wp-smtp-toggle__switch"></span>
-							<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--checked"><?php esc_html_e( 'Show', 'easy-wp-smtp' ); ?></span>
-							<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--unchecked"><?php esc_html_e( 'Hide', 'easy-wp-smtp' ); ?></span>
-						</label>
-					</div>
-				</div>
+				<?php if ( $this->connection->is_primary() ) : ?>
 
-				<!-- Reply-To Email Address -->
-				<div class="easy-wp-smtp-row easy-wp-smtp-setting-row easy-wp-smtp-setting-row--text<?php echo ! $connection_options->get( 'mail', 'advanced' ) ? ' easy-wp-smtp-hidden' : ''; ?>">
-					<div class="easy-wp-smtp-setting-row__label">
-						<label for="easy-wp-smtp-setting-reply_to_email">
-							<?php esc_html_e( 'Reply-To Email Address', 'easy-wp-smtp' ); ?>
-						</label>
-					</div>
-					<div class="easy-wp-smtp-setting-row__field">
-						<div class="easy-wp-smtp-setting-row__sub-row">
-							<input name="easy-wp-smtp[mail][reply_to_email]" type="text"
-										 value="<?php echo esc_attr( $connection_options->get( 'mail', 'reply_to_email' ) ); ?>"
-										 <?php echo $connection_options->is_const_defined( 'mail', 'reply_to_email' ) ? 'disabled' : ''; ?>
-										 id="easy-wp-smtp-setting-reply_to_email" spellcheck="false"
-							/>
-							<p class="desc">
-								<?php esc_html_e( '(Optional) This email address will be used in the Reply-To field of emails sent from your site. Leave it blank to use the From Email Address as the reply-to value.', 'easy-wp-smtp' ); ?>
-							</p>
+					<!-- Advanced options -->
+					<div id="easy-wp-smtp-setting-row-advanced" class="easy-wp-smtp-row easy-wp-smtp-setting-row">
+						<div class="easy-wp-smtp-setting-row__label">
+							<label for="easy-wp-smtp-setting-advanced">
+								<?php esc_html_e( 'Advanced Settings', 'easy-wp-smtp' ); ?>
+							</label>
 						</div>
-						<div class="easy-wp-smtp-setting-row__sub-row">
-							<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-reply_to_replace_from">
-								<input name="easy-wp-smtp[mail][reply_to_replace_from]" type="checkbox" value="true"
-											 id="easy-wp-smtp-setting-reply_to_replace_from"
-											 <?php echo $connection_options->is_const_defined( 'mail', 'reply_to_replace_from' ) ? 'disabled' : ''; ?>
-											 <?php checked( true, $connection_options->get( 'mail', 'reply_to_replace_from' ) ); ?>
+						<div class="easy-wp-smtp-setting-row__field">
+							<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-advanced">
+								<input name="easy-wp-smtp[mail][advanced]" type="checkbox"
+								       value="true" <?php checked( true, $connection_options->get( 'mail', 'advanced' ) ); ?>
+								       id="easy-wp-smtp-setting-advanced"
 								/>
 								<span class="easy-wp-smtp-toggle__switch"></span>
-								<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--static"><?php esc_html_e( 'Substitute Mode', 'easy-wp-smtp' ); ?></span>
+								<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--checked"><?php esc_html_e( 'Show', 'easy-wp-smtp' ); ?></span>
+								<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--unchecked"><?php esc_html_e( 'Hide', 'easy-wp-smtp' ); ?></span>
 							</label>
+						</div>
+					</div>
+
+					<!-- Reply-To Email Address -->
+					<div class="easy-wp-smtp-row easy-wp-smtp-setting-row easy-wp-smtp-setting-row--text<?php echo ! $connection_options->get( 'mail', 'advanced' ) ? ' easy-wp-smtp-hidden' : ''; ?>">
+						<div class="easy-wp-smtp-setting-row__label">
+							<label for="easy-wp-smtp-setting-reply_to_email">
+								<?php esc_html_e( 'Reply-To Email Address', 'easy-wp-smtp' ); ?>
+							</label>
+						</div>
+						<div class="easy-wp-smtp-setting-row__field">
+							<div class="easy-wp-smtp-setting-row__sub-row">
+								<input name="easy-wp-smtp[mail][reply_to_email]" type="text"
+								       value="<?php echo esc_attr( $connection_options->get( 'mail', 'reply_to_email' ) ); ?>"
+									<?php echo $connection_options->is_const_defined( 'mail', 'reply_to_email' ) || ! empty( $disabled_reply_to ) ? 'disabled' : ''; ?>
+									   id="easy-wp-smtp-setting-reply_to_email" spellcheck="false"
+								/>
+								<p class="desc">
+									<?php esc_html_e( '(Optional) This email address will be used in the Reply-To field of emails sent from your site. Leave it blank to use the From Email Address as the reply-to value.', 'easy-wp-smtp' ); ?>
+								</p>
+							</div>
+							<div class="easy-wp-smtp-setting-row__sub-row">
+								<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-reply_to_replace_from">
+									<input name="easy-wp-smtp[mail][reply_to_replace_from]" type="checkbox" value="true"
+									       id="easy-wp-smtp-setting-reply_to_replace_from"
+										<?php echo $connection_options->is_const_defined( 'mail', 'reply_to_replace_from' ) || ! empty( $disabled_reply_to ) ? 'disabled' : ''; ?>
+										<?php checked( true, $connection_options->get( 'mail', 'reply_to_replace_from' ) ); ?>
+									/>
+									<span class="easy-wp-smtp-toggle__switch"></span>
+									<span class="easy-wp-smtp-toggle__label easy-wp-smtp-toggle__label--static"><?php esc_html_e( 'Substitute Mode', 'easy-wp-smtp' ); ?></span>
+								</label>
+								<p class="desc">
+									<?php esc_html_e( 'When enabled, this setting will replace the From Email Address with the Reply-To Email Address if the From Email Address is found in the reply-to header. This can prevent conflicts with other plugins that specify their own reply-to email addresses.', 'easy-wp-smtp' ); ?>
+								</p>
+								<p class="desc">
+									<?php esc_html_e( 'If no Reply-To Email Address has been set or if the reply-to header of an email is empty, this setting has no effect.', 'easy-wp-smtp' ); ?>
+								</p>
+							</div>
+						</div>
+					</div>
+
+					<!-- BCC Email Address -->
+					<div class="easy-wp-smtp-row easy-wp-smtp-setting-row easy-wp-smtp-setting-row--text<?php echo ! $connection_options->get( 'mail', 'advanced' ) ? ' easy-wp-smtp-hidden' : ''; ?>">
+						<div class="easy-wp-smtp-setting-row__label">
+							<label for="easy-wp-smtp-setting-bcc_emails">
+								<?php esc_html_e( 'BCC Email Address', 'easy-wp-smtp' ); ?>
+							</label>
+						</div>
+						<div class="easy-wp-smtp-setting-row__field">
+							<input name="easy-wp-smtp[mail][bcc_emails]" type="text"
+							       value="<?php echo esc_attr( $connection_options->get( 'mail', 'bcc_emails' ) ); ?>"
+								<?php echo $connection_options->is_const_defined( 'mail', 'bcc_emails' ) ? 'disabled' : ''; ?>
+								   id="easy-wp-smtp-setting-bcc_emails" spellcheck="false"
+							/>
 							<p class="desc">
-								<?php esc_html_e( 'When enabled, this setting will replace the From Email Address with the Reply-To Email Address if the From Email Address is found in the reply-to header. This can prevent conflicts with other plugins that specify their own reply-to email addresses.', 'easy-wp-smtp' ); ?>
-							</p>
-							<p class="desc">
-								<?php esc_html_e( 'If no Reply-To Email Address has been set or if the reply-to header of an email is empty, this setting has no effect.', 'easy-wp-smtp' ); ?>
+								<?php esc_html_e( '(Optional) This email address will be used in the BCC field of all outgoing emails. You can enter multiple email addresses separated by commas. Please use this setting carefully, as the email address(es) entered above will be included on every email your site sends.', 'easy-wp-smtp' ); ?>
 							</p>
 						</div>
 					</div>
-				</div>
 
-				<!-- BCC Email Address -->
-				<div class="easy-wp-smtp-row easy-wp-smtp-setting-row easy-wp-smtp-setting-row--text<?php echo ! $connection_options->get( 'mail', 'advanced' ) ? ' easy-wp-smtp-hidden' : ''; ?>">
-					<div class="easy-wp-smtp-setting-row__label">
-						<label for="easy-wp-smtp-setting-bcc_emails">
-							<?php esc_html_e( 'BCC Email Address', 'easy-wp-smtp' ); ?>
-						</label>
+					<!-- Don't Replace "From" Field -->
+					<div class="easy-wp-smtp-row easy-wp-smtp-setting-row easy-wp-smtp-setting-row--text<?php echo ! $connection_options->get( 'mail', 'advanced' ) ? ' easy-wp-smtp-hidden' : ''; ?>">
+						<div class="easy-wp-smtp-setting-row__label">
+							<label for="easy-wp-smtp-setting-from_email_force_exclude_emails">
+								<?php esc_html_e( 'Don\'t Replace in From Field', 'easy-wp-smtp' ); ?>
+							</label>
+						</div>
+						<div class="easy-wp-smtp-setting-row__field">
+							<input name="easy-wp-smtp[mail][from_email_force_exclude_emails]" type="text"
+							       value="<?php echo esc_attr( $connection_options->get( 'mail', 'from_email_force_exclude_emails' ) ); ?>"
+								<?php echo $connection_options->is_const_defined( 'mail', 'from_email_force_exclude_emails' ) ? 'disabled' : ''; ?>
+								   id="easy-wp-smtp-setting-from_email_force_exclude_emails" spellcheck="false"
+							/>
+							<p class="desc">
+								<?php esc_html_e( 'Comma separated emails list. (Example value: email1@domain.com, email2@domain.com)', 'easy-wp-smtp' ); ?>
+							</p>
+							<p class="desc">
+								<?php esc_html_e( '(Optional) This option is useful when you are using several email aliases on your SMTP server. If you don\'t want your aliases to be replaced by the address specified in From Email Address setting, enter them in this field.', 'easy-wp-smtp' ); ?>
+							</p>
+						</div>
 					</div>
-					<div class="easy-wp-smtp-setting-row__field">
-						<input name="easy-wp-smtp[mail][bcc_emails]" type="text"
-									 value="<?php echo esc_attr( $connection_options->get( 'mail', 'bcc_emails' ) ); ?>"
-									 <?php echo $connection_options->is_const_defined( 'mail', 'bcc_emails' ) ? 'disabled' : ''; ?>
-									 id="easy-wp-smtp-setting-bcc_emails" spellcheck="false"
-						/>
-						<p class="desc">
-							<?php esc_html_e( '(Optional) This email address will be used in the BCC field of all outgoing emails. You can enter multiple email addresses separated by commas. Please use this setting carefully, as the email address(es) entered above will be included on every email your site sends.', 'easy-wp-smtp' ); ?>
-						</p>
-					</div>
-				</div>
 
-				<!-- Don't Replace "From" Field -->
-				<div class="easy-wp-smtp-row easy-wp-smtp-setting-row easy-wp-smtp-setting-row--text<?php echo ! $connection_options->get( 'mail', 'advanced' ) ? ' easy-wp-smtp-hidden' : ''; ?>">
-					<div class="easy-wp-smtp-setting-row__label">
-						<label for="easy-wp-smtp-setting-from_email_force_exclude_emails">
-							<?php esc_html_e( 'Don\'t Replace in From Field', 'easy-wp-smtp' ); ?>
-						</label>
-					</div>
-					<div class="easy-wp-smtp-setting-row__field">
-						<input name="easy-wp-smtp[mail][from_email_force_exclude_emails]" type="text"
-									 value="<?php echo esc_attr( $connection_options->get( 'mail', 'from_email_force_exclude_emails' ) ); ?>"
-									 <?php echo $connection_options->is_const_defined( 'mail', 'from_email_force_exclude_emails' ) ? 'disabled' : ''; ?>
-									 id="easy-wp-smtp-setting-from_email_force_exclude_emails" spellcheck="false"
-						/>
-						<p class="desc">
-							<?php esc_html_e( 'Comma separated emails list. (Example value: email1@domain.com, email2@domain.com)', 'easy-wp-smtp' ); ?>
-						</p>
-						<p class="desc">
-							<?php esc_html_e( '(Optional) This option is useful when you are using several email aliases on your SMTP server. If you don\'t want your aliases to be replaced by the address specified in From Email Address setting, enter them in this field.', 'easy-wp-smtp' ); ?>
-						</p>
-					</div>
-				</div>
+				<?php endif; ?>
 			</div>
 		</div>
 		<?php
@@ -430,15 +444,33 @@ class ConnectionSettings {
 		) {
 			// Remove all debug messages when switching mailers.
 			Debug::clear();
+
+			// Save correct from email address if Zoho mailer is already configured.
+			if (
+				in_array( $data['mail']['mailer'], [ 'zoho' ], true ) &&
+				! empty( $old_data[ $data['mail']['mailer'] ]['user_details']['email'] )
+			) {
+				$data['mail']['from_email'] = $old_data[ $data['mail']['mailer'] ]['user_details']['email'];
+			}
 		}
 
 		// Prevent redirect to setup wizard from settings page after successful auth.
 		if (
 			! empty( $data['mail']['mailer'] ) &&
-			in_array( $data['mail']['mailer'], [ 'outlook' ], true )
+			in_array( $data['mail']['mailer'], [ 'gmail', 'outlook', 'zoho' ], true )
 		) {
 			$data[ $data['mail']['mailer'] ]['is_setup_wizard_auth'] = false;
 		}
+
+		/**
+		 * Filters connection data.
+		 *
+		 * @since 2.9.0
+		 *
+		 * @param array $data     Connection data.
+		 * @param array $old_data Old connection data.
+		 */
+		return apply_filters( 'easy_wp_smtp_admin_connection_settings_process_data', $data, $old_data );
 
 		return $data;
 	}
@@ -451,7 +483,35 @@ class ConnectionSettings {
 	 * @param array $data     Connection data.
 	 * @param array $old_data Old connection data.
 	 */
-	public function post_process( $data, $old_data ) {}
+	public function post_process( $data, $old_data ) {
+
+		// When switching mailers.
+		if (
+			! empty( $old_data['mail']['mailer'] ) &&
+			! empty( $data['mail']['mailer'] ) &&
+			$old_data['mail']['mailer'] !== $data['mail']['mailer']
+		) {
+
+			// Save correct from email address if Outlook mailer is already configured.
+			if ( $data['mail']['mailer'] === 'outlook' ) {
+				$auth      = easy_wp_smtp()->get_providers()->get_auth( $data['mail']['mailer'], $this->connection );
+				$user_info = ! $auth->is_auth_required() ? $auth->get_user_info() : false;
+
+				if (
+					! empty( $user_info['email'] ) &&
+					is_email( $user_info['email'] ) !== false &&
+					(
+						empty( $data['mail']['from_email'] ) ||
+						$data['mail']['from_email'] !== $user_info['email']
+					)
+				) {
+					$data['mail']['from_email'] = $user_info['email'];
+
+					$this->connection->get_options()->set( $data, false, false );
+				}
+			}
+		}
+	}
 
 	/**
 	 * Get connection settings admin page URL.

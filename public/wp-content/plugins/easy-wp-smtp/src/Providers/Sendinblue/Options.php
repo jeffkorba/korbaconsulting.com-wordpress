@@ -3,6 +3,7 @@
 namespace EasyWPSMTP\Providers\Sendinblue;
 
 use EasyWPSMTP\ConnectionInterface;
+use EasyWPSMTP\Helpers\UI;
 use EasyWPSMTP\Providers\OptionsAbstract;
 
 /**
@@ -62,7 +63,7 @@ class Options extends OptionsAbstract {
 				'logo_url'    => easy_wp_smtp()->assets_url . '/images/providers/brevo.svg',
 				'slug'        => self::SLUG,
 				'title'       => esc_html__( 'Brevo', 'easy-wp-smtp' ),
-				'php'         => '5.6',
+				'php'         => '7.2',
 				'description' => $description,
 				'supports'    => [
 					'from_email'       => true,
@@ -103,11 +104,19 @@ class Options extends OptionsAbstract {
 					/>
 					<?php $this->display_const_set_message( 'EASY_WP_SMTP_SENDINBLUE_API_KEY' ); ?>
 				<?php else : ?>
-					<input type="password" spellcheck="false"
-						name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][api_key]"
-						value="<?php echo esc_attr( $this->connection_options->get( $this->get_slug(), 'api_key' ) ); ?>"
-						id="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-api_key"
-					/>
+					<?php
+					$slug  = $this->get_slug();
+					$value = $this->connection_options->get( $slug, 'api_key' );
+
+					UI::hidden_password_field(
+						[
+							'name'       => "easy-wp-smtp[{$slug}][api_key]",
+							'id'         => "easy-wp-smtp-setting-{$slug}-api_key",
+							'value'      => $value,
+							'clear_text' => esc_html__( 'Remove API Key', 'easy-wp-smtp' ),
+						]
+					);
+					?>
 				<?php endif; ?>
 
 				<p class="desc">

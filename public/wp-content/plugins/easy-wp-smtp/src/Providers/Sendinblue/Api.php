@@ -3,10 +3,6 @@
 namespace EasyWPSMTP\Providers\Sendinblue;
 
 use EasyWPSMTP\ConnectionInterface;
-use EasyWPSMTP\Vendor\SendinBlue\Client\Api\AccountApi;
-use EasyWPSMTP\Vendor\SendinBlue\Client\Api\SendersApi;
-use EasyWPSMTP\Vendor\SendinBlue\Client\Api\TransactionalEmailsApi;
-use EasyWPSMTP\Vendor\SendinBlue\Client\Configuration;
 
 /**
  * Class Api is a wrapper for Sendinblue library with handy methods.
@@ -55,51 +51,54 @@ class Api {
 	 * Configure API key authorization: api-key.
 	 *
 	 * @since 2.0.0
+	 * @deprecated 2.2.0 We are no longer using the Sendinblue SDK.
 	 *
-	 * @return Configuration
+	 * @return null
 	 */
 	protected function get_api_config() {
 
-		return Configuration::getDefaultConfiguration()->setApiKey( 'api-key', isset( $this->options['api_key'] ) ? $this->options['api_key'] : '' );
+		_deprecated_function( __METHOD__, '2.2.0' );
+
+		return null;
 	}
 
 	/**
 	 * Get the mailer client instance for Account API.
 	 *
 	 * @since 2.0.0
+	 * @deprecated 2.2.0 We are no longer using the Sendinblue SDK.
 	 */
 	public function get_account_client() {
 
-		// Include the library.
-		require_once easy_wp_smtp()->plugin_path . '/vendor/autoload.php';
+		_deprecated_function( __METHOD__, '2.2.0' );
 
-		return new AccountApi( null, $this->get_api_config() );
+		return null;
 	}
 
 	/**
 	 * Get the mailer client instance for Sender API.
 	 *
 	 * @since 2.0.0
+	 * @deprecated 2.2.0 We are no longer using the Sendinblue SDK.
 	 */
 	public function get_sender_client() {
 
-		// Include the library.
-		require_once easy_wp_smtp()->plugin_path . '/vendor/autoload.php';
+		_deprecated_function( __METHOD__, '2.2.0' );
 
-		return new SendersApi( null, $this->get_api_config() );
+		return null;
 	}
 
 	/**
 	 * Get the mailer client instance for SMTP API.
 	 *
 	 * @since 2.0.0
+	 * @deprecated 2.2.0 We are no longer using the Sendinblue SDK.
 	 */
 	public function get_smtp_client() {
 
-		// Include the library.
-		require_once easy_wp_smtp()->plugin_path . '/vendor/autoload.php';
+		_deprecated_function( __METHOD__, '2.2.0' );
 
-		return new TransactionalEmailsApi( null, $this->get_api_config() );
+		return null;
 	}
 
 	/**

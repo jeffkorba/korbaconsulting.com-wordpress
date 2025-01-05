@@ -3,6 +3,7 @@
 namespace EasyWPSMTP\Providers;
 
 use EasyWPSMTP\ConnectionInterface;
+use EasyWPSMTP\Helpers\UI;
 use EasyWPSMTP\Options;
 
 /**
@@ -162,17 +163,17 @@ abstract class OptionsAbstract implements OptionsInterface {
 
 				$notice = wp_kses(
 					$notice,
-					array(
-						'p'     => true,
+					[
+						'p'      => true,
 						'br'     => true,
 						'strong' => true,
 						'em'     => true,
-						'a'      => array(
+						'a'      => [
 							'href'   => true,
 							'rel'    => true,
 							'target' => true,
-						),
-					)
+						],
+					]
 				);
 				if ( empty( $notice ) ) {
 					continue;
@@ -293,9 +294,9 @@ abstract class OptionsAbstract implements OptionsInterface {
 			</div>
 			<div class="easy-wp-smtp-setting-row__field">
 				<input name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][host]" type="text"
-					value="<?php echo esc_attr( $this->connection_options->get( $this->get_slug(), 'host' ) ); ?>"
+				       value="<?php echo esc_attr( $this->connection_options->get( $this->get_slug(), 'host' ) ); ?>"
 					<?php echo $this->connection_options->is_const_defined( $this->get_slug(), 'host' ) ? 'disabled' : ''; ?>
-					id="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-host" spellcheck="false"
+					   id="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-host" spellcheck="false"
 				/>
 				<p class="desc">
 					<?php esc_html_e( 'Your mail server\'s address.', 'easy-wp-smtp' ); ?>
@@ -312,9 +313,9 @@ abstract class OptionsAbstract implements OptionsInterface {
 				<div class="easy-wp-smtp-radio-group">
 					<label class="easy-wp-smtp-radio" for="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-enc-none">
 						<input type="radio" id="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-enc-none"
-									 name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][encryption]" value="none"
-									 <?php echo $this->connection_options->is_const_defined( $this->get_slug(), 'encryption' ) ? 'disabled' : ''; ?>
-									 <?php checked( 'none', $this->connection_options->get( $this->get_slug(), 'encryption' ) ); ?>
+						       name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][encryption]" value="none"
+							<?php echo $this->connection_options->is_const_defined( $this->get_slug(), 'encryption' ) ? 'disabled' : ''; ?>
+							<?php checked( 'none', $this->connection_options->get( $this->get_slug(), 'encryption' ) ); ?>
 						/>
 						<span class="easy-wp-smtp-radio__checkmark"></span>
 						<span class="easy-wp-smtp-radio__label"><?php esc_html_e( 'None', 'easy-wp-smtp' ); ?></span>
@@ -322,9 +323,9 @@ abstract class OptionsAbstract implements OptionsInterface {
 
 					<label class="easy-wp-smtp-radio" for="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-enc-ssl">
 						<input type="radio" id="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-enc-ssl"
-									 name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][encryption]" value="ssl"
-									 <?php echo $this->connection_options->is_const_defined( $this->get_slug(), 'encryption' ) ? 'disabled' : ''; ?>
-									 <?php checked( 'ssl', $this->connection_options->get( $this->get_slug(), 'encryption' ) ); ?>
+						       name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][encryption]" value="ssl"
+							<?php echo $this->connection_options->is_const_defined( $this->get_slug(), 'encryption' ) ? 'disabled' : ''; ?>
+							<?php checked( 'ssl', $this->connection_options->get( $this->get_slug(), 'encryption' ) ); ?>
 						/>
 						<span class="easy-wp-smtp-radio__checkmark"></span>
 						<span class="easy-wp-smtp-radio__label"><?php esc_html_e( 'SSL', 'easy-wp-smtp' ); ?></span>
@@ -332,9 +333,9 @@ abstract class OptionsAbstract implements OptionsInterface {
 
 					<label class="easy-wp-smtp-radio" for="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-enc-tls">
 						<input type="radio" id="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-enc-tls"
-									 name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][encryption]" value="tls"
-									 <?php echo $this->connection_options->is_const_defined( $this->get_slug(), 'encryption' ) ? 'disabled' : ''; ?>
-									 <?php checked( 'tls', $this->connection_options->get( $this->get_slug(), 'encryption' ) ); ?>
+						       name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][encryption]" value="tls"
+							<?php echo $this->connection_options->is_const_defined( $this->get_slug(), 'encryption' ) ? 'disabled' : ''; ?>
+							<?php checked( 'tls', $this->connection_options->get( $this->get_slug(), 'encryption' ) ); ?>
 						/>
 						<span class="easy-wp-smtp-radio__checkmark"></span>
 						<span class="easy-wp-smtp-radio__label"><?php esc_html_e( 'TLS', 'easy-wp-smtp' ); ?></span>
@@ -354,9 +355,9 @@ abstract class OptionsAbstract implements OptionsInterface {
 			</div>
 			<div class="easy-wp-smtp-setting-row__field">
 				<input name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][port]" type="number"
-							 value="<?php echo esc_attr( $this->connection_options->get( $this->get_slug(), 'port' ) ); ?>"
+				       value="<?php echo esc_attr( $this->connection_options->get( $this->get_slug(), 'port' ) ); ?>"
 					<?php echo $this->connection_options->is_const_defined( $this->get_slug(), 'port' ) ? 'disabled' : ''; ?>
-							 id="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-port" class="small-text" spellcheck="false"
+					   id="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-port" class="small-text" spellcheck="false"
 				/>
 				<p class="desc">
 					<?php esc_html_e( 'The port to your mail server.', 'easy-wp-smtp' ); ?>
@@ -372,7 +373,7 @@ abstract class OptionsAbstract implements OptionsInterface {
 			<div class="easy-wp-smtp-setting-row__field">
 				<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-autotls">
 					<input type="checkbox" id="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-autotls"
-						name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][autotls]" value="yes"
+					       name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][autotls]" value="yes"
 						<?php echo $this->connection_options->is_const_defined( $this->get_slug(), 'autotls' ) ? 'disabled' : ''; ?>
 						<?php checked( true, (bool) $this->connection_options->get( $this->get_slug(), 'autotls' ) ); ?>
 					/>
@@ -394,7 +395,7 @@ abstract class OptionsAbstract implements OptionsInterface {
 			<div class="easy-wp-smtp-setting-row__field">
 				<label class="easy-wp-smtp-toggle" for="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-auth">
 					<input type="checkbox" id="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-auth"
-						name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][auth]" value="yes"
+					       name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][auth]" value="yes"
 						<?php echo $this->connection_options->is_const_defined( $this->get_slug(), 'auth' ) ? 'disabled' : ''; ?>
 						<?php checked( true, (bool) $this->connection_options->get( $this->get_slug(), 'auth' ) ); ?>
 					/>
@@ -409,15 +410,15 @@ abstract class OptionsAbstract implements OptionsInterface {
 		</div>
 
 		<!-- SMTP Username -->
-		<div id="easy-wp-smtp-setting-row-<?php echo esc_attr( $this->get_slug() ); ?>-user" class="easy-wp-smtp-row easy-wp-smtp-setting-row easy-wp-smtp-setting-row--text<?php echo ! $this->connection_options->is_const_defined( $this->get_slug(), 'auth' ) && ! $this->connection_options->get( $this->get_slug(), 'auth' ) ? ' easy-wp-smtp-hidden' : ''; ?>">
+		<div id="easy-wp-smtp-setting-row-<?php echo esc_attr( $this->get_slug() ); ?>-user" class="easy-wp-smtp-row easy-wp-smtp-setting-row easy-wp-smtp-setting-row--text<?php echo ! $this->connection_options->get( $this->get_slug(), 'auth' ) ? ' easy-wp-smtp-hidden' : ''; ?>">
 			<div class="easy-wp-smtp-setting-row__label">
 				<label for="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-user"><?php esc_html_e( 'SMTP Username', 'easy-wp-smtp' ); ?></label>
 			</div>
 			<div class="easy-wp-smtp-setting-row__field">
 				<input name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][user]" type="text"
-					value="<?php echo esc_attr( $this->connection_options->get( $this->get_slug(), 'user' ) ); ?>"
+				       value="<?php echo esc_attr( $this->connection_options->get( $this->get_slug(), 'user' ) ); ?>"
 					<?php echo $this->connection_options->is_const_defined( $this->get_slug(), 'user' ) ? 'disabled' : ''; ?>
-					id="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-user" spellcheck="false" autocomplete="new-password"
+					   id="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-user" spellcheck="false" autocomplete="new-password"
 				/>
 				<p class="desc">
 					<?php esc_html_e( 'The username to log in to your mail server.', 'easy-wp-smtp' ); ?>
@@ -426,7 +427,7 @@ abstract class OptionsAbstract implements OptionsInterface {
 		</div>
 
 		<!-- SMTP Password -->
-		<div id="easy-wp-smtp-setting-row-<?php echo esc_attr( $this->get_slug() ); ?>-pass" class="easy-wp-smtp-row easy-wp-smtp-setting-row easy-wp-smtp-setting-row--text<?php echo ! $this->connection_options->is_const_defined( $this->get_slug(), 'auth' ) && ! $this->connection_options->get( $this->get_slug(), 'auth' ) ? ' easy-wp-smtp-hidden' : ''; ?>">
+		<div id="easy-wp-smtp-setting-row-<?php echo esc_attr( $this->get_slug() ); ?>-pass" class="easy-wp-smtp-row easy-wp-smtp-setting-row easy-wp-smtp-setting-row--text<?php echo ! $this->connection_options->get( $this->get_slug(), 'auth' ) ? ' easy-wp-smtp-hidden' : ''; ?>">
 			<div class="easy-wp-smtp-setting-row__label">
 				<label for="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-pass"><?php esc_html_e( 'SMTP Password', 'easy-wp-smtp' ); ?></label>
 			</div>
@@ -439,7 +440,7 @@ abstract class OptionsAbstract implements OptionsInterface {
 					<p class="desc">
 						<?php
 						printf(
-							/* translators: %s - constant name: EASY_WP_SMTP_SMTP_PASS. */
+						/* translators: %s - constant name: EASY_WP_SMTP_SMTP_PASS. */
 							esc_html__( 'To change the password you need to change the value of the constant there: %s', 'easy-wp-smtp' ),
 							'<code>define( \'EASY_WP_SMTP_SMTP_PASS\', \'your_old_password\' );</code>'
 						);
@@ -447,7 +448,7 @@ abstract class OptionsAbstract implements OptionsInterface {
 						<br>
 						<?php
 						printf(
-							/* translators: %1$s - wp-config.php file, %2$s - EASY_WP_SMTP_ON constant name. */
+						/* translators: %1$s - wp-config.php file, %2$s - EASY_WP_SMTP_ON constant name. */
 							esc_html__( 'If you want to disable the use of constants, find in %1$s file the constant %2$s and turn if off:', 'easy-wp-smtp' ),
 							'<code>wp-config.php</code>',
 							'<code>EASY_WP_SMTP_ON</code>'
@@ -461,10 +462,21 @@ abstract class OptionsAbstract implements OptionsInterface {
 						<?php esc_html_e( 'All the defined constants will stop working and you will be able to change all the values on this page.', 'easy-wp-smtp' ); ?>
 					</p>
 				<?php else : ?>
-					<input name="easy-wp-smtp[<?php echo esc_attr( $this->get_slug() ); ?>][pass]" type="password"
-						value="<?php echo esc_attr( $this->connection_options->get( $this->get_slug(), 'pass' ) ); ?>"
-						id="easy-wp-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-pass" spellcheck="false" autocomplete="new-password"
-					/>
+
+					<?php
+					$slug  = $this->get_slug();
+					$value = $this->connection_options->get( $slug, 'pass' );
+
+					UI::hidden_password_field(
+						[
+							'name'       => "easy-wp-smtp[{$slug}][pass]",
+							'id'         => "easy-wp-smtp-setting-{$slug}-pass",
+							'value'      => $value,
+							'clear_text' => esc_html__( 'Remove Password', 'easy-wp-smtp' ),
+						]
+					);
+					?>
+
 					<p class="desc">
 						<?php esc_html_e( 'The password to log in to your mail server. The password will be encrypted in the database.', 'easy-wp-smtp' ); ?>
 					</p>
@@ -614,5 +626,17 @@ abstract class OptionsAbstract implements OptionsInterface {
 	public function get_supports() {
 
 		return apply_filters( 'easy_wp_smtp_providers_provider_get_supports', $this->supports, $this );
+	}
+
+	/**
+	 * Get the mailer provider notices.
+	 *
+	 * @since 2.9.0
+	 *
+	 * @return array
+	 */
+	public function get_notices() {
+
+		return apply_filters( 'easy_wp_smtp_providers_provider_get_notices', $this->notices, $this );
 	}
 }

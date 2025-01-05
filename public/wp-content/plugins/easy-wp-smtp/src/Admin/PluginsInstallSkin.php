@@ -2,12 +2,15 @@
 
 namespace EasyWPSMTP\Admin;
 
+use Automatic_Upgrader_Skin;
+
 /**
  * WordPress class extended for on-the-fly plugin installations.
  *
  * @since 2.1.0
+ * @since 2.3.0 Updated to extend Automatic_Upgrader_Skin.
  */
-class PluginsInstallSkin extends \WP_Upgrader_Skin {
+class PluginsInstallSkin extends Automatic_Upgrader_Skin {
 
 	/**
 	 * Empty out the header of its HTML content and only check to see if it has

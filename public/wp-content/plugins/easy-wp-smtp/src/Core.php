@@ -6,13 +6,15 @@ use EasyWPSMTP\Admin\Area as AdminArea;
 use EasyWPSMTP\Admin\DashboardWidget;
 use EasyWPSMTP\Admin\DebugEvents\DebugEvents;
 use EasyWPSMTP\Admin\Notifications;
+use EasyWPSMTP\Compatibility\Compatibility;
 use EasyWPSMTP\Migrations\Migrations;
 use EasyWPSMTP\Providers\Loader as ProvidersLoader;
-use EasyWPSMTP\Tasks\Tasks;
-use EasyWPSMTP\Tasks\Meta;
-use EasyWPSMTP\UsageTracking\UsageTracking;
-use EasyWPSMTP\Compatibility\Compatibility;
+use EasyWPSMTP\Providers\Outlook\Provider as OutlookProvider;
+use EasyWPSMTP\Queue\Queue;
 use EasyWPSMTP\Reports\Reports;
+use EasyWPSMTP\Tasks\Meta;
+use EasyWPSMTP\Tasks\Tasks;
+use EasyWPSMTP\UsageTracking\UsageTracking;
 use Exception;
 use ReflectionFunction;
 
@@ -73,6 +75,10 @@ class Core {
 		if ( $this->is_not_loadable() ) {
 			add_action( 'admin_notices', 'easy_wp_smtp_insecure_php_version_notice' );
 
+			if ( WP::use_global_plugin_settings() ) {
+				add_action( 'network_admin_notices', 'easy_wp_smtp_insecure_php_version_notice' );
+			}
+
 			return;
 		}
 
@@ -112,6 +118,9 @@ class Core {
 		// Activation hook.
 		register_activation_hook( EasyWPSMTP_PLUGIN_FILE, [ $this, 'activate' ] );
 
+		// Initialize DB migrations.
+		add_action( 'plugins_loaded', [ $this, 'get_migrations' ] );
+
 		// Load Pro if available.
 		add_action( 'plugins_loaded', [ $this, 'get_pro' ] );
 
@@ -127,7 +136,6 @@ class Core {
 		// Initialize Action Scheduler tasks.
 		add_action( 'init', [ $this, 'get_tasks' ], 5 );
 
-		add_action( 'plugins_loaded', [ $this, 'get_migrations' ] );
 		add_action( 'plugins_loaded', [ $this, 'get_usage_tracking' ] );
 		add_action( 'plugins_loaded', [ $this, 'get_notifications' ] );
 		add_action( 'plugins_loaded', [ $this, 'get_connect' ], 15 );
@@ -137,6 +145,14 @@ class Core {
 		add_action( 'plugins_loaded', [ $this, 'get_db_repair' ] );
 		add_action( 'plugins_loaded', [ $this, 'get_connections_manager' ], 20 );
 		add_action( 'plugins_loaded', [ $this, 'get_wp_mail_initiator' ] );
+		add_action( 'plugins_loaded', [ $this, 'get_queue' ] );
+		add_action(
+			'plugins_loaded',
+			function () {
+				( new OptimizedEmailSending() )->hooks();
+				( new OutlookProvider() )->hooks();
+			}
+		);
 	}
 
 	/**
@@ -169,9 +185,14 @@ class Core {
 		}
 
 		// Plugin admin area notices. Display to "admins" only.
-		if ( current_user_can( 'manage_options' ) ) {
-			add_action( 'admin_notices', array( '\EasyWPSMTP\WP', 'display_admin_notices' ) );
-			add_action( 'admin_notices', array( $this, 'display_general_notices' ) );
+		if ( current_user_can( easy_wp_smtp()->get_capability_manage_options() ) ) {
+			add_action( 'admin_notices', [ '\EasyWPSMTP\WP', 'display_admin_notices' ] );
+			add_action( 'admin_notices', [ $this, 'display_general_notices' ] );
+
+			if ( WP::use_global_plugin_settings() ) {
+				add_action( 'network_admin_notices', [ '\EasyWPSMTP\WP', 'display_admin_notices' ] );
+				add_action( 'network_admin_notices', [ $this, 'display_general_notices' ] );
+			}
 		}
 	}
 
@@ -187,10 +208,6 @@ class Core {
 		$is_allowed = true;
 
 		if ( ! is_readable( $this->plugin_path . '/src/Pro/Pro.php' ) ) {
-			$is_allowed = false;
-		}
-
-		if ( version_compare( phpversion(), '5.6', '<' ) ) {
 			$is_allowed = false;
 		}
 
@@ -293,7 +310,7 @@ class Core {
 		$this->load_action_scheduler();
 
 		// Load Pro specific files early.
-		$pro_files = $this->is_pro_allowed() ? \EasyWPSMTP\Pro\Pro::PLUGGABLE_FILES : array();
+		$pro_files = $this->is_pro_allowed() ? \EasyWPSMTP\Pro\Pro::PLUGGABLE_FILES : [];
 
 		$files = (array) apply_filters( 'easy_wp_smtp_core_init_early_include_files', $pro_files );
 
@@ -363,6 +380,10 @@ class Core {
 			 */
 			$class_name = apply_filters( 'easy_wp_smtp_core_get_admin', AdminArea::class );
 			$admin      = new $class_name();
+
+			if ( method_exists( $admin, 'hooks' ) ) {
+				$admin->hooks();
+			}
 		}
 
 		return $admin;
@@ -418,47 +439,7 @@ class Core {
 	 *
 	 * @since 2.0.0
 	 */
-	public function init_notifications() {
-
-		// Old PHP version notification.
-		if (
-			version_compare( phpversion(), '5.6', '<' ) &&
-			is_super_admin() &&
-			(
-				isset( $GLOBALS['pagenow'] ) &&
-				$GLOBALS['pagenow'] === 'index.php'
-			)
-		) {
-			WP::add_admin_notice(
-				sprintf(
-					wp_kses( /* translators: %1$s - Easy WP SMTP plugin name; %2$s - EasyWPSMTP.com URL to a related doc. */
-						__( 'Your site is running an outdated version of PHP that is no longer supported and may cause issues with %1$s. <a href="%2$s" target="_blank" rel="noopener noreferrer">Read more</a> for additional information.', 'easy-wp-smtp' ),
-						array(
-							'a' => array(
-								'href'   => array(),
-								'target' => array(),
-								'rel'    => array(),
-							),
-						)
-					),
-					'<strong>Easy WP SMTP</strong>',
-					// phpcs:ignore WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound
-					esc_url( easy_wp_smtp()->get_utm_url( 'https://easywpsmtp.com/docs/supported-php-versions-for-easy-wp-smtp/', [ 'medium' => 'Admin Notice', 'content' => 'Upgrade PHP Recommendation' ] ) )
-				) .
-				'<br><br><em>' .
-				wp_kses(
-					__( '<strong>Please Note:</strong> Support for PHP 5.5 will be discontinued in 2021. After this, if no further action is taken, Easy WP SMTP functionality will be disabled.', 'easy-wp-smtp' ),
-					array(
-						'strong' => array(),
-						'em'     => array(),
-					)
-				) .
-				'</em>',
-				WP::ADMIN_NOTICE_ERROR,
-				false
-			);
-		}
-	}
+	public function init_notifications() {}
 
 	/**
 	 * Display all debug mail-delivery related notices.
@@ -474,21 +455,21 @@ class Core {
 				<p>
 					<?php
 					$notices[] = sprintf(
-						/* translators: %s - plugin name and its version. */
+					/* translators: %s - plugin name and its version. */
 						__( '<strong>EMAILING DISABLED:</strong> The %s is currently blocking all emails from being sent.', 'easy-wp-smtp' ),
 						esc_html( 'Easy WP SMTP v' . EasyWPSMTP_PLUGIN_VERSION )
 					);
 
 					if ( Options::init()->is_const_defined( 'general', 'do_not_send' ) ) {
 						$notices[] = sprintf(
-							/* translators: %1$s - constant name; %2$s - constant value. */
+						/* translators: %1$s - constant name; %2$s - constant value. */
 							__( 'To send emails, change the value of the %1$s constant to %2$s.', 'easy-wp-smtp' ),
 							'<code>EASY_WP_SMTP_DO_NOT_SEND</code>',
 							'<code>false</code>'
 						);
 					} else {
 						$notices[] = sprintf(
-							/* translators: %s - plugin Misc settings page URL. */
+						/* translators: %s - plugin Misc settings page URL. */
 							__( 'To send emails, go to plugin <a href="%s">Misc settings</a> and disable the "Do Not Send" option.', 'easy-wp-smtp' ),
 							esc_url( add_query_arg( 'tab', 'misc', easy_wp_smtp()->get_admin()->get_admin_page_url() ) )
 						);
@@ -557,12 +538,12 @@ class Core {
 						if ( ! easy_wp_smtp()->get_admin()->is_admin_page() ) {
 							printf(
 								wp_kses( /* translators: %s - plugin admin page URL. */
-									__( 'Please review your Easy WP SMTP settings in <a href="%s">plugin admin area</a>.' ) . ' ',
-									array(
-										'a' => array(
-											'href' => array(),
-										),
-									)
+									__( 'Please review your Easy WP SMTP settings in <a href="%s">plugin admin area</a>.', 'easy-wp-smtp' ) . ' ',
+									[
+										'a' => [
+											'href' => [],
+										],
+									]
 								),
 								esc_url( easy_wp_smtp()->get_admin()->get_admin_page_url() )
 							);
@@ -570,7 +551,7 @@ class Core {
 
 						printf(
 							wp_kses( /* translators: %s - URL to the debug events page. */
-								__( 'For more details please try running an Email Test or reading the latest <a href="%s">error event</a>.' ),
+								__( 'For more details please try running an Email Test or reading the latest <a href="%s">error event</a>.', 'easy-wp-smtp' ),
 								[
 									'a' => [
 										'href' => [],
@@ -583,21 +564,21 @@ class Core {
 					</p>
 
 					<?php
-						echo wp_kses(
-							apply_filters(
-								'easy_wp_smtp_core_display_general_notices_email_delivery_error_notice_footer',
-								''
-							),
-							[
-								'p' => [],
-								'a' => [
-									'href'   => [],
-									'target' => [],
-									'class'  => [],
-									'rel'    => [],
-								],
-							]
-						);
+					echo wp_kses(
+						apply_filters(
+							'easy_wp_smtp_core_display_general_notices_email_delivery_error_notice_footer',
+							''
+						),
+						[
+							'p' => [],
+							'a' => [
+								'href'   => [],
+								'target' => [],
+								'class'  => [],
+								'rel'    => [],
+							],
+						]
+					);
 					?>
 				</div>
 
@@ -639,7 +620,7 @@ class Core {
 	public function detect_conflicts() {
 
 		// Display only for those who can actually deactivate plugins.
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( easy_wp_smtp()->get_capability_manage_options() ) ) {
 			return;
 		}
 
@@ -718,6 +699,8 @@ class Core {
 			$activated[ $license_type ] = time();
 			update_option( 'easy_wp_smtp_activated', $activated );
 		}
+
+		set_transient( 'easy_wp_smtp_just_activated', true, 60 );
 
 		// Add transient to trigger redirect to the Setup Wizard.
 		set_transient( 'easy_wp_smtp_activation_redirect', true, 30 );
@@ -811,6 +794,7 @@ class Core {
 		$medium   = 'plugin-settings';
 		$campaign = $this->is_pro() ? 'plugin' : 'liteplugin';
 		$content  = 'general';
+		$locale   = get_user_locale();
 
 		if ( is_array( $utm ) ) {
 			if ( isset( $utm['source'] ) ) {
@@ -825,6 +809,9 @@ class Core {
 			if ( isset( $utm['content'] ) ) {
 				$content = $utm['content'];
 			}
+			if ( isset( $utm['locale'] ) ) {
+				$locale = $utm['locale'];
+			}
 		} elseif ( is_string( $utm ) ) {
 			$content = $utm;
 		}
@@ -833,6 +820,7 @@ class Core {
 			'utm_source'   => esc_attr( rawurlencode( $source ) ),
 			'utm_medium'   => esc_attr( rawurlencode( $medium ) ),
 			'utm_campaign' => esc_attr( rawurlencode( $campaign ) ),
+			'utm_locale'   => esc_attr( sanitize_key( $locale ) ),
 		];
 
 		if ( ! empty( $content ) ) {
@@ -879,6 +867,10 @@ class Core {
 			Meta::get_table_name(),
 			DebugEvents::get_table_name(),
 		];
+
+		if ( $this->get_queue()->is_enabled() ) {
+			$tables[] = Queue::get_table_name();
+		}
 
 		return apply_filters( 'easy_wp_smtp_core_get_custom_db_tables', $tables );
 	}
@@ -1076,7 +1068,7 @@ class Core {
 			 *
 			 * @since 2.1.0
 			 *
-			 * @param \EasyWPSMTP\Compatibility\Compatibility  $compatibility Compatibility instance.
+			 * @param \EasyWPSMTP\Compatibility\Compatibility $compatibility Compatibility instance.
 			 */
 			$compatibility = apply_filters( 'easy_wp_smtp_core_get_compatibility', new Compatibility() );
 
@@ -1110,6 +1102,10 @@ class Core {
 			 */
 			$class_name       = apply_filters( 'easy_wp_smtp_core_get_dashboard_widget', DashboardWidget::class );
 			$dashboard_widget = new $class_name();
+
+			if ( method_exists( $dashboard_widget, 'init' ) ) {
+				$dashboard_widget->init();
+			}
 		}
 
 		return $dashboard_widget;
@@ -1281,24 +1277,24 @@ class Core {
 			if ( $conflict['type'] === 'plugin' ) {
 				$message .= '<br><br>' . sprintf(
 					/* translators: %s - plugin name. */
-					esc_html__( 'It looks like the "%s" plugin is overwriting the "wp_mail" function. Please reach out to the plugin developer on how to disable or remove the "wp_mail" function overwrite to prevent conflicts with Easy WP SMTP.', 'easy-wp-smtp' ),
-					esc_html( $conflict['name'] )
-				);
+						esc_html__( 'It looks like the "%s" plugin is overwriting the "wp_mail" function. Please reach out to the plugin developer on how to disable or remove the "wp_mail" function overwrite to prevent conflicts with Easy WP SMTP.', 'easy-wp-smtp' ),
+						esc_html( $conflict['name'] )
+					);
 			} elseif ( $conflict['type'] === 'mu-plugin' ) {
 				$message .= '<br><br>' . sprintf(
 					/* translators: %s - must-use plugin name. */
-					esc_html__( 'It looks like the "%s" must-use plugin is overwriting the "wp_mail" function. Please reach out to your hosting provider on how to disable or remove the "wp_mail" function overwrite to prevent conflicts with Easy WP SMTP.', 'easy-wp-smtp' ),
-					esc_html( $conflict['name'] )
-				);
+						esc_html__( 'It looks like the "%s" must-use plugin is overwriting the "wp_mail" function. Please reach out to your hosting provider on how to disable or remove the "wp_mail" function overwrite to prevent conflicts with Easy WP SMTP.', 'easy-wp-smtp' ),
+						esc_html( $conflict['name'] )
+					);
 			} elseif ( $wp_mail_filepath === ABSPATH . 'wp-config.php' ) {
 				$message .= '<br><br>' . esc_html__( 'It looks like it\'s overwritten in the "wp-config.php" file. Please reach out to your hosting provider on how to disable or remove the "wp_mail" function overwrite to prevent conflicts with Easy WP SMTP.', 'easy-wp-smtp' );
 			}
 
 			$message .= '<br><br>' . sprintf(
 				/* translators: %s - path. */
-				esc_html__( 'Current function path: %s', 'easy-wp-smtp' ),
-				$wp_mail_filepath . ':' . $wp_mail_reflection->getStartLine()
-			);
+					esc_html__( 'Current function path: %s', 'easy-wp-smtp' ),
+					$wp_mail_filepath . ':' . $wp_mail_reflection->getStartLine()
+				);
 
 			printf(
 				'<div class="notice %1$s"><p>%2$s</p></div>',
@@ -1308,5 +1304,49 @@ class Core {
 		} catch ( Exception $e ) {
 			return;
 		}
+	}
+
+	/**
+	 * Get the default capability to manage everything for Easy WP SMTP.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @return string
+	 */
+	public function get_capability_manage_options() {
+
+		/**
+		 * Filters the default capability to manage everything for Easy WP SMTP.
+		 *
+		 * @since 2.3.0
+		 *
+		 * @param string $capability The default capability to manage everything for Easy WP SMTP.
+		 */
+		return apply_filters( 'easy_wp_smtp_core_get_capability_manage_options', 'manage_options' );
+	}
+
+	/**
+	 * Load the queue functionality.
+	 *
+	 * @since 2.6.0
+	 *
+	 * @return Queue
+	 */
+	public function get_queue() {
+
+		static $queue;
+
+		if ( ! isset( $queue ) ) {
+			/**
+			 * Filter the Queue object.
+			 *
+			 * @since 2.6.0
+			 *
+			 * @param Queue $queue The Queue object.
+			 */
+			$queue = apply_filters( 'easy_wp_smtp_core_get_queue', new Queue() );
+		}
+
+		return $queue;
 	}
 }
