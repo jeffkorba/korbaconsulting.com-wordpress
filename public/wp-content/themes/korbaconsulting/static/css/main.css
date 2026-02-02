@@ -348,7 +348,6 @@ footer .menu-list {
   background-color: #344f6f;
   border-color: #344f6f;
   text-decoration: none;
-  transition: none;
 }
 .btn.btn-primary:hover {
   background-color: rgb(76.4049079755, 116.0766871166, 163.0950920245);
@@ -360,6 +359,9 @@ footer .menu-list {
   background-color: #344f6f;
   border-color: #344f6f;
   text-decoration: none;
+}
+.btn.btn-primary {
+  transition: none;
 }
 
 body {
