@@ -30,9 +30,9 @@ add_action('wp_enqueue_scripts', 'enqueue_styles');
 // Functions
 function enqueue_scripts () {
 
-	wp_enqueue_script('axios', get_template_directory_uri() . '/static/vendor/axios/axios.min.js', [], '1.4.0');
-	wp_enqueue_script('bootstrap', get_template_directory_uri() . '/static/vendor/bootstrap/js/bootstrap.min.js', [], '5.3.0');
-	wp_enqueue_script('fontawesome', get_template_directory_uri() . '/static/vendor/fontawesome-free/js/all.min.js', [], '6.4.0');
+	wp_enqueue_script('axios', get_template_directory_uri() . '/static/vendor/axios/axios.min.js', [], '1.13.4');
+	wp_enqueue_script('bootstrap', get_template_directory_uri() . '/static/vendor/bootstrap/js/bootstrap.min.js', [], '5.3.8');
+	wp_enqueue_script('fontawesome', get_template_directory_uri() . '/static/vendor/fontawesome-free/js/all.min.js', [], '6.7.2');
 	wp_enqueue_script('main', get_template_directory_uri() . '/static/js/main.js', [], '1.0', true);
 
 	if (APP_ENV === 'production') {
@@ -44,12 +44,12 @@ function enqueue_scripts () {
 		$script_path = '/static/vendor/vue/vue.global.js';
 	}
 	
-	wp_enqueue_script('vue', get_template_directory_uri() . $script_path, [], '3.3.4');
+	wp_enqueue_script('vue', get_template_directory_uri() . $script_path, [], '3.5.27');
 }
 
 function enqueue_styles () {
 
-	wp_enqueue_style('bootstrap', get_template_directory_uri() . '/static/vendor/bootstrap/css/bootstrap.min.css', [], '5.3.0');
+	wp_enqueue_style('bootstrap', get_template_directory_uri() . '/static/vendor/bootstrap/css/bootstrap.min.css', [], '5.3.8');
 	wp_enqueue_style('main', get_template_directory_uri() . '/static/css/main.css', [], '1.2');
 }
 
